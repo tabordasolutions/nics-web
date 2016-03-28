@@ -30,7 +30,7 @@
 
     <div class="content">
         <div class="content-wrapper">
-            <img src="forgotpassword/images/nics-logo.jpg" height="290px" width="423px"></img>
+            <img src="forgotpassword/images/scout-logo.jpg" height="290px" width="423px"></img>
             <br>
             <h2><fmt:message key="${errorMessageKey}" /></h2>
 

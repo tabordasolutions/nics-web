@@ -63,7 +63,7 @@
             
             <div class="content">
                 <div class="content-wrapper">
-                    <img src="login/images/nics-logo.jpg" height="290px" width="423px"></img>
+                    <img src="login/images/scout-logo.jpg" height="290px" width="423px"></img>
                     <br>
                     <div class="field">
                         <label for="method">Login Method:</label>
