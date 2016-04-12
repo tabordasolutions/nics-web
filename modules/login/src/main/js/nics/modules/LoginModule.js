@@ -42,7 +42,7 @@ define([
                 html: "<div style=\"cursor: pointer;font-family: Arial,Verdana,sans-serif;font-size: 11px;font-weight: bold;color:blue\"><u>Help</u></div>",
                 listeners: {
                     click: function(){
-						window.open('https://scout.stg.tabordasolutions.net/scouthelp/', '_blank');
+						window.open('https://scout.ca.gov/scouthelp/', '_blank');
                     },
                     element: 'el'
                 }
