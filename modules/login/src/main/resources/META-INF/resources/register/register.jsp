@@ -36,7 +36,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>NICS - Register</title>
+        <title>SCOUT - Register</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -455,7 +455,7 @@
 	                	<div style="font-size: small; vertical-align: middle">
 	                    	<img src="register/images/stopsign32px.png" style="width:32px;height:32px"/>
                     	    If your organization is not available, contact 
-                    		<a href="mailto:nicssupport@ll.mit.edu">NICSsupport@LL.MIT.edu</a> to request
+                    		<a href="mailto:scout@caloes.ca.gov">scout@caloes.ca.gov</a> to request
                     		a new organization
 	                    </div>
 	                    <br/>

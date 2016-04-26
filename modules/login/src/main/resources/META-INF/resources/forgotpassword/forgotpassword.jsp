@@ -35,7 +35,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>NICS - Forgot Password</title>
+    <title>SCOUT - Forgot Password</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -63,7 +63,7 @@
 
         <div class="content">
             <div class="content-wrapper">
-                <img src="forgotpassword/images/scout-logo.jpg" height="290px" width="423px"></img>
+                <img src="forgotpassword/images/scout_logo.png" height="290px" width="423px"></img>
                 <br>
                 <div class="field">
                     <label for="username">Email:</label>

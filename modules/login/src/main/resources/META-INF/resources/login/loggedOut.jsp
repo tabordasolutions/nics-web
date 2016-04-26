@@ -52,7 +52,7 @@
             
             <div class="content">
                 <div class="content-wrapper">
-                    <img src="login/images/scout-logo.jpg" height="290px" width="423px"></img>
+                    <img src="login/images/scout_logo.png" height="290px" width="423px"></img>
                     <br>
                     <h2>You have been logged out</h2>
                                         
