@@ -30,6 +30,7 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html>
     <head>
@@ -38,21 +39,64 @@
         <title>Welcome to SCOUT</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <script>
+        function loadAnnouncements() {
+          var newWorkspace = document.getElementById("server").value;
+          document.getElementById("currentWorkspace").value = newWorkspace;
+          if (newWorkspace != " ") {
+          	document.forms["workspaceAnnouncements"].submit();
+          }
+		}
+		 function validateWorkspace() {
+          var newWorkspace = document.getElementById("server").value;
+         if (newWorkspace == "") {
+         	alert("Please choose a Workspace");
+         }
+          
+		}
+		function setWorkspace() {
+          var currentWorkspace = getQueryVariable("currentWorkspace");
+         if (currentWorkspace) {
+         document.getElementById('server').value = currentWorkspace;
+                 //document.getElementById("server").selectedIndex = 
+         }
+          else {
+           document.getElementById("server").selectedIndex = 0;
+         }
+		}
+		 function validateForm() {
+    		var x = document.forms["login"]["server"].value;
+    		if (x == null || x == " ") {
+      		  alert("Please choose a server");
+        		return false;
+    }
+}
+		function getQueryVariable(variable)
+	{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+	}
+	
+        </script>
         <link rel="stylesheet" href="login/styles/login.css">
     </head>
-    <body>
+    <body  onload="setWorkspace()">
     
         <div class="wrapper">
         
-            <form id="login" action="login" method="post">
+            <form id="login" action="login" method="post" onsubmit="return validateForm()">
         
             <div class="header">
                 <div class="server-select">
                     <label for="server">Server:</label>
-                    <select id="server" name="workspace" tabindex="5">
+                    <select id="server" name="workspace" tabindex="5" onchange="loadAnnouncements()" required>
                     <c:forEach items="${requestScope.workspaces}" var="workspace">
-                        <option value="<c:out value="${workspace['workspaceid']}" />">
+                        <option value="<c:out value="${workspace['workspaceid']}" />"  >
                             <c:out value="${workspace['workspacename']}" />
                         </option>
                     </c:forEach>
@@ -84,7 +128,7 @@
                         <input type="password" id="password" name="password" tabindex="2" />
                     </div>
                     <br>
-                    <button type="submit" tabindex="3">Login</button>
+                    <button type="submit" tabindex="3" >Login</button>
                     <br/><br/>
                     <span style="font-size: small">
                     	Don't have an account? <a href="./register">Register</a>.
@@ -95,9 +139,24 @@
                     </span>
                 </div>
             </div>
-            
+            <div class= "announcements" >
+                <div class="content-wrapper">
+                    <h2>Announcements</h2>
+                    <ul>
+                     <c:forEach items="${requestScope.announcements}" var="announcement">
+                    
+                         <li> <strong>  <c:out value="${announcement['created']}"  /> </strong>
+                            <c:out value="${announcement['message']}" />
+                        </li> 
+                    </c:forEach>
+                    </ul>
+                </div>
+            </div>
             </form>
-            
+              <form id="workspaceAnnouncements" action="login" method="get">
+               <input type="hidden" id="currentWorkspace" name="currentWorkspace" />
+              </form>
+             
            
             <div class="footer">
                 <span class="footer-left">
