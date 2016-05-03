@@ -116,9 +116,9 @@ public class LoginServlet extends HttpServlet implements Servlet {
 		Configuration config = Config.getInstance().getConfiguration();
 		restEndpoint = config.getString("endpoint.rest");
 		cookieDomain = config.getString("private.cookie.domain");
-		helpSite = config.getString("help.site.url","https://public.nics.ll.mit.edu/");
-		siteLogo = config.getString("main.site.logo","login/images/nics-logo.jpg");
-		siteLabel = config.getString("main.site.label","Welcome to NICS 6");
+		helpSite = config.getString("help.site.url","https://www.scout.ca.gov/scouthelp");
+		siteLogo = config.getString("main.site.logo","login/images/scout_logo.png");
+		siteLabel = config.getString("main.site.label","Welcome to SCOUT");
 		
 		try {
 			warVersion = getWarVersion();

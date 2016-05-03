@@ -72,7 +72,7 @@ require([
 	        	//Add Title
 				Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>" +
 					((Core.Config.getProperty("main.site.label") || '') ? Core.Config.getProperty("main.site.label") :
-					"Next-Generation Incident Command System" ) + "</b>"}]);
+					"Situation Awareness &amp; Collaboration Tool" ) + "</b>"}]);
 	        	
 	        	Core.Mediator.getInstance().setCookies(
 	        			Core.Config.getProperty("endpoint.rest"), ["openam", "iplanet"]);

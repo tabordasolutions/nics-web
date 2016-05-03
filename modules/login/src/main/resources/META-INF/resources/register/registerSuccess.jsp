@@ -56,7 +56,7 @@
                     <h2>Successfully registered!</h2>
                     
                     <p>
-                    You've successfully registered for NICS. Your account will now be under review, 
+                    You've successfully registered for SCOUT. Your account will now be under review, 
                     and enabled by an administrator.
                     </p>
                     
@@ -80,7 +80,7 @@
                         <a href="settings.html">Settings</a>
                     </span>
                     <span>
-                        <a href="https://scout.ca.gov/scouthelp/" target="_blank">Help</a>
+                        <a href="https://www.scout.ca.gov/scouthelp" target="_blank">Help</a>
                     </span>
                 </span>
             </div>

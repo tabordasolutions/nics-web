@@ -83,7 +83,7 @@
                         <a href="settings.html">Settings</a>
                     </span>
                     <span>
-                        <a href="https://scout.ca.gov/scouthelp/" target="_blank">Help</a>
+                        <a href="https://www.scout.ca.gov/scouthelp" target="_blank">Help</a>
                     </span>
                 </span>
             </div>
