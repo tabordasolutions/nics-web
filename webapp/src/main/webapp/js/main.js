@@ -59,7 +59,7 @@ require([
 	        Core.View.showDisconnect(true);
 
 	        //Add Title
-	        Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>Situation Awareness & Collaboration Tool</b>"}]);
+	        //Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>Situation Awareness & Collaboration Tool</b>"}]);
 
 	        //Show the Toolbar - Required for drawing menu
 	        Core.View.showToolbar(true);

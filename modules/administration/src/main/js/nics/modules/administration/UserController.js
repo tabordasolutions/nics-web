@@ -196,7 +196,7 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules
 						if(response.message && response.message != "Success"){
 							Ext.MessageBox.alert("Status", "There was an error setting user " + username + "'s account to " + enabled);
 						}else if(enabled == "enable"){
-							Ext.MessageBox.alert("Status", "A NICS Welcome Packet has been e-mailed to the newly enabled user(s).");
+							Ext.MessageBox.alert("Status", "A SCOUT Welcome Packet has been e-mailed to the newly enabled user(s).");
 						}
 					}
 			);

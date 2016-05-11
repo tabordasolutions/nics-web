@@ -74,7 +74,7 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			      dataType: 'json',
 			      success: successHandler,
 			      error: function(param1, status, error){
-			    	  alert("Error loading NICS Properties");
+			    	  alert("Error loading SCOUT Properties");
 			      }
 			   });
 			};

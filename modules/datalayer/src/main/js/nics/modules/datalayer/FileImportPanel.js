@@ -66,7 +66,7 @@
 				buttonText: 'Browse'
 			},
 		    {
-		    	fieldLabel: 'Create Display Name in NICS',
+		    	fieldLabel: 'Create Display Name in SCOUT',
 		        name: 'displayname'
 		    },
 			{

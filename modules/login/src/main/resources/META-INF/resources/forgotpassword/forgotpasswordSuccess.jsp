@@ -56,7 +56,7 @@
             <h2>Successfully Submitted!</h2>
 
             <p>
-                You've successfully requested your NICS password be reset. You should receive an email shortly.
+                You've successfully requested your SCOUT password be reset. You should receive an email shortly.
             </p>
 
             <p>

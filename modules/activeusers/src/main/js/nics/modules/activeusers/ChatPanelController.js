@@ -370,7 +370,7 @@ define(['ext', 'iweb/CoreModule'], function(Ext, Core) {
 	 			var description = Ext.String.format(
 	 					"{0} says: {1}", msg.from.nickname, msg.text);
 	 			
-	 			var note = new Notification("NICS Private Chat Message", {
+	 			var note = new Notification("SCOUT Private Chat Message", {
 	 				tag: this.channel,
 	 				body: description,
 	 				icon: 'images/activeusers/private-chat.png'
