@@ -73,9 +73,6 @@
                         <a href="terms.html">Terms</a>
                     </span>
                     <span>
-                        <a href="settings.html">Settings</a>
-                    </span>
-                    <span>
                         <a href="https://www.scout.ca.gov/scouthelp" target="_blank">Help</a>
                     </span>
                 </span>
