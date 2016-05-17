@@ -158,7 +158,7 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 			    	Core.EventManager.fireEvent("PrintROCReport",emailMessage);
 			    }
 			  else if (reportType == 'email'){
-				  	emailMessage += "<p style='font-size:.8em;'>This e-mail was sent automatically by the Next Generation Incident Command System (NICS).Do not reply.</p></html></body >";
+				  	emailMessage += "<p style='font-size:.8em;'>This e-mail was sent automatically by the Situation Awareness &amp; Collaboration Tool (SCOUT).Do not reply.</p></html></body >";
 				    var subject  = "Report on Conditions  - " + data.rocDisplayName + "," + data.incidentType + "," + data.county + "," + data.reportType;
 				    var emailResponse = {emailList: data.email, subject: subject, emailBody: emailMessage};
 			    	Core.EventManager.fireEvent("EmailROCReport",emailResponse);
@@ -172,7 +172,6 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 	    	submitForm: function(){
 	    		var form = {};
 	    		var message = {};
-	    		var report= {}
 	    		
 	    		
 	    		var time = Core.Util.formatDateToString(new Date());
