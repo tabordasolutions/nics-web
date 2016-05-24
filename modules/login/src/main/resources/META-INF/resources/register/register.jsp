@@ -294,7 +294,7 @@
 		    	var phoneOffice = document.getElementById('phoneOffice').value;
 		    	var phoneOther = document.getElementById('phoneOther').value;		    	
 		    	
-		    	if(!affValue || affValue === "" || affValue === "0") {
+		    	if(!affValue || affValue === "") {
 		    		reasons += "- Must choose Affiliation<br/>";
 		    		valid = false;
 		    	}
