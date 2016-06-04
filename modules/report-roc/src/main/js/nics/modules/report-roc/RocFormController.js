@@ -172,6 +172,7 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 	    	submitForm: function(){
 	    		var form = {};
 	    		var message = {};
+	    		var report= {};
 	    		
 	    		
 	    		var time = Core.Util.formatDateToString(new Date());
