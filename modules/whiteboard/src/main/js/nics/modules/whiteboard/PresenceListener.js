@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -129,8 +129,9 @@ define(['ext', 'iweb/CoreModule', './ChatModel','nics/modules/UserProfileModule'
 			this.mediator.sendPostMessage(this.url, this.callbackTopic, {
 				username: this.user.username,
 				nickname: this.user.nickname,
+				organization: this.user.organization,
 				status: status
-			})
+			});
 		},
 		
 		/**

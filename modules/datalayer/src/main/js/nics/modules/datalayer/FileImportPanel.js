@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,9 +66,24 @@
 				buttonText: 'Browse'
 			},
 		    {
-		    	fieldLabel: 'Create Display Name in NICS',
+		    	fieldLabel: 'Create Display Name in SCOUT',
 		        name: 'displayname'
-		    }],
+		    },
+			{
+				xtype: 'combo',
+				name: 'refreshrate',
+				fieldLabel: 'Refresh rate',
+				queryMode: 'local',
+				store: new Ext.data.SimpleStore({
+					fields: [
+						'value',
+						'text'
+					],
+					data: [[30, '0:30'],[60, '1:00'], [90, '1:30'], [180, '3:00'], [300, '5:00']]
+				}),
+				valueField: 'value',
+				displayField: 'text'
+			}],
 		    buttons: [{
 				    text: 'Upload',
 				    handler :  'submitForm'     

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,53 @@ html, body {
 	/* Height of the footer element */
 	padding-bottom:70px;
 }
+.login {
+	
+    text-align: center;
+	
+	
+}
+.announcements  {
+	
+    text-align: center;
+	
+	
+}
+.announcements h2 {
+	
+   background-color:#c5cae9;
+   min-height:40px;
+   margin-top: 0;
+   padding: 10px 10px 0 0;
+   width: 100%;
+}
+	
+	
 
+.announcements .content-wrapper {
+	
+   border: 2px solid #c5cae9;
+   padding-right: 10px;
+   max-width:700px;
+   overflow-y:scroll;
+   max-height:500px;
+	
+}
+
+.announcements ul {
+	
+    text-align: left;
+
+	
+	
+}
+.announcements li {
+	
+    padding-bottom:1em;
+
+	
+	
+}
 .footer {
 	width:100%;
 	min-height:30px;
@@ -68,6 +114,8 @@ html, body {
     right: 0;
     margin: 5px;
 }
+
+
 
 .center-container {
     text-align: center;

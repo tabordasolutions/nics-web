@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,6 +42,8 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule'],
 		incidentId: null,
 		
 		userId: null,
+		
+		readOnly: false,
 
 		init: function(){
 			this.mediator = Core.Mediator.getInstance();
@@ -52,23 +54,31 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule'],
 			Core.EventManager.addListener("nics.incident.join", this.onJoinIncident.bind(this));
 		},
 		
-		load: function(){
+		showGrids: function(){
 			var secureController = this.view.lookupReference('managePermissions').controller;
+			var checkbox = this.view.lookupReference('secureRoomCB');
+			
+			//Don't allow users to unsecure the incident map
+			checkbox.setVisible(this.collabRoomName != UserProfile.getIncidentMapName());
+			this.resetGrids();
+			secureController.loadUnsecureUsers(this.incidentId, this.collabRoomId);
+			secureController.loadSecureUsers(this.incidentId, this.collabRoomId);
+			this.view.show();
+		},
+		
+		load: function(){
 			
 			if(this.view.isManager){//User is an admin for this secured room
-				secureController.loadUnsecureUsers(this.incidentId, this.collabRoomId);
-				secureController.loadSecureUsers(this.incidentId, this.collabRoomId);
-				this.view.show();
-			}else if(UserProfile.getSystemRoleId() == 0 //user is a system admin or super user
-					|| UserProfile.getSystemRoleId() == 4){
+				this.showGrids();
+			}else if((UserProfile.getSystemRoleId() == 4 || UserProfile.isSuperUser()) //user is a system admin or super user
+					&& this.collabRoomName !=  UserProfile.getIncidentMapName() && !this.readOnly){ 
 				if(this.collabRoomId != "myMap"){
-					this.resetGrids();
-					this.view.show(); //allow user to secure the room
+					this.showGrids();
 				}else{
-					Ext.MessageBox.alert("Permissions", "Please join a collaboration room.");
+					Ext.MessageBox.alert("Room Error", "Please join a collaboration room.");
 				}
 			}else{
-				Ext.MessageBox.alert("Permissions", "You do not have permissions to modify this room.");
+				Ext.MessageBox.alert("Permissions Error", "You do not have permissions to modify this room.");
 			}
 		},
 		
@@ -117,9 +127,9 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule'],
 							}
 						}
 						if(failed){
-							Ext.MessageBox.alert("Permissions", failureNotice);
+							Ext.MessageBox.alert("Permissions Error", failureNotice);
 						}else{
-							Ext.MessageBox.alert("Permissions", "All permissions were successfully updated.");
+							Ext.MessageBox.alert("Permissions Update", "All permissions were successfully updated.");
 							this.view.close();
 						}
 			});
@@ -157,12 +167,17 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule'],
 			}
 		},
 		
-		onActivateRoom: function(evt, collabRoomId){
+		onActivateRoom: function(evt, collabRoomId, readOnly, name){
+			if(!readOnly){
+				this.readOnly = false;
+			}
+			
 			if(this.view && this.view.isVisible()){
 				this.closeManager();
 			}
 			
 			this.collabRoomId = collabRoomId;
+			this.collabRoomName = name;
 			if($.inArray(collabRoomId, this.adminRooms) != -1){
 				this.getView().showManager();
 			}else{
@@ -181,7 +196,7 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule'],
 			Core.EventManager.createCallbackHandler(topic, this, 
 					function(evt, response){
 						if(response.message != "OK"){
-							Ext.MessageBox.alert("NICS", response.message);
+							Ext.MessageBox.alert("Collaboration Room Error", response.message);
 						}else{
 							var pos = $.inArray(this.collabRoomId, this.adminRooms);
 							this.adminRooms.splice(pos, 1);

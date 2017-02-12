@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,10 @@ define(['ol'], function(ol){
 	
 	ArcGISCapabilities.prototype.read = function(doc) {
 		var parsed = JSON.parse(doc);
-		return parsed.layers;
+		return {
+			version: parsed.currentVersion,
+			layers: parsed.layers
+		};
 	};
 	
 	return ArcGISCapabilities;

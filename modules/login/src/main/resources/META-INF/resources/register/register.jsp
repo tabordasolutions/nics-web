@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+    Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,25 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>NICS - Register</title>
+        <title>SCOUT - Register</title>
+                <link rel="apple-touch-icon" sizes="57x57" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-180x180.png">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/android-chrome-192x192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="https://www.scout.ca.gov/static/uploads/favicons/manifest.json">
+        <link rel="mask-icon" href="https://www.scout.ca.gov/static/uploads/favicons/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-TileImage" content="https://www.scout.ca.gov/static/uploads/favicons/mstile-144x144.png">
+        <meta name="theme-color" content="#ffffff">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -84,7 +102,7 @@
         		Populates IMT select elements based on matching Org Type for each IMT
         	*/
         	function populateIMTs() {
-        		var cdfImtOptions = [], federalImtOptions, otherLocalImtOptions, usarImtOptions = [];
+        		var cdfImtOptions = [], federalImtOptions = [], otherLocalImtOptions = [], usarImtOptions = [];
         		
         		var cdfImt, cdfImtOrgs = [];
         		var federalImt, federalImtOrgs = [];
@@ -294,7 +312,7 @@
 		    	var phoneOffice = document.getElementById('phoneOffice').value;
 		    	var phoneOther = document.getElementById('phoneOther').value;		    	
 		    	
-		    	if(!affValue || affValue === "" || affValue === "0") {
+		    	if(!affValue || affValue === "") {
 		    		reasons += "- Must choose Affiliation<br/>";
 		    		valid = false;
 		    	}
@@ -321,17 +339,17 @@
 		    			    	
 		    	if(!passwordValue || passwordValue === ""
 		    			|| !confirmPasswordValue || confirmPasswordValue === ""
-		    			|| (passwordValue !== confirmPasswordValue)
-		    			|| passwordValue.length < 8 || passwordValue.length > 20) {
+		    			|| (passwordValue !== confirmPasswordValue) ) {
+		    			//|| passwordValue.length < 8 || passwordValue.length > 20) {
 		    		
-		    		reasons += "- Must provide a password between 8 and 20 characters long, and it must match the confirm password<br/>";
+		    		reasons += "- Must provide a valid password, and it must match the confirm password<br/>";
 		    		valid = false;
 		    	}
 		    	
 		    	// Ensure this regex matches back-end regex on UserInformation validator
-		    	var passRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!_-]).{8,}/;
+		    	var passRegex = /${requestScope.passwordPattern}/;
 		    	if(!passRegex.test(passwordValue)) {
-		    		reasons += "- Password must contain at least one lower case and one upper case letter, a number, and a symbol: @#$%!_-<br/>";
+		    		reasons += "- Password must meet stated requirements<br/>";
 		    	}
 		    	
 		    	if(phoneMobile && phoneMobile !== "") {
@@ -387,7 +405,7 @@
     
         <div class="wrapper" style="background: linear-gradient(#003366, #0066FF)">        	
         
-            <form id="register" action="register" method="post">
+            <form id="register" action="register" method="post" onsubmit="return validateForm();">
         
             <div class="header" >
                 <div class="server-select">
@@ -433,13 +451,17 @@
 			       		Fields marked with a <font style="color:red">*</font> are required
 			       	</p>
 			       	
+			       	<p>
+			       		For assistance with registration please contact: <c:out value="${requestScope.registerhelp}"/>
+			       	</p>
+			       	
 			       	<div id="messages" name="messages" style="color:red;border: 2px solid red;padding: 4px" hidden="true"></div>
                     <br/>
                     <hr/>         
                                 	
 	            	<div class="field">
 	                    <label for="affiliation">Organization Affiliation <font style="color:red">*</font></label>
-	                    <select id="affiliation" name="affiliation" tabindex="1" width="300" autofocus="autofocus" 
+	                    <select id="affiliation" name="affiliation" tabindex="1" width="300" 
 	                    	onChange="filterOrgs(this);">
 	                    <option value="0">Please select an Affiliation</option>
 	                    <c:forEach items="${requestScope.orgtypes}" var="orgtype">
@@ -455,7 +477,7 @@
 	                	<div style="font-size: small; vertical-align: middle">
 	                    	<img src="register/images/stopsign32px.png" style="width:32px;height:32px"/>
                     	    If your organization is not available, contact 
-                    		<a href="mailto:nicssupport@ll.mit.edu">NICSsupport@LL.MIT.edu</a> to request
+                    		<a href="mailto:scout@caloes.ca.gov">scout@caloes.ca.gov</a> to request
                     		a new organization
 	                    </div>
 	                    <br/>
@@ -540,6 +562,13 @@
                     </div>
                     <br/>
                     <div class="field">
+                    	<center>
+                    	<div style="width:65%">
+                    		<b>Password Requirements</b><br/> <c:out value="${requestScope.passwordRequirements}"/>
+                    		<input type="hidden" id="passwordPattern" value="${requestScope.passwordPattern}"/>
+                    	</div>
+                    	<br/>
+                    	
                     	<span>
                         	<label for="password">Password <font style="color:red">*</font></label>
                         	<input type="password" id="password" name="password" maxlength="20" tabindex="10" />
@@ -549,6 +578,7 @@
                         	<label for="confirmPassword">Confirm Password <font style="color:red">*</font></label>
                         	<input type="password" id="confirmPassword" name="confirmPassword" maxlength="20" tabindex="11" />
                         </span>
+                        </center>
                     </div>
                     <hr/>
                     
@@ -621,20 +651,17 @@
             <div class="footer">
                 <span class="footer-left">
                     <span>Version: <c:out value="${requestScope.version}" /></span>
-                </span>
+                </span>/
 
                 <span class="footer-right nav">
                     <span>
-                        <a href="about.html">About</a>
+                        <a href="https://www.scout.ca.gov/nics/about.html">About</a>
                     </span>
                     <span>
-                        <a href="terms.html">Terms</a>
+                        <a href="https://www.scout.ca.gov/nics/terms.html">Terms</a>
                     </span>
                     <span>
-                        <a href="settings.html">Settings</a>
-                    </span>
-                    <span>
-                        <a href="https://public.nics.ll.mit.edu" target="_blank">Help</a>
+                        <a href="https://www.scout.ca.gov/scouthelp" target="_blank">Help</a>
                     </span>
                 </span>
             </div>

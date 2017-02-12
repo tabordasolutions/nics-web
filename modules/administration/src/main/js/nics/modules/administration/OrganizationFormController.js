@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -148,9 +148,9 @@ define(['ext', 'ol', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 			Core.EventManager.createCallbackHandler(topic, this, 
 					function(updatedOrgTypes, evt, response){
 						if(response.message != "OK"){
-							Ext.MessageBox.alert("NICS", "There was an error updating the organization.");
+							Ext.MessageBox.alert("Status", "There was an error updating the organization.");
 						}else{
-							Ext.MessageBox.alert("NICS", "Organization was successfully updated.");
+							Ext.MessageBox.alert("Status", "Organization was successfully updated.");
 							Core.EventManager.fireEvent("nics.admin.org.new", response.organizations);
 							this.updateOrgTypes(updatedOrgTypes, response.organizations[0].orgId);
 						}
@@ -231,6 +231,7 @@ define(['ext', 'ol', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 	    onAddUsers: function(){
 	    	var vm = this.lookupReference('orgForm').getViewModel();
 	    	if(!Ext.isEmpty(vm.get('orgId'))){
+	    		this.lookupWindow.controller.clearGrid()
 	    		this.lookupWindow.show();
 	    	}
 	    },
@@ -248,7 +249,7 @@ define(['ext', 'ol', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 				Core.EventManager.createCallbackHandler(topic, this, 
 						function(orgId, evt, response){
 							if(response.failedUsers.length > 0){
-								Ext.MessageBox.alert("NICS", response.failedUsers.length + 
+								Ext.MessageBox.alert("Status", response.failedUsers.length + 
 										" users were not successfully added to the organization. Please confirm that they are not already members.");
 							}
 							if(response.users.length > 0){

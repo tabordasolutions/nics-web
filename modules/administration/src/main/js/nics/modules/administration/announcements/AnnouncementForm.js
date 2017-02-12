@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,9 +27,73 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define([], function(){
-	
-	var KMZCapabilities = function() {};
-	
-	return KMZCapabilities;
+ define(['iweb/CoreModule','./AnnouncementViewModel', './AnnouncementFormController', 'nics/modules/report/common/FormVTypes'], 
+
+		 function(Core,AnnouncementViewModel) {
+	return Ext.define('modules.administraton.AnnouncementForm', {
+	    
+		extend: 'Ext.panel.Panel',
+		    	    
+	    controller: 'announceformcontroller',
+	    
+	    buttonAlign: 'center',
+	    
+	    collapsible: true,
+	    
+	    title: 'Announcement',
+	    
+	    autoHeight: true,
+	    
+	    autoWidth: true,
+	    
+	    hidden: true,
+    	
+	   
+	    reference: 'announceFormPanel',
+	    
+	    defaults: {
+    	    scrollable: true,
+            bodyPadding: 5,
+            border: false
+	    },
+	    
+	    
+	    referenceHolder: true,
+	    
+	    layout: 'hbox',
+	    
+	    items:[{
+	    	xtype: 'form',
+	    	viewModel: {
+		       type: 'announceview'
+		    },
+		    reference: 'announceForm',
+	    	layout: 'form',
+		    defaultType: 'textareafield',
+		    width: '100%',
+		  
+		    
+		    items:[{
+		    	fieldLabel: 'Announcement',
+		    	bind: '{message}',
+		    	vtype:'extendedalphanum',
+		    }]
+	    }],
+	    
+	    buttons: [{
+	        	text: 'Create',
+	        	reference: 'createButton',
+	        	handler: 'submitForm',
+		       
+	    		},
+	    		/*{text: 'Update',
+	        	reference: 'updateButton',
+		        handler: 'updateForm',
+		        
+	    		}, */
+	    		{
+	        	text: 'Cancel',
+		        handler: 'cancelForm'
+		     }]
+	     });
 });

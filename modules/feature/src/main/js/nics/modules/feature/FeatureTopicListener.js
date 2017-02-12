@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 	var GEOMETRY_FIELD = "geometry";
 	var OK_STATUS = "OK";
 	
+	
 	return Ext.define('modules.feature.FeatureTopicListener', {
 		
 		constructor: function(featureType, id, user, userId) {
@@ -51,12 +52,16 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 			
 			this.isActive = true;
 			
+			this.wgs84Sphere = new ol.Sphere(6378137);
+			
 			//Add new room drawing layer
 			Core.Ext.Map.addLayer(this.layer);
 			
 			//Load features when room is initially open or on reconnect
 			this.loadFeatureTopic = Ext.String.format('NICS.{0}.{1}.loadfeature', featureType, id);
-			Core.EventManager.addListener(this.loadFeatureTopic, this.onLoadFeatures.bind(this));
+			
+			this.onLoadFeaturesCallback = this.onLoadFeatures.bind(this);
+			Core.EventManager.addListener(this.loadFeatureTopic, this.onLoadFeaturesCallback);
 			
 			this.loadFeatureURL = Ext.String.format('{0}/features/{1}/{2}', 
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
@@ -153,7 +158,6 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 			feature.persistChange = true;
 		},
 		
-		
 		populateFeature: function(feature, data){
 			
 			if (data.geometry) {
@@ -210,14 +214,24 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 		/** After the feature has been persisted - add the new id **/
 		onCreateFeature: function(feature, evt, response){
 			if(response.message != OK_STATUS){
-				Ext.MessageBox.alert("NICS", response.message);
+				Ext.MessageBox.alert("Status", response.message);
 			}
 			
 			//Only one feature expected on a persist
 			if(response.features && response.features[0]){
 				feature.persistChange = false;
 				feature.setId(response.features[0].featureId);
-				feature.set("featureId", response.features[0].featureId);
+				newFeature =  response.features[0];
+				feature.set("featureId", newFeature.featureId);
+				feature.set("username", newFeature.username);
+				feature.set("lastupdate", newFeature.lastupdate);
+				feature.set("layerid"), this.id;
+
+
+				if (newFeature.attributes) {
+					var attributes = JSON.parse(newFeature.attributes);
+						feature.set("attributes", attributes );
+				}
 				feature.persistChange = true; //Set back to true
 			}
 		},
@@ -236,7 +250,7 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 				var topic = "nics.collabroom.feature.delete" + Core.Util.generateUUID();
 				Core.EventManager.createCallbackHandler(topic, this, function(feature, evt, response){
 					if(response.message != OK_STATUS){
-						Ext.MessageBox.alert("NICS", response.message);
+						Ext.MessageBox.alert("Status", response.message);
 					} else {
 						feature.removed = true;
 					}
@@ -278,7 +292,7 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 						var topic = "nics.collabroom.feature.change" + Core.Util.generateUUID();
 						Core.EventManager.createCallbackHandler(topic, this, function(evt, response){
 							if(response.message != OK_STATUS){
-								Ext.MessageBox.alert("NICS", response.message);
+								Ext.MessageBox.alert("Status", response.message);
 							}
 						});
 						
@@ -338,7 +352,7 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 				Core.EventManager.removeListener(this.changeFeatureTopic, this.changeFeatureCallback);
 			}
 			
-			Core.EventManager.removeListener(this.loadFeatureTopic, this.onLoadFeatures);
+			Core.EventManager.removeListener(this.loadFeatureTopic, this.onLoadFeaturesCallback);
 			Core.Ext.Map.removeLayer(this.layer);
 		},
 		
@@ -363,23 +377,42 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 		getFeature: function(feat){
 			//Create a new copy of features
 			var feature = jQuery.extend(true, {}, feat.getProperties());
-
+			var attributes = feature.attributes;
+			//On the first time through, there is no defined username, and the description gets deleted.  Add these to attributes so we can grab them
+			if (!attributes) attributes = {description:""};	
 			delete feature.lastupdate; //Update on the server
 			delete feature.gesture; //Does not exist in the database
 			
-			//Might want to add this to the database
+			//Add this to the database in the attributes
 			if(feature.description || feature.description==""){
+				attributes.description = feature.description;
+				
 				delete feature.description;
 			}
-			
+		   
 			//Does not exist in the database
+			
 			if(feature.dragging){
 				delete feature.dragging;
 			}
 			if(feature.documents){
 				delete feature.documents;
 			}
-			
+
+			if (this.id) {
+				attributes.layerid = this.id;
+			}
+
+
+			if (feature.geometry.getType() == 'LineString') {
+				var lengthMeter = this.calculateLength(feature.geometry );
+				measureImperial = this.formatLengthImperial(lengthMeter);
+				attributes.length = measureImperial;
+			}else if (feature.geometry.getType() == 'Polygon'){
+				var areaSqrMeter = this.calculateArea(feature.geometry);
+				measureImperial = this.formatAreaImperial(areaSqrMeter);
+				attributes.area = measureImperial;
+			}
 			//Change value to WKT
 			feature.geometry = format.writeFeature(feat);
 			
@@ -389,12 +422,70 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 			//Add the username
 			feature.username = this.username; //Move to global properties module eventually
 			
+			//add all the extras in the attributes
+			feature.attributes = attributes;
+			
 			if (feature.attributes && typeof feature.attributes !== "string") {
 				feature.attributes = JSON.stringify(feature.attributes);
 			}
 			
 			return feature;
-		}
+		}, 
+		formatDate: function(date)
+        {
+            var str = (date.getMonth() + 1) + "/"
+            + date.getDate() + "/"
+            + date.getFullYear();
+
+            return str;
+        },
+        calculateLength: function(line) {
+			var lengthMeter = 0;
+			var sourceProj = Core.Ext.Map.getMap().getView().getProjection();
+			var coordinates = line.getCoordinates();
+			for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+				var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
+				var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
+				lengthMeter += this.wgs84Sphere.haversineDistance(c1, c2);
+			}
+			return lengthMeter;
+		},
+		
+		calculateArea: function(polygon) {
+			var sourceProj = Core.Ext.Map.getMap().getView().getProjection();
+			var geom = polygon.clone().transform(sourceProj, 'EPSG:4326');
+			var coordinates = geom.getLinearRing(0).getCoordinates();
+			return Math.abs(this.wgs84Sphere.geodesicArea(coordinates));
+		},
+		
+		FEET_PER_METER: 3.28084,
+		FEET_PER_MILE: 5280,
+		formatLengthImperial: function(lengthMeter){
+			var lengthFeet = lengthMeter * this.FEET_PER_METER;
+			if (lengthFeet > (this.FEET_PER_MILE / 10)) {
+				return this.round(lengthFeet / this.FEET_PER_MILE) + ' mi';
+			} else {
+				return this.round(lengthFeet) + ' ft';
+			}
+		},
+		round: function(value) {
+			return (Math.round(value * 100) / 100);
+		},
+		
+		SQRFEET_PER_SQRMETER: 10.7639,
+		SQRFEET_PER_ACRE: 43560,
+		formatAreaImperial: function(areaSqrMeter){
+			var areaSqrFeet = areaSqrMeter * this.SQRFEET_PER_SQRMETER;
+			if (areaSqrFeet > (this.SQRFEET_PER_ACRE / 10)) {
+				return this.round(areaSqrFeet / this.SQRFEET_PER_ACRE) + ' acres';
+			} else {
+				return this.round(areaSqrFeet) + ' ft²';
+			}
+		},
+
+		round: function(value) {
+			return (Math.round(value * 100) / 100);
+		},
 		
 	});
 

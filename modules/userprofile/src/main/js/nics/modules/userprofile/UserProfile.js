@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,6 +53,7 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			var description;
 			var isSuperUser;
 			var isAdminUser;
+			var incidentMapName;
 			
 			var propertiesLoadedEvt = "nics.user.properties.loaded";
 			var profileLoadedEvt = "nics.user.profile.loaded";
@@ -73,7 +74,7 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			      dataType: 'json',
 			      success: successHandler,
 			      error: function(param1, status, error){
-			    	  alert("Error loading NICS Properties");
+			    	  alert("Error loading SCOUT Properties");
 			      }
 			   });
 			};
@@ -155,6 +156,14 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 				REST_ENDPOINT: "endpoint.rest",
 				
 				GEOSERVER_ENDPOINT: "endpoint.geoserver",
+				
+				getIncidentMapName: function(){
+					if(!incidentMapName){
+						var name = Core.Config.getProperty("collabroom.incident.map.name");
+						incidentMapName = name ? name : "Incident Map";
+					}
+					return incidentMapName;
+				},
 			
 				getWorkspaceId: function(){
 					return workspaceId;

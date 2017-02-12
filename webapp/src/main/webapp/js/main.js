@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@ require([
 	"nics/modules/FeaturePersistence", "nics/modules/AdministrationModule",
 	"nics/modules/UserProfileModule", "nics/modules/PhotosModule", "nics/modules/PrintModule" ,
 	"nics/modules/AccountInfoModule", "nics/modules/MultiIncidentViewModule",
-    "nics/modules/FeedbackReportModule"
+    "nics/modules/FeedbackReportModule", "nics/modules/MapSyncLocation"
     ],
 
     function(Core, MapModule, View, DrawMenuModule, GeocodeModule,
@@ -44,7 +44,7 @@ require([
         LoginModule, WhiteboardModule, ReportModule, DatalayerModule,
         ActiveUsersModule, FeaturePersistence, AdminModule, UserProfile,
         PhotosModule, PrintModule, AccountModule, MultiIncidentModule,
-        FeedbackReportModule) {
+        FeedbackReportModule, MapSyncLocation) {
 
         "use strict";
 
@@ -59,7 +59,7 @@ require([
 	        Core.View.showDisconnect(true);
 
 	        //Add Title
-	        Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>Next-Generation Incident Command System</b>"}]);
+	        //Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>Situation Awareness & Collaboration Tool</b>"}]);
 
 	        //Show the Toolbar - Required for drawing menu
 	        Core.View.showToolbar(true);
@@ -68,6 +68,11 @@ require([
 
 	        //Load each module
 	        function loadModules() {
+	        	
+	        	//Add Title
+				Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>" +
+					((Core.Config.getProperty("main.site.label") || '') ? Core.Config.getProperty("main.site.label") :
+					"Situation Awareness &amp; Collaboration Tool" ) + "</b>"}]);
 	        	
 	        	Core.Mediator.getInstance().setCookies(
 	        			Core.Config.getProperty("endpoint.rest"), ["openam", "iplanet"]);
@@ -107,6 +112,8 @@ require([
 
                 // Add email report to Tools Menu
                 FeedbackReportModule.load();
+                
+                MapSyncLocation.load();
 	        }
 
 	        //Mediator

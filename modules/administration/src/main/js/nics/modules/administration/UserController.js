@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules/accountinfo/AccountInfoViewer'],
-         function(Ext, Core, UserProfile, AccountInfoViewer){
+define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules/AccountInfoModule'],
+         function(Ext, Core, UserProfile, AccountInfoModule){
 	
 	return Ext.define('modules.administration.UserController', {
 		extend : 'Ext.app.ViewController',
@@ -43,11 +43,10 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules
 			Core.EventManager.addListener("nics.admin.org.clear", this.clearGrids.bind(this));
 			Core.EventManager.addListener("nics.admin.org.users.load", this.loadUsers.bind(this));
 			Core.EventManager.addListener(this.showUserProfileTopic, this.showUserProfile.bind(this));
+			Core.EventManager.addListener("dcds.user.profile.loaded", this.loadUserProfile.bind(this));
 			
 			this.getView().getFirstGrid().getView().on('drop', this.enableUsers, this);
 			this.getView().getSecondGrid().getView().on('drop', this.disableUsers, this);
-			
-			this.accountInfoViewer = Ext.create('modules.accountinfo.AccountInfoViewer');
 		},
 		
 		clearGrids: function(){
@@ -87,6 +86,25 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules
 					UserProfile.getUserOrgId());
 				
 			Core.Mediator.getInstance().sendRequestMessage(url, this.showUserProfileTopic);
+		},
+
+		onDeleteUsers: function()
+		{
+			var grid = this.getView().getFirstGrid();
+			var selection = grid.getSelectionModel().getSelection();
+
+			for (var i = 0; i < selection.length; i++)
+			{
+				var topic = Core.Util.generateUUID();
+				var userorgworkspaceid = selection[i].data.userorg_workspace_id;
+				var userid = selection[i].data.userid;
+
+				Ext.String.format('{0}/users/{1}/setActive/{2}/userid/{3}?active={4}',
+					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
+					UserProfile.getWorkspaceId(), userorgworkspaceid, userid, false);
+
+				this.mediator.sendPostMessage(url, topic, {});
+			}
 		},
 		
 		loadUsers: function(evt, orgId){
@@ -147,7 +165,7 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules
 				Core.EventManager.createCallbackHandler(topic, this, 
 						function(username, evt, response){
 							if(!response.users || response.users.length != 1){ //we are enabling one at a time atm..
-								Ext.MessageBox.alert("NICS", "There was an issue enabling the user.");
+								Ext.MessageBox.alert("Status", "There was an issue enabling the user.");
 							}else{
 								//Update OpenAM if it's the first time the user is enabled or
 								//They are no longer enabled in any other orgs
@@ -174,8 +192,11 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules
 			//populate the user grids
 			Core.EventManager.createCallbackHandler(topic, this, 
 					function(evt, response){
+						console.log(enabled);
 						if(response.message && response.message != "Success"){
-							Ext.MessageBox.alert("NICS", "There was an error setting user " + username + "'s account to " + enabled);
+							Ext.MessageBox.alert("Status", "There was an error setting user " + username + "'s account to " + enabled);
+						}else if(enabled == "enable"){
+							Ext.MessageBox.alert("Status", "A SCOUT Welcome Packet has been e-mailed to the newly enabled user(s).");
 						}
 					}
 			);
@@ -188,7 +209,20 @@ define(['ext', 'iweb/CoreModule','nics/modules/UserProfileModule', 'nics/modules
 		},
 		
 		showUserProfile: function(evt, userProfile){
-			this.accountInfoViewer.controller.showAccountInfo(userProfile);
+			AccountInfoModule.showViewer(userProfile);
+		},
+
+		loadUserProfile: function(evt, profile)
+		{
+			if (profile.isSuperUser)
+			{
+				this.getView().add({
+					xtype: 'button',
+					text: 'Delete selected users',
+					reference: 'deleteUsersButton',
+					handler: 'onDeleteUsers'
+				});
+			}
 		}
 	});
 });

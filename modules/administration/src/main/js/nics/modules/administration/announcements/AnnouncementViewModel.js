@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,9 +27,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define([], function(){
+define(['ext','iweb/CoreModule'], function(Ext, Core) {
+	 
+	return Ext.define('modules.administration.AnnouncementViewModel', {
+	    extend: 'Ext.app.ViewModel',
 	
-	var KMLCapabilities = function() {};
-	
-	return KMLCapabilities;
+	    alias: 'viewmodel.announceview',
+	    
+	    data: {
+	    	
+	    	created: '',
+	    	message: '',
+	    	announcementId: -1
+	    },
+	   
+	    
+	});
 });

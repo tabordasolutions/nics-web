@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -370,7 +370,7 @@ define(['ext', 'iweb/CoreModule'], function(Ext, Core) {
 	 			var description = Ext.String.format(
 	 					"{0} says: {1}", msg.from.nickname, msg.text);
 	 			
-	 			var note = new Notification("NICS Private Chat Message", {
+	 			var note = new Notification("SCOUT Private Chat Message", {
 	 				tag: this.channel,
 	 				body: description,
 	 				icon: 'images/activeusers/private-chat.png'

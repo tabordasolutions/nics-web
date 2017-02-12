@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,8 +38,12 @@ define(['./SecureRoomController', 'nics/modules/administration/UserModel', 'nics
 	return Ext.define('modules.administration.SecureRoomView', {
 	 
 	 	extend: 'Ext.Panel',
+	 	
+	 	referenceHolder: true,
 
 	 	controller: 'secureroomcontroller',
+	 	
+	 	reference: "managePermissions",
 	 	
 	 	 dockedItems: [{
             xtype: 'toolbar',

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -124,6 +124,8 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule"],
 						buttons: Ext.Msg.OK
 					});
 				}
+
+				console.log("Submitting form for "+ fileName +" to url: " + url);
 				
 				form.submit({
 					url: url,

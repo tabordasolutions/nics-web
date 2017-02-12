@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,10 +28,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  define(["iweb/CoreModule"], function(Core) {
-	 
+
 	return Ext.define('modules.datalayer.js.DatalayerButton', {
 		extend: 'Ext.Button',
-		
+
 		config: {
 			baseCls: 'nontb_style'
 		},
@@ -39,12 +39,22 @@
 		listeners: {
 			click: "toggleWindow"
 		},
-		
+
 		toggleWindow: function(){
+			var isHidden = this.window.isHidden();
+			this.hideDatalayerWindows();
 			this.setWindowPosition(this.window);
-			this.window.setVisible( this.window.isHidden() );
+			this.window.setVisible(isHidden);
 		},
-		
+
+		hideDatalayerWindows: function() {
+			Ext.WindowManager.each(function(win){
+				if (win instanceof modules.datalayer.Window){
+					win.close();
+				}
+			});
+		},
+
 		setWindowPosition: function(win){
 			var pos = this.getPosition();
 			var x = pos[0] + win.width;

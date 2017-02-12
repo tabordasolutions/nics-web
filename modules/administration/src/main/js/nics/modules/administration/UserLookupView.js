@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['./DDGridView', './UserLookupController', './UserModel'],
+define(['./DDGridView', './UserLookupController', './UserModel', 'nics/modules/report/common/FormVTypes'],
 		function(DDGridView, UserLookupController, UserModel) {
 	
 	return Ext.define('modules.administration.UserLookupView', {
@@ -53,7 +53,7 @@ define(['./DDGridView', './UserLookupController', './UserModel'],
 	 		xtype:'form',
             layout: 'vbox',
             reference: 'userLookupForm',
-	 		items: [{
+            items: [{
 	            xtype: 'fieldcontainer',
 	            fieldLabel: 'Search Type',
 	            defaultType: 'radiofield',
@@ -83,11 +83,13 @@ define(['./DDGridView', './UserLookupController', './UserModel'],
 	        },{
 	        	xtype: 'textfield',
 	        	fieldLabel: 'First Name ',
-	        	reference: 'firstName'
+	        	reference: 'firstName',
+		        vtype:'simplealphanum'
 	        },{
 	        	xtype: 'textfield',
 	        	fieldLabel: 'Last Name',
-	        	reference: 'lastName'
+	        	reference: 'lastName',
+		        vtype:'simplealphanum'
 	        }],
 	        
 	        buttons: [{
@@ -97,7 +99,7 @@ define(['./DDGridView', './UserLookupController', './UserModel'],
 	 		},{
 	        
 	            xtype: 'grid',
-	            
+	            flex:1,
 	            reference: 'lookupGrid',
 	            
 	            store: {
@@ -107,6 +109,7 @@ define(['./DDGridView', './UserLookupController', './UserModel'],
 		        autoHeight: true,
 		        autoWidth: true,
 		        autoScroll: true,
+		       
 		                
 		        columns: [{
 		            text: 'Username',

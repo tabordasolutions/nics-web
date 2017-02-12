@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,12 +37,13 @@ define(['./RoomManagementController', 'nics/modules/collabroom/SecureRoomView','
 	 	controller: 'roommanagementcontroller',
 	 	
 	 	closeAction: "hide",
+	 	
+	 	referenceHolder: true,
 	 
 	 	initComponent: function(){
 			this.callParent();
 			
 			var secureRoomView = new SecureRoomView();
-			secureRoomView.setReference('managePermissions');
 			
 			this.add(secureRoomView);
 			

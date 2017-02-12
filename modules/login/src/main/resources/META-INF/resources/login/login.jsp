@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+    Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -30,29 +30,91 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Welcome to NICS 6</title>
+        <title>Welcome to SCOUT</title>
+                <link rel="apple-touch-icon" sizes="57x57" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="https://www.scout.ca.gov/static/uploads/favicons/apple-touch-icon-180x180.png">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/android-chrome-192x192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/favicon-96x96.png" sizes="96x96">
+        <link rel="icon" type="image/png" href="https://www.scout.ca.gov/static/uploads/favicons/favicon-16x16.png" sizes="16x16">
+        <link rel="manifest" href="https://www.scout.ca.gov/static/uploads/favicons/manifest.json">
+        <link rel="mask-icon" href="https://www.scout.ca.gov/static/uploads/favicons/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-TileImage" content="https://www.scout.ca.gov/static/uploads/favicons/mstile-144x144.png">
+        <meta name="theme-color" content="#ffffff">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <script>
+        function loadAnnouncements() {
+          var newWorkspace = document.getElementById("server").value;
+          document.getElementById("currentWorkspace").value = newWorkspace;
+          if (newWorkspace != " ") {
+          	document.forms["workspaceAnnouncements"].submit();
+          }
+		}
+		 function validateWorkspace() {
+          var newWorkspace = document.getElementById("server").value;
+         if (newWorkspace == "") {
+         	alert("Please choose a Workspace");
+         }
+          
+		}
+		function setWorkspace() {
+          var currentWorkspace = getQueryVariable("currentWorkspace");
+         if (currentWorkspace) {
+         document.getElementById('server').value = currentWorkspace;
+                 //document.getElementById("server").selectedIndex = 
+         }
+          else {
+           document.getElementById("server").selectedIndex = 0;
+         }
+		}
+		 function validateForm() {
+    		var x = document.forms["login"]["server"].value;
+    		if (x == null || x == " ") {
+      		  alert("Please choose a server");
+        		return false;
+    }
+}
+		function getQueryVariable(variable)
+	{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+	}
+	
+        </script>
         <link rel="stylesheet" href="login/styles/login.css">
     </head>
-    <body>
+    <body  onload="setWorkspace()">
     
         <div class="wrapper">
         
-            <form id="login" action="login" method="post">
+            <form id="login" action="login" method="post" onsubmit="return validateForm()">
         
             <div class="header">
                 <div class="server-select">
                     <label for="server">Server:</label>
-                    <select id="server" name="workspace" tabindex="5">
+                    <select id="server" name="workspace" tabindex="5" onchange="loadAnnouncements()" required>
                     <c:forEach items="${requestScope.workspaces}" var="workspace">
-                        <option value="<c:out value="${workspace['workspaceid']}" />">
+                        <option value="<c:out value="${workspace['workspaceid']}" />"  >
                             <c:out value="${workspace['workspacename']}" />
                         </option>
                     </c:forEach>
@@ -63,7 +125,7 @@
             
             <div class="content">
                 <div class="content-wrapper">
-                    <img src="login/images/nics-logo.jpg" height="290px" width="423px"></img>
+                    <img src="login/images/scout_logo.png" height="290px" width="423px"></img>
                     <br>
                     <div class="field">
                         <label for="method">Login Method:</label>
@@ -84,7 +146,7 @@
                         <input type="password" id="password" name="password" tabindex="2" />
                     </div>
                     <br>
-                    <button type="submit" tabindex="3">Login</button>
+                    <button type="submit" tabindex="3" >Login</button>
                     <br/><br/>
                     <span style="font-size: small">
                     	Don't have an account? <a href="./register">Register</a>.
@@ -95,9 +157,24 @@
                     </span>
                 </div>
             </div>
-            
+            <div class= "announcements" >
+                <div class="content-wrapper">
+                    <h2>Announcements</h2>
+                    <ul>
+                     <c:forEach items="${requestScope.announcements}" var="announcement">
+                    
+                         <li> <strong>  <c:out value="${announcement['created']}"  /> </strong>
+                            <c:out value="${announcement['message']}" />
+                        </li> 
+                    </c:forEach>
+                    </ul>
+                </div>
+            </div>
             </form>
-            
+              <form id="workspaceAnnouncements" action="login" method="get">
+               <input type="hidden" id="currentWorkspace" name="currentWorkspace" />
+              </form>
+             
            
             <div class="footer">
                 <span class="footer-left">
@@ -106,16 +183,13 @@
 
                 <span class="footer-right nav">
                     <span>
-                        <a href="about.html">About</a>
+                        <a href="https://www.scout.ca.gov/nics/about.html">About</a>
                     </span>
                     <span>
-                        <a href="terms.html">Terms</a>
+                        <a href="https://www.scout.ca.gov/nics/terms.html">Terms</a>
                     </span>
                     <span>
-                        <a href="settings.html">Settings</a>
-                    </span>
-                    <span>
-                        <a href="https://public.nics.ll.mit.edu" target="_blank">Help</a>
+                        <a href="https://www.scout.ca.gov/scouthelp/" target="_blank">Help</a>
                     </span>
                 </span>
             </div>

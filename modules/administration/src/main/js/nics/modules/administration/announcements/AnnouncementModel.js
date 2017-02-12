@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2008-2015, Massachusetts Institute of Technology (MIT)
+/*
+ * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-div.roc-required label{
-    color:#11aa00;
-    font-weight:bold;
-}
+define(['ext'], function(Ext) {
+
+	return Ext.define('modules.administrator.announcements.AnnouncementModel', {	 
+	 	extend: 'Ext.data.Model',
+	 	
+	 	idProperty: 'logid',
+	 		 	
+		fields : [
+			{
+				name : 'message',
+				mapping : 'message'
+			}, {
+				name : 'created',
+				mapping : 'created',
+				type: 'date',
+			      convert: function(rawValue, model) {
+
+			          /* convert to local time */
+			    	  returnDate = new Date(rawValue);
+			    	  x = new Date();
+			    	  currentTimeZoneOffsetInHours = x.getTimezoneOffset()/60;
+			    	  if (currentTimeZoneOffsetInHours > 0){
+			    	  		//the user is a behind UTC.  add a day to the date returned
+			    		  returnDate =  new Date(returnDate.getTime() + 24*60*60*1000);
+			    	  }
+			    	  return returnDate;
+			          
+			        }
+			} 
+		],
+		
+
+	 });
+});
