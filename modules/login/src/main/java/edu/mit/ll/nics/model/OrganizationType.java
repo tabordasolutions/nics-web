@@ -35,15 +35,15 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrganizationType {
-    @JsonProperty("orgTypeId")
+
     private int id;
-    @JsonProperty("orgTypeName")
     private String name;
-    private Set<Integer> organizationIds;
+    private Set<Integer> organizationIds = new HashSet<Integer>();
 
     public OrganizationType() {
     }
@@ -65,8 +65,18 @@ public class OrganizationType {
         return id;
     }
 
+    @JsonProperty("orgTypeId")
+    public void setOrgTypeId(int id) {
+        this.setId(id);
+    }
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    @JsonProperty("orgTypeName")
+    public void setOrgTypeName(String name) {
+        this.setName(name);
     }
 
     public String getName() {

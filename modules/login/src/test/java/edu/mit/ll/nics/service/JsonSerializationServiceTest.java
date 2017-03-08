@@ -30,13 +30,18 @@
 package edu.mit.ll.nics.service;
 
 import edu.mit.ll.nics.model.Organization;
+import edu.mit.ll.nics.model.OrganizationType;
+import edu.mit.ll.nics.response.OrganizationTypesResponse;
 import edu.mit.ll.nics.response.OrganizationsResponse;
+import edu.mit.ll.nics.response.Response;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JsonSerializationServiceTest {
     JsonSerializationService service = new JsonSerializationService();
@@ -74,5 +79,33 @@ public class JsonSerializationServiceTest {
         organization2.setCounty("Sacramento");
         organization2.setCountry("USA");
         org.junit.Assert.assertTrue(organization1.equals(organization1));
+    }
+
+    @Test
+    public void testErrorResponseSerialization() throws IOException {
+        String expectedSerializedResponse = "{\"status\":500,\"message\":\"Error message\"}";
+        Response response = new Response(500, "Error message");
+        String serializedResponse = service.serialize(response);
+        assertEquals(expectedSerializedResponse, serializedResponse);
+    }
+
+    @Test
+    public void testOrganizationTypesSerialization() throws IOException {
+        String expectedJsonString1 = "{\"status\":200,\"message\":\"OK\",\"organizationTypes\":[{\"id\":1,\"name\":\"Fire/Emergency\",\"organizationIds\":[]}]}";
+        String expectedJsonString2 = "{\"status\":200,\"message\":\"OK\",\"organizationTypes\":[{\"id\":1,\"name\":\"Fire/Emergency\",\"organizationIds\":[1,2]}]}";
+
+        List<OrganizationType> organizationTypes = new ArrayList<OrganizationType>();
+        OrganizationType organizationType = new OrganizationType();
+        organizationType.setId(1);
+        organizationType.setName("Fire/Emergency");
+        organizationTypes.add(organizationType);
+        OrganizationTypesResponse response = new OrganizationTypesResponse(200, "OK", organizationTypes);
+        assertEquals(expectedJsonString1, service.serialize(response));
+
+        Set<Integer> organizationIds = new HashSet<Integer>();
+        organizationIds.add(1);
+        organizationIds.add(2);
+        organizationType.setOrganizationIds(organizationIds);
+        assertEquals(expectedJsonString2, service.serialize(response));
     }
 }

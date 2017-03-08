@@ -27,24 +27,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.mit.ll.nics.responsemapper;
+package edu.mit.ll.nics.gateway.responseMappers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.mit.ll.nics.model.Organization;
+import edu.mit.ll.nics.model.OrganizationType;
 
 import java.io.IOException;
 import java.util.List;
 
-public class OrganizationResponseMapper {
+public class OrganizationTypeResponseMapper {
 
-    public List<Organization> mapResponse(String response) throws IOException, JsonProcessingException {
+    public List<OrganizationType> mapResponse(String response) throws IOException, JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(response);
-        JsonNode organizationsNode = root.get("organizations");
-        List<Organization> organizationList = mapper.readValue(organizationsNode.toString(), new TypeReference<List<Organization>>() {});
+        JsonNode organizationsNode = root.get("orgTypes");
+        List<OrganizationType> organizationList = mapper.readValue(organizationsNode.toString(), new TypeReference<List<OrganizationType>>() {});
         return organizationList;
     }
 }

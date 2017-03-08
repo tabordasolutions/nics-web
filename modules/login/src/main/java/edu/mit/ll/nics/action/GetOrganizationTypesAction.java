@@ -27,17 +27,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.mit.ll.nics;
+package edu.mit.ll.nics.action;
 
+import edu.mit.ll.nics.log.LoggerFactory;
 import edu.mit.ll.nics.model.OrganizationType;
+import edu.mit.ll.nics.response.OrganizationTypesResponse;
+import edu.mit.ll.nics.response.Response;
 import edu.mit.ll.nics.service.JsonSerializationService;
 import edu.mit.ll.nics.service.OrganizationService;
-import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -45,28 +48,37 @@ import java.util.List;
 public class GetOrganizationTypesAction {
     private OrganizationService organizationService;
     private JsonSerializationService jsonSerializationService;
-    private final Logger logger;
-    private final Configuration configuration;
+    private LoggerFactory loggerFactory;
+    private Logger logger;
 
     @Autowired
-    public GetOrganizationTypesAction(Logger logger, OrganizationService organizationService, JsonSerializationService jsonSerializationService, Configuration configuration) {
-        this.logger = logger;
+    public GetOrganizationTypesAction(LoggerFactory loggerFactory, OrganizationService organizationService, JsonSerializationService jsonSerializationService) {
+        this.loggerFactory = loggerFactory;
+        this.logger = loggerFactory.getLogger(GetOrganizationTypesAction.class);
         this.organizationService = organizationService;
         this.jsonSerializationService = jsonSerializationService;
-        this.configuration = configuration;
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String responseBody;
         try {
             List<OrganizationType> organizationTypes = organizationService.getOrganizationTypesWithOrganizations();
-            String json = null;// = jsonService.serializeOrganizations(organizationTypes);
-            response.setContentType("application/json");
-            OutputStream outputStream = response.getOutputStream();
-            outputStream.write(json.getBytes());
-            outputStream.flush();
+            OrganizationTypesResponse organizationTypesResponse = new OrganizationTypesResponse(HttpServletResponse.SC_OK, "OK", organizationTypes);
+            responseBody  = jsonSerializationService.serialize(organizationTypesResponse);
+            this.writeResponse(response, responseBody, HttpServletResponse.SC_OK);
         } catch(Exception e) {
             logger.error("Error retrieving organization types data ", e);
-            response.sendError(500, "Failed to retrieve Organization Types: " + e.getMessage());
+            Response errorResponse = new Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to retrieve Organization Types: " + e.getMessage());
+            responseBody = jsonSerializationService.serialize(errorResponse);
+            this.writeResponse(response, responseBody, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void writeResponse(HttpServletResponse response, String responseBody, int status) throws IOException {
+        response.setStatus(status);
+        response.setContentType(MediaType.APPLICATION_JSON);
+        OutputStream outputStream = response.getOutputStream();
+        outputStream.write(responseBody.getBytes());
+        outputStream.flush();
     }
 }

@@ -27,39 +27,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.mit.ll.nics.responsemapper;
+package edu.mit.ll.nics.gateway.responseMappers;
 
 import edu.mit.ll.nics.model.OrganizationType;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import static org.junit.Assert.*;
-
-public class OrganizationTypeMapResponseMapperTest {
-    OrganizationTypeMapResponseMapper mapper = new OrganizationTypeMapResponseMapper();
+public class OrganizationTypeResponseMapperTest {
+    OrganizationTypeResponseMapper mapper = new OrganizationTypeResponseMapper();
 
     @Test
-    public void testParsingOrganizationTypeMap() throws Exception {
-        String json = "{\"message\":\"ok\",\"orgAdminList\":null,\"orgTypes\":[],\"orgOrgTypes\":[{\"orgOrgtypeid\":0,\"orgid\":4,\"orgtypeid\":4,\"org\":null,\"orgtype\":null},{\"orgOrgtypeid\":0,\"orgid\":2,\"orgtypeid\":8,\"org\":null,\"orgtype\":null},{\"orgOrgtypeid\":0,\"orgid\":1,\"orgtypeid\":8,\"org\":null,\"orgtype\":null}],\"count\":3,\"organizations\":[]}";
-        Map<Integer, Set<Integer>> organizationTypeMap = mapper.mapResponse(json);
-        assertNotNull(organizationTypeMap);
-        assertEquals(organizationTypeMap.size(), 2);
-        Set<Integer> organizationIds = organizationTypeMap.get(8);
-        assertEquals(2, organizationIds.size());
-        assertTrue(organizationIds.contains(1));
-        assertTrue(organizationIds.contains(2));
-        organizationIds = organizationTypeMap.get(4);
-        assertEquals(1, organizationIds.size());
-        assertTrue(organizationIds.contains(4));
+    public void testParsingOrganizations() throws Exception {
+        String json = "{\"message\":\"ok\",\"orgAdminList\":null,\"orgTypes\":[{\"orgTypeId\":11,\"orgTypeName\":\"Federal\",\"orgOrgTypes\":[]}],\"orgOrgTypes\":[],\"count\":1,\"organizations\":[]}";
+        List<OrganizationType> organizationTypes = mapper.mapResponse(json);
+        assertNotNull(organizationTypes);
+        assertEquals(organizationTypes.size(), 1);
+        OrganizationType organizationType = organizationTypes.get(0);
+        assertEquals(11, organizationType.getId());
+        assertEquals("Federal", organizationType.getName());
+    }
+
+    @Test
+    public void testParsingMultipleOrganizations() throws Exception {
+        String json = "{\"message\":\"ok\",\"orgAdminList\":null,\"orgTypes\":[{\"orgTypeId\":2,\"orgTypeName\":\"Academia\",\"orgOrgTypes\":[]},{\"orgTypeId\":13,\"orgTypeName\":\"CDF IMT\",\"orgOrgTypes\":[]},{\"orgTypeId\":8,\"orgTypeName\":\"Corporate\",\"orgOrgTypes\":[]},{\"orgTypeId\":11,\"orgTypeName\":\"Federal\",\"orgOrgTypes\":[]}],\"orgOrgTypes\":[],\"count\":4,\"organizations\":[]}";
+        List<OrganizationType> organizationTypes = mapper.mapResponse(json);
+        assertNotNull(organizationTypes);
+        assertEquals(organizationTypes.size(), 4);
+        assertFalse(organizationTypes.contains(null));
     }
 
     @Test
     public void testParsingZeroOrganizations() throws Exception {
         String json = "{\"message\":\"ok\",\"orgAdminList\":null,\"orgTypes\":[],\"orgOrgTypes\":[],\"count\":0,\"organizations\":[]}";
-        Map<Integer, Set<Integer>> organizationTypes = mapper.mapResponse(json);
+        List<OrganizationType> organizationTypes = mapper.mapResponse(json);
         assertNotNull(organizationTypes);
         assertEquals(0, organizationTypes.size());
     }
@@ -70,3 +74,4 @@ public class OrganizationTypeMapResponseMapperTest {
         mapper.mapResponse(json);
     }
 }
+

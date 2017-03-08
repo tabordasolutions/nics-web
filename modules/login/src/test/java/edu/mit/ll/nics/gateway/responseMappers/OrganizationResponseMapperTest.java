@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.mit.ll.nics.responsemapper;
+package edu.mit.ll.nics.gateway.responseMappers;
 
 import edu.mit.ll.nics.model.Organization;
 import org.junit.Test;

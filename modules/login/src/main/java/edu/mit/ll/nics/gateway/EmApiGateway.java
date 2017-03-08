@@ -33,21 +33,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import edu.mit.ll.nics.config.SpringConfiguration;
 import edu.mit.ll.nics.model.Organization;
 import edu.mit.ll.nics.model.OrganizationType;
-import edu.mit.ll.nics.responsemapper.*;
+import edu.mit.ll.nics.gateway.responseMappers.*;
 import edu.mit.ll.nics.util.CookieTokenUtil;
-import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -76,10 +72,10 @@ public class EmApiGateway {
         this.organizationTypeMapResponseMapper = new OrganizationTypeMapResponseMapper();
     }
 
-    public EmApiGateway(URL restEndpoint, ApplicationContext context, OrganizationResponseMapper organizationResponseMapper, OrganizationTypeResponseMapper organizationTypeResponseMapper,
+    public EmApiGateway(URL restEndpoint, ApplicationContext context, OrganizationResponseMapper organizationResponseParser, OrganizationTypeResponseMapper organizationTypeResponseMapper,
                         OrganizationTypeMapResponseMapper organizationTypeMapResponseMapper) {
         this.restEndpoint = restEndpoint;
-        this.organizationsResponseMapper = organizationResponseMapper;
+        this.organizationsResponseMapper = organizationResponseParser;
         this.organizationTypeResponseMapper = organizationTypeResponseMapper;
         this.organizationTypeMapResponseMapper = organizationTypeMapResponseMapper;
     }
