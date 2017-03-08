@@ -32,6 +32,7 @@ package edu.mit.ll.nics.service;
 import edu.mit.ll.nics.gateway.EmApiGateway;
 import edu.mit.ll.nics.model.Organization;
 import edu.mit.ll.nics.model.OrganizationType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ import java.util.Set;
 public class OrganizationService {
     private EmApiGateway emApiGateway;
 
+    @Autowired
     public OrganizationService(EmApiGateway emApiGateway) {
         this.emApiGateway = emApiGateway;
     }

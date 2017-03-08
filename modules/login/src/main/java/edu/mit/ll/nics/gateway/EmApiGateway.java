@@ -44,13 +44,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Component
 public class EmApiGateway {
 
     private static final Logger logger = Logger.getLogger(EmApiGateway.class);
@@ -59,18 +62,18 @@ public class EmApiGateway {
     private static final String ORG_TYPE_MAP_ENDPOINT = "orgs/1/typemap";
 
     private URL restEndpoint;
+    private Client client;
     private OrganizationResponseMapper organizationsResponseMapper;
     private OrganizationTypeResponseMapper organizationTypeResponseMapper;
     private OrganizationTypeMapResponseMapper organizationTypeMapResponseMapper;
-    private final ApplicationContext context;
 
     @Autowired
-    public EmApiGateway(@Qualifier("restEndpoint") URL restEndpoint, @Qualifier("configuration") Configuration configuration) {
+    public EmApiGateway(@Qualifier("restEndpoint") URL restEndpoint, @Qualifier("client") Client client) {
         this.restEndpoint = restEndpoint;
+        this.client = client;
         this.organizationsResponseMapper = new OrganizationResponseMapper();
         this.organizationTypeResponseMapper = new OrganizationTypeResponseMapper();
         this.organizationTypeMapResponseMapper = new OrganizationTypeMapResponseMapper();
-        context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
     }
 
     public EmApiGateway(URL restEndpoint, ApplicationContext context, OrganizationResponseMapper organizationResponseMapper, OrganizationTypeResponseMapper organizationTypeResponseMapper,
@@ -79,25 +82,25 @@ public class EmApiGateway {
         this.organizationsResponseMapper = organizationResponseMapper;
         this.organizationTypeResponseMapper = organizationTypeResponseMapper;
         this.organizationTypeMapResponseMapper = organizationTypeMapResponseMapper;
-        this.context = context;
     }
 
     public List<Organization> getOrganizations() throws IOException {
         CookieTokenUtil tokenUtil = getCookieTokenUtil();
-        Client client = null;
-        Builder builder = null;
         Response response = null;
         List<Organization> orgList = Collections.emptyList();
         try {
-            client = ClientBuilder.newClient();
-            builder = client.target(restEndpoint.toString()).path(ALL_ORGS_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(ALL_ORGS_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
-            String entity = response.readEntity(String.class);
-            orgList = organizationsResponseMapper.mapResponse(entity);
+            if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+                String entity = response.readEntity(String.class);
+                orgList = organizationsResponseMapper.mapResponse(entity);
+            } else {
+                Map<String, Object> entity = response.readEntity(new GenericType<Map<String, Object>>(){});
+                throw new RuntimeException((String)entity.get("message"));
+            }
         } finally {
             if(response!= null) response.close();
-            if(client!= null) client.close();
             tokenUtil.destroyToken();
         }
         return orgList;
@@ -105,20 +108,21 @@ public class EmApiGateway {
 
     public List<OrganizationType> getOrganizationTypes() throws IOException {
         CookieTokenUtil tokenUtil = getCookieTokenUtil();
-        Client client = null;
-        Builder builder = null;
         Response response = null;
         List<OrganizationType> orgList = Collections.emptyList();
         try {
-            client = ClientBuilder.newClient();
-            builder = client.target(restEndpoint.toString()).path(ORG_TYPES_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPES_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
-            String entity = response.readEntity(String.class);
-            orgList = organizationTypeResponseMapper.mapResponse(entity);
+            if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+                String entity = response.readEntity(String.class);
+                orgList = organizationTypeResponseMapper.mapResponse(entity);
+            } else {
+                Map<String, Object> entity = response.readEntity(new GenericType<Map<String, Object>>(){});
+                throw new RuntimeException((String)entity.get("message"));
+            }
         } finally {
             if(response!= null) response.close();
-            if(client!= null) client.close();
             tokenUtil.destroyToken();
         }
         return orgList;
@@ -127,25 +131,26 @@ public class EmApiGateway {
     public Map<Integer, Set<Integer>> getOrganizationTypeMap() throws IOException {
         CookieTokenUtil tokenUtil = getCookieTokenUtil();
         Map<Integer, Set<Integer>> organizationTypeMap = new HashMap<Integer, Set<Integer>>();
-        Client client = null;
-        Builder builder = null;
         Response response = null;
         try {
-            client = ClientBuilder.newClient();
-            builder = client.target(restEndpoint.toString()).path(ORG_TYPE_MAP_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPE_MAP_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
-            String entity = response.readEntity(String.class);
-            organizationTypeMap = organizationTypeMapResponseMapper.mapResponse(entity);
+            if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+                String entity = response.readEntity(String.class);
+                organizationTypeMap = organizationTypeMapResponseMapper.mapResponse(entity);
+            } else {
+                Map<String, Object> entity = response.readEntity(new GenericType<Map<String, Object>>(){});
+                throw new RuntimeException((String)entity.get("message"));
+            }
         } finally {
             if(response!= null) response.close();
-            if(client!= null) client.close();
             tokenUtil.destroyToken();
         }
         return organizationTypeMap;
     }
 
     private CookieTokenUtil getCookieTokenUtil() {
-        return context.getBean(CookieTokenUtil.class);
+        return new CookieTokenUtil();
     }
 }

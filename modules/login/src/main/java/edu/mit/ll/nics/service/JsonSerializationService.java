@@ -33,14 +33,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import edu.mit.ll.nics.model.Organization;
 import edu.mit.ll.nics.response.OrganizationsResponse;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+@Component
 public class JsonSerializationService {
 
     private ObjectMapper mapper;
@@ -59,13 +59,13 @@ public class JsonSerializationService {
     /**
      *
      * @param organizations response
-     * @return jsonString serializing only id & name fields in organizations apart from status & message in OrganizationsResponse
+     * @return jsonString serializing selected fields in organizations apart from status & message in OrganizationsResponse
+     *          fields included in serialization are defined in the default constructor
      * @throws IOException
      */
     public String serializeOrganizations(OrganizationsResponse organizations) throws IOException {
         return mapper.writer(organizationFilterProvider).writeValueAsString(organizations);
     }
-
 
     public String serialize(Object o) throws IOException {
         return mapper.writeValueAsString(o);
