@@ -37,6 +37,7 @@ import edu.mit.ll.nics.service.JsonSerializationService;
 import edu.mit.ll.nics.service.OrganizationService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,15 +46,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+@Component
 public class GetOrganizationTypesAction {
     private OrganizationService organizationService;
     private JsonSerializationService jsonSerializationService;
-    private LoggerFactory loggerFactory;
     private Logger logger;
 
     @Autowired
     public GetOrganizationTypesAction(LoggerFactory loggerFactory, OrganizationService organizationService, JsonSerializationService jsonSerializationService) {
-        this.loggerFactory = loggerFactory;
         this.logger = loggerFactory.getLogger(GetOrganizationTypesAction.class);
         this.organizationService = organizationService;
         this.jsonSerializationService = jsonSerializationService;
