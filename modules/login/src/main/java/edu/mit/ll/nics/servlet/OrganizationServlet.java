@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.mit.ll.nics.config.SpringConfiguration;
+import edu.mit.ll.nics.configuration.SpringConfiguration;
 import edu.mit.ll.nics.action.GetOrganizationsAction;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;

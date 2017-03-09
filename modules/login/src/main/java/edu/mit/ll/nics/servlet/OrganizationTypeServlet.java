@@ -30,12 +30,11 @@
 package edu.mit.ll.nics.servlet;
 
 import edu.mit.ll.nics.action.GetOrganizationTypesAction;
-import edu.mit.ll.nics.config.SpringConfiguration;
+import edu.mit.ll.nics.configuration.SpringConfiguration;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
