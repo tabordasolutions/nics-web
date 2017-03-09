@@ -74,7 +74,7 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
         BasicRequest basicRequest = new BasicRequest();
         String result = (String) basicRequest.getRequest(url, headerOptions);
         
-        if(url.indexOf(".kml") > -1){
+        if(url.toLowerCase().indexOf(".kml") > -1){
         	if(result != null && result.indexOf("<kml") == -1){
         		result = this.appendKMLHeader(result);
         	}

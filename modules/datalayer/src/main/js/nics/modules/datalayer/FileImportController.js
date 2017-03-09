@@ -73,7 +73,7 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule"],
 				
 				if(fileType == 'kmz'){
 				
-					if(!fileName || !fileName.endsWith('.kmz')){
+					if(!fileName || !fileName.toLowerCase().endsWith('.kmz')){
 						return Ext.Msg.show({
 							title: 'File Import',
 							message: 'Please include a KMZ file.',
@@ -84,7 +84,7 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule"],
 				}
 				else if(fileType == 'kml'){
 				
-					if(!fileName || !fileName.endsWith('.kml')){
+					if(!fileName || !fileName.toLowerCase().endsWith('.kml')){
 						return Ext.Msg.show({
 							title: 'File Import',
 							message: 'Please include a KML file.',
