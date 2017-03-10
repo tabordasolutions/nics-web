@@ -1,0 +1,39 @@
+.bluepanel {
+  background-color: steelblue;
+  max-width: 650px;
+  min-width: 255px;
+  width: 80%;
+  border: 1px solid transparent;
+  border-radius: 15px; }
+
+.errorselect {
+  border-color: #a94442;
+  color: #333;
+  background-color: #fff; }
+
+.selectform.form-control {
+  margin-bottom: 15px; }
+
+.termsandconditions {
+  width: 100%;
+  margin: auto;
+  height: 200px;
+  border: 1px solid #ccc;
+  background: #f2f2f2;
+  padding: 6px;
+  overflow: auto; }
+  .termsandconditions h2 {
+    font-size: 16px; }
+  .termsandconditions h3 {
+    font-size: 14px; }
+
+.errorborder {
+  border-color: #a94442; }
+
+.errorhelp {
+  color: #a94442; }
+
+.confirmValue {
+  color: steelblue; }
+
+/*# sourceMappingURL=register.css.map */

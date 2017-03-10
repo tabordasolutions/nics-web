@@ -1,0 +1,54 @@
+$errorcolor:#a94442;
+
+.bluepanel {
+    background-color : steelblue;
+    max-width: 650px;
+    min-width: 255px;
+    width: 80%;
+    border: 1px solid transparent;
+    border-radius: 15px;
+}
+
+.requiredtext {
+    //margin-bottom: 15px;
+}
+
+.errorselect {
+    border-color: $errorcolor;
+    color: #333;
+    background-color: #fff;
+}
+
+.selectform.form-control {
+    margin-bottom: 15px;
+}
+
+.termsandconditions {
+    width: 100%;
+    margin: auto;
+    height: 200px;
+    border: 1px solid #ccc;
+    background: #f2f2f2;
+    padding: 6px;
+    overflow: auto;
+
+    h2 {
+        font-size: 16px;
+    }
+
+    h3 {
+        font-size: 14px;
+    }
+
+}
+
+.errorborder {
+    border-color: $errorcolor;
+}
+
+.errorhelp {
+    color:$errorcolor;
+}
+.confirmValue {
+    color: steelblue;
+}
