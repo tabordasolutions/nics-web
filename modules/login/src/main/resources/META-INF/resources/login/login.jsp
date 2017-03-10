@@ -318,7 +318,10 @@
                         <h3>Thank you for registering!</h3>
                     </div>
                     <div class="modal-body">
-                        <p>Your registration request has been submitted to your Agency’s SCOUT Administrator.  The Administrator will review the request and enable your account, as deemed appropriate. If you do not receive a registration confirmation email within a few days, please contact your Agency’s SCOUT Administrator.</p>
+                        <p>Your registration request has been submitted to your Agency&rsquo;s SCOUT Administrator.
+                            The Administrator will review the request and enable your account, as deemed appropriate.
+                            If you do not receive a registration confirmation email within a few days, please contact
+                            your Agency&rsquo;s SCOUT Administrator.</p>
                     </div>
                     <div class="modal-footer text-center">
                         <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>

@@ -65,8 +65,8 @@ function onResetForm4(e) {
 }
 
 function populateOrgData() {
-    var orgtypesUrl = "http://nicsweb:8082/nics/organizationTypes";
-    var orgsUrl = "http://nicsweb:8082/nics/organizations";
+    var orgtypesUrl = "organizationTypes";
+    var orgsUrl = "organizations";
 
     $.when($.get(orgtypesUrl),$.get(orgsUrl))
         .then(function(orgtypesResult, orgsResult) {
