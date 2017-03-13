@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="json" uri="http://www.atg.com/taglibs/json" %>
 <!doctype html>
 <html>
     <head>
@@ -35,29 +36,18 @@
         <script src="login/js/bootstrap-select.min.js"></script>
         <script src="login/js/validator.min.js"></script>
         <script src="login/js/jquery.maskedinput.min.js"></script>
+        <script src="login/js/moment.min.js"></script>
         <script src="login/js/registration.js"></script>
         <script src="login/js/login.js"></script>
     </head>
-    <body onload="setWorkspace()">
+    <body>
 
     <div class="container">
+        <form id="frmWorkspace" action="login" method="get">
+            <input type="hidden" id="currentWorkspace" name="currentWorkspace" />
+        </form>
 
-        <form id="login" action="login" method="post" onsubmit="return validateForm()">
-
-            <div class="text-right">
-                <div class="form-group">
-                    <label for="server">Workspace:</label>
-                    <select id="server" class="form-control" name="workspace" onchange="loadAnnouncements()" style="width:auto;display: inline-block" required>
-                        <c:forEach items="${requestScope.workspaces}" var="workspace">
-                            <option value="<c:out value="${workspace['workspaceid']}" />"  >
-                                <c:out value="${workspace['workspacename']}" />
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </div>
-
-
+        <form id="login" action="login" method="post">
             <div>
                 <div style="display: table;margin: 0 auto">
                     <div class="text-center"><img src="login/images/scout_logo.png" height="290px" /></div>
@@ -67,7 +57,12 @@
                             <option value="">OpenAM</option>
                         </select>
                     </div>
-                    <br>
+                    <div class="form-group">
+                        <label for="server">Workspace:</label>
+                        <select id="server" class="form-control" name="workspace" style="width:auto;display: inline-block" required>
+
+                        </select>
+                    </div>
                     <div class="form-group ">
                         <label for="email" class="sr-only">Email:</label>
                         <div class="input-group" style="width:100%">
@@ -97,12 +92,8 @@
                             <h3>Announcements</h3>
                         </div>
                         <div class="panel-body">
-                            <ul>
-                                <c:forEach items="${requestScope.announcements}" var="announcement">
-                                    <li> <strong>  <c:out value="${announcement['created']}"  /> </strong>
-                                        <c:out value="${announcement['message']}" />
-                                    </li>
-                                </c:forEach>
+                            <ul id="announcements">
+
                             </ul>
                         </div>
                     </div>
@@ -110,9 +101,7 @@
             </div>
 
         </form>
-        <form id="workspaceAnnouncements" action="login" method="get">
-            <input type="hidden" id="currentWorkspace" name="currentWorkspace" />
-        </form>
+
 
 
         <div id="modalRegistration" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalRegistrationLabel">
@@ -345,9 +334,29 @@
 
     <script type="text/javascript">
         $(function() {
-            $('#modalRegistration').on('show.bs.modal', function (e) {
-                initRegistration();
-            });
+
+            var workspacedata =
+                <json:object>
+                <json:array name="workspaces" var="workspace" items="${requestScope.workspaces}">
+                <json:object>
+                <json:property name="id" value="${workspace['workspaceid']}"/>
+                <json:property name="name" value="${workspace['workspacename']}"/>
+                </json:object>
+                </json:array>
+                <json:array name="announcements" var="announcement" items="${requestScope.announcements}">
+                <json:object>
+                <json:property name="createdate" value="${announcement['created']}"/>
+                <json:property name="message" value="${announcement['message']}"/>
+                </json:object>
+                </json:array>
+                </json:object>
+
+                console.log(workspacedata);
+
+                loginpage.setPageData(workspacedata);
+                loginpage.setWorkspace();
+                loginpage.setAnnouncements();
+
 
             $('#modalRegistration').on('hidden.bs.modal', function (e) {
                 resetDialogSequence();

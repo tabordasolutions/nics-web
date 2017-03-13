@@ -13,18 +13,18 @@ function initRegistration() {
         $('#formStep3').validator().on('submit', doStep4);
         $('#formStep4').validator().on('submit', doRegistration);
         $('#formStep1').on('reset', onResetForm1);
-        $('#formStep1').on('reset', onResetForm2);
-        $('#formStep1').on('reset', onResetForm3);
-        $('#formStep1').on('reset', onResetForm4);
+        $('#formStep2').on('reset', onResetForm2);
+        $('#formStep3').on('reset', onResetForm3);
+        $('#formStep4').on('reset', onResetForm4);
 
         //Load the T&C content externally.
         $('#tc_content').load('login/html/terms.html #tc_content');
         $("#phone").mask("(999) 999-9999");
 
-
+        populateOrgData();
         bInitialized = true;
     }
-    populateOrgData();
+
 
 }
 

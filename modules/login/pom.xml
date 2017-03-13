@@ -29,10 +29,18 @@
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <repositories>
+      <repository>
+          <id>public</id>
+          <url>http://maven.nuxeo.org/nexus/content/repositories/public/</url>
+      </repository>
+  </repositories>
+
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
   	<groupId>edu.mit.ll.nics</groupId>
   	<artifactId>web-modules</artifactId>
@@ -110,6 +118,13 @@
           <artifactId>spring-context</artifactId>
           <version>${spring.version}</version>
       </dependency>
+    <!-- https://mvnrepository.com/artifact/atg.taglib.json/json-taglib -->
+    <dependency>
+      <groupId>atg.taglib.json</groupId>
+      <artifactId>json-taglib</artifactId>
+      <version>0.4.1</version>
+    </dependency>
+
 
     <!-- test dependencies -->
     <dependency>
