@@ -1,6 +1,3 @@
-/**
- * Created by weavert on 3/9/17.
- */
 var loginpage = function($, w, moment) {
 
     var pageData = {};
@@ -20,7 +17,9 @@ var loginpage = function($, w, moment) {
         //set the list of workspaces.
         pageData.workspaces.forEach(function (item) {
             $('#server').append('<option value="' + item.id + '">' + item.name + '</option>')
-        })
+        });
+        if (pageData.workspaces.length < 2) { $('#workspaces').addClass('hidden');} //Don't show if there is only one workspace.
+
         var currentWorkspace = getQueryVariable("currentWorkspace");
         if (currentWorkspace) {
             document.getElementById('server').value = currentWorkspace;
@@ -36,9 +35,10 @@ var loginpage = function($, w, moment) {
         pageData.announcements.sort(function(a, b) {
             return a.createdate - b.createdate;
         }).reverse();
+        if (pageData.announcements.length > 0) { $('#announcements').empty() }
         pageData.announcements.forEach(function(item) {
-            $('#announcements').append('<ul><b>' + moment(item.createdate).format('M-D-YYYY h:mm a') + '</b> '
-                + item.message + '</ul>');
+            $('#announcements').append('<dt>' + moment(item.createdate).format('M-D-YYYY h:mm a') + '</dt><dd>'
+                + item.message + '</dd>');
         })
     }
 
@@ -60,5 +60,5 @@ var loginpage = function($, w, moment) {
         setAnnouncements : setAnnouncements
     }
 
-}(jQuery, window, moment)
+}(jQuery, window, moment);
 

@@ -57,10 +57,9 @@
                         <option value="">OpenAM</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div id="workspaces" class="form-group text-center">
                     <label for="server">Workspace:</label>
                     <select id="server" class="form-control" name="workspace" style="width:auto;display: inline-block" required>
-
                     </select>
                 </div>
                 <div class="form-group ">
@@ -92,9 +91,9 @@
                         <h3>Announcements</h3>
                     </div>
                     <div class="panel-body">
-                        <ul id="announcements">
-
-                        </ul>
+                        <dl id="announcements" class="dl-horizontal">
+                            <dd>There are currently no announcements.</dd>
+                        </dl>
                     </div>
                 </div>
             </div>
@@ -111,7 +110,7 @@
                     <div class="modal-header text-center">
                         <h3>Registration Step 1 of 4</h3>
                         <p>Please select an Organization Type, then select your organization.</p>
-                        <p>If your organization is not available, contact <a href="mailto:scout@caloes.ca.gov">scout@caloes.ca.gov</a> to request a new organization</p>
+                        <p><span class="glyphicon glyphicon-exclamation-sign" style="color:orange"></span> If your organization is not available, contact <a href="mailto:scout@caloes.ca.gov">scout@caloes.ca.gov</a> to request a new organization</p>
                     </div>
                     <div class="modal-body">
 
@@ -228,8 +227,7 @@
                 <form id="formStep3" role="form">
                     <div class="modal-header text-center">
                         <h3>Registration Step 3 of 4</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vel laoreet nisi, ac egestas dui. Nullam libero nibh, sodales cursus dictum id, mollis vitae augue.
-                            Fusce quis erat rutrum, posuere odio eu, convallis erat. Ut venenatis est risus, sed lobortis massa consectetur nec. Suspendisse vehicula risus vel dapibus bibendum.</p>
+                        <p>Optional Information</p>
                     </div>
                     <div class="modal-body">
                         <div class="text-center" style="display: table;margin: auto">
@@ -241,7 +239,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr/>
                             <h4>Are you a member of an Incident Management Team?</h4>
                             <div class="col-sm-6" ><select id="selectCDFIMT" class="selectpicker form-control selectform" onchange="registration.checkForClear(this)" title="CDF IMT"><option value="">--clear--</option></select></div>
                             <div class="col-sm-6"><select id="selectFedIMT" class="selectpicker form-control selectform" onchange="registration.checkForClear(this)" title="Federal IMT"><option value="">--clear--</option></select></div>
@@ -283,10 +280,12 @@
                                 </div>
                             </div>
                             <div id="tchelp" class="errorhelp hidden">*Please read and accept the license agreement.</div>
-                            <div id="confirmationVals" style="margin-top: 20px">
-                                <div class="col-sm-12 text-center">Org Type <span id="verifyorgtype" class="confirmValue">{Confirm Organization Type}</span></div>
-                                <div class="col-sm-12 text-center">Org Name: <span id="verifyorgname" class="confirmValue">{Organization Name}</span></div>
-                                <div class="col-sm-12 text-center">Email/Login: <span id="verifyemail" class="confirmValue">{Confirm Email}</span></div>
+                            <div id="confirmationVals" style="display: table;margin: 20px auto">
+                                <dl class="dl-horizontal">
+                                    <dt>Organization Type:</dt><dd id="verifyorgtype" class="confirmValue">{Confirm Organization Type}</dd>
+                                    <dt>Organization Name:</dt><dd id="verifyorgname" class="confirmValue">{Organization Name}</dd>
+                                    <dt>Email/Login:</dt><dd id="verifyemail" class="confirmValue">{Confirm Email}</dd>
+                                </dl>
                             </div>
                         </div>
 
@@ -330,6 +329,7 @@
     </div><!-- /.modal -->
 
 </div>
+
 
 <script type="text/javascript">
     $(function() {
