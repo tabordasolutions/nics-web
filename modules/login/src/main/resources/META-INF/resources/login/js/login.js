@@ -32,8 +32,12 @@ var loginpage = function($, w, moment) {
     }
 
     function setAnnouncements() {
+
+        pageData.announcements.sort(function(a, b) {
+            return a.createdate - b.createdate;
+        }).reverse();
         pageData.announcements.forEach(function(item) {
-            $('#announcements').append('<ul><b>' + moment(item.createdate).format('M-D-YYYY h:mm:ss a') + '</b> '
+            $('#announcements').append('<ul><b>' + moment(item.createdate).format('M-D-YYYY h:mm a') + '</b> '
                 + item.message + '</ul>');
         })
     }
