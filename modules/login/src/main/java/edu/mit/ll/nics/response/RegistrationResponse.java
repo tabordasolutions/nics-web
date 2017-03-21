@@ -27,37 +27,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.mit.ll.nics.servlet;
+package edu.mit.ll.nics.response;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+public class RegistrationResponse {
+    private int status;
+    private String response;
 
-import edu.mit.ll.nics.configuration.SpringConfiguration;
-import edu.mit.ll.nics.action.GetOrganizationsAction;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.io.IOException;
-
-@WebServlet("/organizations")
-public class OrganizationServlet extends HttpServlet {
-
-    private final ApplicationContext context;
-
-    OrganizationServlet(ApplicationContext context) {
-        this.context = context;
+    public RegistrationResponse(int status, String response) {
+        this.status = status;
+        this.response = response;
     }
 
-    public OrganizationServlet() {
-        context = SpringConfiguration.getContext();
+    public int getStatus() {
+        return this.status;
     }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        context.getBean(GetOrganizationsAction.class).handle(request, response);
+    public String getResponse() {
+        return this.response;
     }
 }

@@ -29,35 +29,35 @@
  */
 package edu.mit.ll.nics.servlet;
 
+import java.io.IOException;
+
+import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.mit.ll.nics.action.PostRegistrationAction;
 import edu.mit.ll.nics.configuration.SpringConfiguration;
-import edu.mit.ll.nics.action.GetOrganizationsAction;
-import org.apache.log4j.Logger;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.IOException;
-
-@WebServlet("/organizations")
-public class OrganizationServlet extends HttpServlet {
+@WebServlet("/register")
+public class RegistrationServlet extends HttpServlet implements Servlet {
 
     private final ApplicationContext context;
 
-    OrganizationServlet(ApplicationContext context) {
-        this.context = context;
-    }
+    RegistrationServlet(ApplicationContext context) { this.context = context; };
 
-    public OrganizationServlet() {
+	public RegistrationServlet() {
         context = SpringConfiguration.getContext();
-    }
+	}
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        context.getBean(GetOrganizationsAction.class).handle(request, response);
-    }
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+        context.getBean(PostRegistrationAction.class).handle(request, response);
+	}
 }

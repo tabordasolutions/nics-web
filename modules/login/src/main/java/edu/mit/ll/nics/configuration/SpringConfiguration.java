@@ -32,10 +32,7 @@ package edu.mit.ll.nics.configuration;
 import edu.mit.ll.iweb.websocket.Config;
 import edu.mit.ll.nics.log.LoggerFactory;
 import edu.mit.ll.nics.util.CookieTokenUtil;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -45,6 +42,8 @@ import java.net.URL;
 @ComponentScan("edu.mit.ll.nics")
 @Configuration
 public class SpringConfiguration {
+    private static AnnotationConfigApplicationContext context = null;
+
     @Bean
     public org.apache.commons.configuration.Configuration configuration() {
         return Config.getInstance().getConfiguration();
@@ -69,5 +68,11 @@ public class SpringConfiguration {
     @Bean
     public Client client() {
         return ClientBuilder.newClient();
+    }
+
+    public static AnnotationConfigApplicationContext getContext() {
+        if(context == null)
+            context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        return context;
     }
 }

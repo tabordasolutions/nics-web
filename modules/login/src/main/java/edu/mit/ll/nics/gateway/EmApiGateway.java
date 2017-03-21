@@ -30,6 +30,7 @@
 package edu.mit.ll.nics.gateway;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -37,14 +38,16 @@ import edu.mit.ll.nics.log.LoggerFactory;
 import edu.mit.ll.nics.model.Organization;
 import edu.mit.ll.nics.model.OrganizationType;
 import edu.mit.ll.nics.gateway.responseMappers.*;
+import edu.mit.ll.nics.response.RegistrationResponse;
 import edu.mit.ll.nics.util.CookieTokenUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -53,9 +56,10 @@ import javax.ws.rs.core.Response;
 @Component
 public class EmApiGateway {
 
-    private static final String ALL_ORGS_ENDPOINT = "orgs/1/all";
-    private static final String ORG_TYPES_ENDPOINT = "orgs/1/types";
-    private static final String ORG_TYPE_MAP_ENDPOINT = "orgs/1/typemap";
+    private static final String ALL_ORGS_PATH = "orgs/1/all";
+    private static final String ORG_TYPES_PATH = "orgs/1/types";
+    private static final String ORG_TYPE_MAP_PATH = "orgs/1/typemap";
+    private static final String REGISTRATION_PATH = "users/1";
 
     private final Logger logger;
     private final URL restEndpoint;
@@ -89,7 +93,7 @@ public class EmApiGateway {
         Response response = null;
         List<Organization> orgList = Collections.emptyList();
         try {
-            Builder builder = client.target(restEndpoint.toString()).path(ALL_ORGS_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(ALL_ORGS_PATH).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
             if(response.getStatus() == Response.Status.OK.getStatusCode()) {
@@ -111,7 +115,7 @@ public class EmApiGateway {
         Response response = null;
         List<OrganizationType> orgList = Collections.emptyList();
         try {
-            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPES_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPES_PATH).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
             if(response.getStatus() == Response.Status.OK.getStatusCode()) {
@@ -133,7 +137,7 @@ public class EmApiGateway {
         Map<Integer, Set<Integer>> organizationTypeMap = new HashMap<Integer, Set<Integer>>();
         Response response = null;
         try {
-            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPE_MAP_ENDPOINT).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPE_MAP_PATH).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
             if(response.getStatus() == Response.Status.OK.getStatusCode()) {
@@ -148,6 +152,24 @@ public class EmApiGateway {
             tokenUtil.destroyToken();
         }
         return organizationTypeMap;
+    }
+
+    public RegistrationResponse registerUser(String jsonRequest) {
+        CookieTokenUtil tokenUtil = getCookieTokenUtil();
+        Response response = null;
+        RegistrationResponse registrationResponse;
+        try{
+            Builder builder = client.target(restEndpoint.toString()).path(REGISTRATION_PATH).request(MediaType.APPLICATION_JSON_TYPE);
+            builder.header("Content-type", "application/json");
+            tokenUtil.setCookies(builder);
+            response = builder.post(Entity.entity(jsonRequest, MediaType.APPLICATION_JSON_TYPE));
+            String jsonResponse = response.readEntity(String.class);
+            registrationResponse = new RegistrationResponse(response.getStatus(), jsonResponse);
+        } finally {
+            if(response != null) response.close();
+            tokenUtil.destroyToken();
+        }
+        return registrationResponse;
     }
 
     private CookieTokenUtil getCookieTokenUtil() {

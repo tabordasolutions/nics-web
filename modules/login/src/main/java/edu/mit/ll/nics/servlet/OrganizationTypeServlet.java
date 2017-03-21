@@ -52,7 +52,7 @@ public class OrganizationTypeServlet extends HttpServlet {
     }
 
     public OrganizationTypeServlet() {
-        this.context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        this.context = SpringConfiguration.getContext();
     }
 
     @Override
