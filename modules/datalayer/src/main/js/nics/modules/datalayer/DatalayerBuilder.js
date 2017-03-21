@@ -86,15 +86,15 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 			
 			// format used to parse WFS GetFeature responses
 			var wfsFormat = new ol.format.WFS();
-			
+
 			var vectorSource = new ol.source.Vector({
-			  loader: function(extent, resolution, projection) {
-				  var requestUrl = Ext.String.format(
-						  "{0}//{1}/nics/proxy?url={2}?version=1.1.0&request=GetFeature&typename={3}" +
+                         loader: function(extent, resolution, projection) {
+				 var requestUrl = Ext.String.format(
+						  "{0}//{1}/nics/proxy?url={2}?version=1.1.0&service=WFS&request=GetFeature&typename={3}" +
 						  "&srsname=EPSG:3857&bbox={4}{5}",
 					  window.location.protocol,
-					  window.location.host, 
-					  url, layername, extent.join(','), ',EPSG:3857');
+					  window.location.host,
+					  url, layername, extent.join(','), '&EPSG:3857');
 				  
 					if(config.secure){
 						var token = TokenManager.getToken(config.datasourceid);
