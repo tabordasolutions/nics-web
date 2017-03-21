@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import edu.mit.ll.nics.log.LoggerFactory;
 import edu.mit.ll.nics.model.Organization;
 import edu.mit.ll.nics.model.OrganizationType;
 import edu.mit.ll.nics.gateway.responseMappers.*;
@@ -52,29 +53,32 @@ import javax.ws.rs.core.Response;
 @Component
 public class EmApiGateway {
 
-    private static final Logger logger = Logger.getLogger(EmApiGateway.class);
     private static final String ALL_ORGS_ENDPOINT = "orgs/1/all";
     private static final String ORG_TYPES_ENDPOINT = "orgs/1/types";
     private static final String ORG_TYPE_MAP_ENDPOINT = "orgs/1/typemap";
 
-    private URL restEndpoint;
-    private Client client;
-    private OrganizationResponseMapper organizationsResponseMapper;
-    private OrganizationTypeResponseMapper organizationTypeResponseMapper;
-    private OrganizationTypeMapResponseMapper organizationTypeMapResponseMapper;
+    private final Logger logger;
+    private final URL restEndpoint;
+    private final Client client;
+    private final OrganizationResponseMapper organizationsResponseMapper;
+    private final OrganizationTypeResponseMapper organizationTypeResponseMapper;
+    private final OrganizationTypeMapResponseMapper organizationTypeMapResponseMapper;
 
     @Autowired
-    public EmApiGateway(@Qualifier("restEndpoint") URL restEndpoint, @Qualifier("client") Client client) {
+    public EmApiGateway(@Qualifier("restEndpoint") URL restEndpoint, Client client, LoggerFactory loggerFactory) {
         this.restEndpoint = restEndpoint;
         this.client = client;
+        this.logger = loggerFactory.getLogger(EmApiGateway.class);
         this.organizationsResponseMapper = new OrganizationResponseMapper();
         this.organizationTypeResponseMapper = new OrganizationTypeResponseMapper();
         this.organizationTypeMapResponseMapper = new OrganizationTypeMapResponseMapper();
     }
 
-    public EmApiGateway(URL restEndpoint, ApplicationContext context, OrganizationResponseMapper organizationResponseParser, OrganizationTypeResponseMapper organizationTypeResponseMapper,
+    protected EmApiGateway(URL restEndpoint, Client client, LoggerFactory loggerFactory,  OrganizationResponseMapper organizationResponseParser, OrganizationTypeResponseMapper organizationTypeResponseMapper,
                         OrganizationTypeMapResponseMapper organizationTypeMapResponseMapper) {
         this.restEndpoint = restEndpoint;
+        this.client = client;
+        this.logger = loggerFactory.getLogger(EmApiGateway.class);
         this.organizationsResponseMapper = organizationResponseParser;
         this.organizationTypeResponseMapper = organizationTypeResponseMapper;
         this.organizationTypeMapResponseMapper = organizationTypeMapResponseMapper;

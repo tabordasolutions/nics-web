@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.configuration.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,17 +49,15 @@ import java.util.*;
 
 @Component
 public class GetOrganizationsAction {
-    private OrganizationService organizationService;
-    private JsonSerializationService jsonSerializationService;
-    private LoggerFactory loggerFactory;
-    private Logger logger;
+    private final OrganizationService organizationService;
+    private final JsonSerializationService jsonSerializationService;
+    private final Logger logger;
     protected static final String OK = "OK";
 
     @Autowired
     public GetOrganizationsAction(OrganizationService organizationService, JsonSerializationService jsonSerializationService, LoggerFactory loggerFactory) {
         this.organizationService = organizationService;
         this.jsonSerializationService = jsonSerializationService;
-        this.loggerFactory = loggerFactory;
         logger = loggerFactory.getLogger(GetOrganizationsAction.class);
     }
 

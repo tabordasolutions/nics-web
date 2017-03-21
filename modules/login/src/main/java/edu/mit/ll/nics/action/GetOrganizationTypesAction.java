@@ -48,9 +48,9 @@ import java.util.List;
 
 @Component
 public class GetOrganizationTypesAction {
-    private OrganizationService organizationService;
-    private JsonSerializationService jsonSerializationService;
-    private Logger logger;
+    private final OrganizationService organizationService;
+    private final JsonSerializationService jsonSerializationService;
+    private final Logger logger;
 
     @Autowired
     public GetOrganizationTypesAction(LoggerFactory loggerFactory, OrganizationService organizationService, JsonSerializationService jsonSerializationService) {

@@ -40,7 +40,7 @@ import java.util.List;
 
 public class OrganizationTypeResponseMapper {
 
-    public List<OrganizationType> mapResponse(String response) throws IOException, JsonProcessingException {
+    public List<OrganizationType> mapResponse(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(response);
         JsonNode organizationsNode = root.get("orgTypes");

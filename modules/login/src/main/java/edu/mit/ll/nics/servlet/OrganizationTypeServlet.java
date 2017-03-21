@@ -45,7 +45,6 @@ import java.io.IOException;
 @WebServlet("/organizationTypes")
 public class OrganizationTypeServlet extends HttpServlet {
 
-    private static Logger logger = Logger.getLogger(OrganizationTypeServlet.class);
     private final ApplicationContext context;
 
     OrganizationTypeServlet(ApplicationContext context) {

@@ -43,8 +43,8 @@ import java.util.Set;
 @Component
 public class JsonSerializationService {
 
-    private ObjectMapper mapper;
-    private FilterProvider organizationFilterProvider;
+    private final ObjectMapper mapper;
+    private final FilterProvider organizationFilterProvider;
 
     public JsonSerializationService() {
         mapper = new ObjectMapper();

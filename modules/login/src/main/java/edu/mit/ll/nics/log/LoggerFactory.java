@@ -32,16 +32,8 @@ package edu.mit.ll.nics.log;
 import org.apache.log4j.Logger;
 
 public class LoggerFactory {
-    private static LoggerFactory loggerFactory;
 
-    public static LoggerFactory getInstance() {
-        if(loggerFactory == null) {
-            loggerFactory = new LoggerFactory();
-        }
-        return loggerFactory;
-    }
-
-    private LoggerFactory() {
+    public LoggerFactory() {
     }
 
     public Logger getLogger(Class c) {

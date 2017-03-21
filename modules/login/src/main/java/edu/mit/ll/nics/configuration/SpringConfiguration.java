@@ -32,7 +32,6 @@ package edu.mit.ll.nics.configuration;
 import edu.mit.ll.iweb.websocket.Config;
 import edu.mit.ll.nics.log.LoggerFactory;
 import edu.mit.ll.nics.util.CookieTokenUtil;
-import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -53,7 +52,7 @@ public class SpringConfiguration {
 
     @Bean
     public LoggerFactory loggerFactory() {
-        return LoggerFactory.getInstance();
+        return new LoggerFactory();
     }
 
     @Bean(name = "restEndpoint")
