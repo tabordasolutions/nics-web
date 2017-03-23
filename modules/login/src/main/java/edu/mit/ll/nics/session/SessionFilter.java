@@ -60,6 +60,7 @@ public class SessionFilter implements Filter {
 	private static String SESSION_ID = "sessionId";
     private static String ORGANIZATIONS_JSON = "/nics/organizations";
     private static String ORGANIZATION_TYPES_JSON = "/nics/organizationTypes";
+    private static String VERIFY_EMAIL = "/nics/verifyData";
 	
 	private static Logger logger = Logger.getLogger(SessionFilter.class);
 	
@@ -103,7 +104,7 @@ public class SessionFilter implements Filter {
 			
 			chain.doFilter(req,resp);
 		} //Allow everyone to registration related AJAX requests
-        else if(requestURI.startsWith(ORGANIZATIONS_JSON) || requestURI.startsWith(ORGANIZATION_TYPES_JSON)) {
+        else if(requestURI.startsWith(ORGANIZATIONS_JSON) || requestURI.startsWith(ORGANIZATION_TYPES_JSON) || requestURI.startsWith(VERIFY_EMAIL)) {
             req.getAuthType();
             chain.doFilter(req, resp);
         }
