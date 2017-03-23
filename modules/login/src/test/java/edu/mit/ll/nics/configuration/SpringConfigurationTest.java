@@ -29,6 +29,7 @@
  */
 package edu.mit.ll.nics.configuration;
 
+import edu.mit.ll.nics.action.GetEmailVerificationAction;
 import edu.mit.ll.nics.action.GetOrganizationTypesAction;
 import edu.mit.ll.nics.action.GetOrganizationsAction;
 import edu.mit.ll.nics.gateway.EmApiGateway;
@@ -65,6 +66,11 @@ public class SpringConfigurationTest {
     @Test
     public void hasGetOrganizationTypesAction() {
         isInstanceOf(GetOrganizationTypesAction.class, context.getBean(GetOrganizationTypesAction.class));
+    }
+
+    @Test
+    public void hasGetEmailVerificationAction() {
+        isInstanceOf(GetEmailVerificationAction.class, context.getBean(GetEmailVerificationAction.class));
     }
 
     @Test

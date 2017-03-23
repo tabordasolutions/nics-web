@@ -31,7 +31,7 @@ package edu.mit.ll.nics.action;
 
 import edu.mit.ll.nics.gateway.EmApiGateway;
 import edu.mit.ll.nics.log.LoggerFactory;
-import edu.mit.ll.nics.response.RegistrationResponse;
+import edu.mit.ll.nics.response.EmApiResponse;
 import edu.mit.ll.nics.response.Response;
 import edu.mit.ll.nics.service.JsonSerializationService;
 import org.apache.log4j.Logger;
@@ -75,14 +75,14 @@ public class PostRegistrationActionTest {
 
     @Test
     public void verifySuccessfulRegistration() throws IOException {
-        RegistrationResponse registrationResponse = new RegistrationResponse(200, "success");
+        EmApiResponse registrationResponse = new EmApiResponse(200, "success");
         when(emApiGateway.registerUser(jsonRequest)).thenReturn(registrationResponse);
 
         action.handle(request, response);
 
         verify(response).setStatus(registrationResponse.getStatus());
         verify(response).setContentType(MediaType.APPLICATION_JSON);
-        verify(outputStream).write(registrationResponse.getResponse().getBytes());
+        verify(outputStream).write(registrationResponse.getResponseBody().getBytes());
         verify(outputStream).flush();
     }
 
