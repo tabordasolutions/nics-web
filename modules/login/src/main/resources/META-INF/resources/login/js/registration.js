@@ -9,6 +9,7 @@ var registration = function($) {
     var endpointRoot = "";
     var orgtypesService = "organizationTypes";
     var orgsService = "organizations";
+    var registrationService = "register";
     var termsUrl = "login/html/terms.html";
     var termsElement = "#tc_content";
 
@@ -19,6 +20,7 @@ var registration = function($) {
     function setTermsUrl(url) {
         termsUrl = url;
     }
+
     function init() {
 
         if (!bInitialized) {
@@ -310,10 +312,37 @@ var registration = function($) {
         }
         else {
             var postData = createPostData();
-            //TODO: Send the data and handle response.
+            //Send the data and handle response.
+            var registrationUrl = endpointRoot + registrationService;
             console.log(JSON.stringify(postData));
-            $($dlgStep4).toggleClass('hidden');
-            $($dlgConfirmation).toggleClass('hidden');
+
+            $.ajax({
+                method: "POST",
+                url:    registrationUrl,
+                dataType:   "json",
+                contentType: "application/json",
+                data:   JSON.stringify(postData)
+            })
+                .done(function (data) {
+                    console.log("Registration response: " + JSON.stringify(data));
+                    $($dlgStep4).toggleClass('hidden');
+                    $($dlgConfirmation).toggleClass('hidden');
+                })
+                .fail(function (result, errortext, error) {
+                    $($dlgStep4).toggleClass('hidden');
+
+                    errortext = "The server encountered an error while processing your registration request. Please try your request again. " +
+                        "If this error continues, please email <a href=\"mailto:scout@caloes.ca.gov\">scout@caloes.ca.gov</a>";
+                    var errorResponse  = result.status + " - " + errortext;
+                    var responseJson = result.responseJSON;
+                    if (responseJson) {
+                        console.log(responseJson);
+                        errorResponse = responseJson.message;
+                    }
+                    errortext += "<p class=\"errorResponse\"> Error: " + errorResponse + "</p>";
+                    doError(errortext);
+                });
+
             event.preventDefault(); //don't let the form post anywhere.
         }
 
@@ -331,8 +360,8 @@ var registration = function($) {
         var data = {};
         data.organizationTypeId = $('#selectOrgAffiliates').val();
         data.organizationId = $('#selectOrganizations').val();
-        data.firstname = $('#firstname').val();
-        data.lastname = $('#lastname').val();
+        data.firstName = $('#firstname').val();
+        data.lastName = $('#lastname').val();
         data.email = $('#regemail').val();
         data.password = $('#regpassword').val();
         data.phone = $('#phone').val();
@@ -342,7 +371,7 @@ var registration = function($) {
         return data;
     }
     function doError(message) {
-        $('#errormessage').text(message);
+        $('#errormessage').html(message);
         $($dlgError).removeClass('hidden');
     }
 

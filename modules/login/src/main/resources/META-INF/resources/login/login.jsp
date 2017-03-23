@@ -316,7 +316,7 @@
             </div><!-- /.modal-content -->
             <div id="errordialog" class="modal-content hidden">
                 <div class="modal-header text-center">
-                    <h3 class="errorhelp">An error occurred.</h3>
+                    <h3 class="errorcolor">Oops! Something went wrong.</h3>
                 </div>
                 <div class="modal-body">
                     <p id="errormessage" class="errorhelp">{Error Message}</p>

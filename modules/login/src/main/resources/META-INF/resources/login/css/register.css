@@ -30,8 +30,11 @@
 .errorborder {
   border-color: #a94442; }
 
-.errorhelp {
+.errorcolor {
   color: #a94442; }
+
+.errorResponse {
+  margin-top: 10px; }
 
 .confirmValue {
   color: steelblue; }

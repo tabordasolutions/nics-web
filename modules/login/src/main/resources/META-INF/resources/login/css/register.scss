@@ -46,8 +46,12 @@ $errorcolor:#a94442;
     border-color: $errorcolor;
 }
 
-.errorhelp {
+.errorcolor {
     color:$errorcolor;
+}
+
+.errorResponse {
+    margin-top: 10px;
 }
 .confirmValue {
     color: steelblue;
