@@ -29,48 +29,43 @@
  */
 package edu.mit.ll.nics.action;
 
-import edu.mit.ll.nics.model.Organization;
-import edu.mit.ll.nics.response.Response;
-import edu.mit.ll.nics.response.OrganizationsResponse;
-import edu.mit.ll.nics.service.JsonSerializationService;
-import edu.mit.ll.nics.service.OrganizationService;
+import edu.mit.ll.nics.gateway.EmApiGateway;
 import edu.mit.ll.nics.log.LoggerFactory;
+import edu.mit.ll.nics.response.EmApiResponse;
+import edu.mit.ll.nics.response.Response;
+import edu.mit.ll.nics.service.JsonSerializationService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
 
 @Component
-public class GetOrganizationsAction extends Action {
-    private final OrganizationService organizationService;
-    private final JsonSerializationService jsonSerializationService;
-    private final Logger logger;
-    protected static final String OK = "OK";
+public class GetEmailVerificationAction extends Action {
+
+    protected final static String FAILURE_MESSAGE = "Unable to verify email. Please try again later.";
+    private EmApiGateway emApiGateway;
+    private JsonSerializationService jsonSerializationService;
+    private Logger logger;
 
     @Autowired
-    public GetOrganizationsAction(OrganizationService organizationService, JsonSerializationService jsonSerializationService, LoggerFactory loggerFactory) {
-        this.organizationService = organizationService;
+    public GetEmailVerificationAction(EmApiGateway emApiGateway, JsonSerializationService jsonSerializationService, LoggerFactory loggerFactory) {
+        this.emApiGateway = emApiGateway;
         this.jsonSerializationService = jsonSerializationService;
-        logger = loggerFactory.getLogger(GetOrganizationsAction.class);
+        this.logger = loggerFactory.getLogger(GetEmailVerificationAction.class);
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String responseBody;
+        String email = request.getParameter("email");
         try {
-            List<Organization> organizations = organizationService.getOrganizations();
-            OrganizationsResponse organizationsResponse = new OrganizationsResponse(HttpServletResponse.SC_OK, OK, organizations);
-            responseBody = jsonSerializationService.serializeOrganizations(organizationsResponse);
-            this.writeJsonResponse(response, responseBody, HttpServletResponse.SC_OK);
+            EmApiResponse apiResponse = emApiGateway.verifyEmail(email);
+            this.writeJsonResponse(response, apiResponse.getResponseBody(), apiResponse.getStatus());
         } catch(Exception e) {
-            logger.error("Error retrieving organization data ", e);
-            Response errorResponse = new Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to retrieve Organizations: " + e.getMessage());
-            responseBody = jsonSerializationService.serialize(errorResponse);
-            this.writeJsonResponse(response, responseBody, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            logger.error("Error validating email: " + email, e);
+            String errorResponse = jsonSerializationService.serialize(new Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, FAILURE_MESSAGE));
+            this.writeJsonResponse(response, errorResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

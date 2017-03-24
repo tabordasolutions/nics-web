@@ -31,23 +31,19 @@ package edu.mit.ll.nics.action;
 
 import edu.mit.ll.nics.gateway.EmApiGateway;
 import edu.mit.ll.nics.log.LoggerFactory;
-import edu.mit.ll.nics.response.RegistrationResponse;
+import edu.mit.ll.nics.response.EmApiResponse;
 import edu.mit.ll.nics.response.Response;
 import edu.mit.ll.nics.service.JsonSerializationService;
 import org.apache.log4j.Logger;
-import org.apache.poi.util.IOUtils;
-import org.apache.xmlbeans.impl.common.IOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 import java.io.*;
-import java.util.Map;
 
 @Component
-public class PostRegistrationAction {
+public class PostRegistrationAction extends Action {
     private final EmApiGateway emApiGateway;
     private final JsonSerializationService jsonSerializationService;
     private final Logger logger;
@@ -64,16 +60,15 @@ public class PostRegistrationAction {
     public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String jsonRequest = null;
         String jsonResponse;
-        RegistrationResponse registrationResponse;
+        EmApiResponse registrationResponse;
         try{
             jsonRequest = this.readJson(request);
             registrationResponse = emApiGateway.registerUser(jsonRequest);
-            this.writeResponse(response, registrationResponse.getResponse(), registrationResponse.getStatus());
+            this.writeJsonResponse(response, registrationResponse.getResponseBody(), registrationResponse.getStatus());
         } catch(Exception e) {
             logger.error("Failed to register account with data: " + jsonRequest, e);
-            Response errorResponse = new Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, FAILURE_MESSAGE);
-            jsonResponse = jsonSerializationService.serialize(errorResponse);
-            this.writeResponse(response, jsonResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            jsonResponse = jsonSerializationService.serialize(new Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, FAILURE_MESSAGE));
+            this.writeJsonResponse(response, jsonResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -85,13 +80,5 @@ public class PostRegistrationAction {
             jsonBuffer.append(currentLine);
         }
         return jsonBuffer.toString();
-    }
-
-    private void writeResponse(HttpServletResponse response, String jsonResponse, int status) throws IOException {
-        response.setStatus(status);
-        response.setContentType(MediaType.APPLICATION_JSON);
-        OutputStream outputStream = response.getOutputStream();
-        outputStream.write(jsonResponse.getBytes());
-        outputStream.flush();
     }
 }

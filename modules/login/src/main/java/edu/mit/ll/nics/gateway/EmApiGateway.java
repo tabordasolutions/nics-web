@@ -38,7 +38,7 @@ import edu.mit.ll.nics.log.LoggerFactory;
 import edu.mit.ll.nics.model.Organization;
 import edu.mit.ll.nics.model.OrganizationType;
 import edu.mit.ll.nics.gateway.responseMappers.*;
-import edu.mit.ll.nics.response.RegistrationResponse;
+import edu.mit.ll.nics.response.EmApiResponse;
 import edu.mit.ll.nics.util.CookieTokenUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +60,7 @@ public class EmApiGateway {
     private static final String ORG_TYPES_PATH = "orgs/1/types";
     private static final String ORG_TYPE_MAP_PATH = "orgs/1/typemap";
     private static final String REGISTRATION_PATH = "users/1";
+    private static final String VERIFY_EMAIL_PATH = "users/1/verifyEmail/%s";
 
     private final Logger logger;
     private final URL restEndpoint;
@@ -154,22 +155,40 @@ public class EmApiGateway {
         return organizationTypeMap;
     }
 
-    public RegistrationResponse registerUser(String jsonRequest) {
+    public EmApiResponse registerUser(String jsonRequest) {
         CookieTokenUtil tokenUtil = getCookieTokenUtil();
         Response response = null;
-        RegistrationResponse registrationResponse;
+        EmApiResponse registrationResponse;
         try{
             Builder builder = client.target(restEndpoint.toString()).path(REGISTRATION_PATH).request(MediaType.APPLICATION_JSON_TYPE);
             builder.header("Content-type", "application/json");
             tokenUtil.setCookies(builder);
             response = builder.post(Entity.entity(jsonRequest, MediaType.APPLICATION_JSON_TYPE));
             String jsonResponse = response.readEntity(String.class);
-            registrationResponse = new RegistrationResponse(response.getStatus(), jsonResponse);
+            registrationResponse = new EmApiResponse(response.getStatus(), jsonResponse);
         } finally {
             if(response != null) response.close();
             tokenUtil.destroyToken();
         }
         return registrationResponse;
+    }
+
+    public EmApiResponse verifyEmail(String email) {
+        CookieTokenUtil tokenUtil = getCookieTokenUtil();
+        Response response = null;
+        EmApiResponse apiResponse;
+        try{
+            String path = String.format(VERIFY_EMAIL_PATH, email);
+            Builder builder = client.target(restEndpoint.toString()).path(path).request(MediaType.APPLICATION_JSON_TYPE);
+            tokenUtil.setCookies(builder);
+            response = builder.get();
+            String jsonResponse = response.readEntity(String.class);
+            apiResponse = new EmApiResponse(response.getStatus(), jsonResponse);
+        } finally {
+            if(response != null) response.close();
+            tokenUtil.destroyToken();
+        }
+        return apiResponse;
     }
 
     private CookieTokenUtil getCookieTokenUtil() {

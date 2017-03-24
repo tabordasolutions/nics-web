@@ -38,22 +38,21 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.imageio.IIOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.doThrow;
+public class GetEmailVerificationActionTest {
 
-public class PostRegistrationActionTest {
-    private PostRegistrationAction action;
+    private GetEmailVerificationAction action;
     private EmApiGateway emApiGateway = mock(EmApiGateway.class);
     private JsonSerializationService jsonSerializationService = mock(JsonSerializationService.class);
     private LoggerFactory loggerFactory = mock(LoggerFactory.class);
@@ -61,25 +60,22 @@ public class PostRegistrationActionTest {
     private HttpServletRequest request = mock(HttpServletRequest.class);
     private HttpServletResponse response = mock(HttpServletResponse.class);
     private ServletOutputStream outputStream = mock(ServletOutputStream.class);
-
-    private String jsonRequest = "test json request";
-    private BufferedReader requestReader = new BufferedReader(new StringReader(jsonRequest));
+    private String email = "email@sometimes.com";
 
     @Before
     public void setup() throws IOException {
-        when(loggerFactory.getLogger(PostRegistrationAction.class)).thenReturn(logger);
-        when(request.getReader()).thenReturn(requestReader);
+        when(loggerFactory.getLogger(GetEmailVerificationAction.class)).thenReturn(logger);
         when(response.getOutputStream()).thenReturn(outputStream);
-        action = new PostRegistrationAction(emApiGateway, jsonSerializationService, loggerFactory);
+        when(request.getParameter("email")).thenReturn(email);
+        action = new GetEmailVerificationAction(emApiGateway, jsonSerializationService, loggerFactory);
     }
 
     @Test
-    public void verifySuccessfulRegistration() throws IOException {
+    public void successfullyVerifiesEmailAddress() throws IOException {
         EmApiResponse registrationResponse = new EmApiResponse(200, "success");
-        when(emApiGateway.registerUser(jsonRequest)).thenReturn(registrationResponse);
+        when(emApiGateway.verifyEmail(email)).thenReturn(registrationResponse);
 
         action.handle(request, response);
-
         verify(response).setStatus(registrationResponse.getStatus());
         verify(response).setContentType(MediaType.APPLICATION_JSON);
         verify(outputStream).write(registrationResponse.getResponseBody().getBytes());
@@ -87,14 +83,13 @@ public class PostRegistrationActionTest {
     }
 
     @Test
-    public void verifyRegistrationFailureReturnsError() throws IOException {
+    public void failureToVerifyEmailAddressSendsErrorResponse() throws IOException {
         Response errorResponse = new Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, action.FAILURE_MESSAGE);
         String jsonErrorResponse = "error";
-        doThrow(new RuntimeException("Test exception")).when(emApiGateway).registerUser(jsonRequest);
+        doThrow(new RuntimeException("Test exception")).when(emApiGateway).verifyEmail(email);
         when(jsonSerializationService.serialize(errorResponse)).thenReturn(jsonErrorResponse);
 
         action.handle(request, response);
-
         verify(response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         verify(response).setContentType(MediaType.APPLICATION_JSON);
         verify(outputStream).write(jsonErrorResponse.getBytes());

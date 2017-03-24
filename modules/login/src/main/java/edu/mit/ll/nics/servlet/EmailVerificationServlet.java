@@ -27,22 +27,38 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package edu.mit.ll.nics.response;
+package edu.mit.ll.nics.servlet;
 
-public class RegistrationResponse {
-    private int status;
-    private String response;
+import edu.mit.ll.nics.action.GetEmailVerificationAction;
+import edu.mit.ll.nics.configuration.SpringConfiguration;
+import edu.mit.ll.nics.gateway.EmApiGateway;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-    public RegistrationResponse(int status, String response) {
-        this.status = status;
-        this.response = response;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/verifyData")
+public class EmailVerificationServlet extends HttpServlet {
+
+    private final ApplicationContext context;
+
+    EmailVerificationServlet(ApplicationContext context) {
+        this.context = context;
     }
 
-    public int getStatus() {
-        return this.status;
+    public EmailVerificationServlet() {
+        this.context = SpringConfiguration.getContext();
     }
 
-    public String getResponse() {
-        return this.response;
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        context.getBean(GetEmailVerificationAction.class).handle(request, response);
     }
 }
