@@ -32,13 +32,13 @@
     <link rel="stylesheet" href="login/css/register.css">
 
     <script src="login/js/jquery-3.1.1.min.js"></script>
-    <script src="login/js/bootstrap.js"></script>
+    <script src="login/js/bootstrap.min.js"></script>
     <script src="login/js/bootstrap-select.min.js"></script>
     <script src="login/js/validator.min.js"></script>
     <script src="login/js/jquery.maskedinput.min.js"></script>
     <script src="login/js/moment.min.js"></script>
-    <script src="login/js/registration.js"></script>
-    <script src="login/js/login.js"></script>
+    <script src="login/js/registration.min.js"></script>
+    <script src="login/js/login.min.js"></script>
 </head>
 <body>
 
@@ -168,11 +168,13 @@
                                 <div class="form-group">
                                     <div class="input-group" style="width:100%">
                                         <span class="input-group-addon glyphicon glyphicon-envelope" style="top: 0"></span>
-                                        <input type="email" id="regemail"
+                                        <input type="email" id="regemail" name="email"
                                                class="form-control requiredtext"
                                                placeholder="Work email"
-                                               data-error="Invalid Email Address"
-                                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$" required>
+                                               data-pattern-error="Invalid Email Address"
+                                               data-remote-error="The email is already registered"
+                                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
+                                               data-remote="http://nicsweb:8082/nics/verifyData" required>
 
                                     </div>
                                     <div class="help-block with-errors"></div>
@@ -279,7 +281,7 @@
                                     </label>
                                 </div>
                             </div>
-                            <div id="tchelp" class="errorhelp hidden">*Please read and accept the license agreement.</div>
+                            <div id="tchelp" class="errorcolor hidden">*Please scroll down, read, and accept the license agreement</div>
                             <div id="confirmationVals" style="display: table;margin: 20px auto">
                                 <dl class="dl-horizontal">
                                     <dt>Organization Type:</dt><dd id="verifyorgtype" class="confirmValue">{Confirm Organization Type}</dd>
@@ -330,7 +332,6 @@
 
 </div>
 
-
 <script type="text/javascript">
     $(function() {
 
@@ -355,8 +356,6 @@
         loginpage.setWorkspace();
         loginpage.setAnnouncements();
 
-        //registration.setEndPointRoot("http://nicsweb:8082/nics/"); //Debug setting.
-        //registration.setTermsUrl("terms.html")
 
         $('#modalRegistration').on('show.bs.modal', function () {
             registration.init();

@@ -46,13 +46,19 @@ var registration = function($) {
             $selectImtUSAR = $('#selectUSAR');
 
             $($formStep1).validator().on('submit', doStep2);
+
             $($formStep2).validator().on('submit', doStep3);
+            //Listen for field validation events on Form2 in order to detect a valid email address
+            // was entered and send to the verify service.
+            //$($formStep2).validator().on('validated.bs.validator', form2OnValidateField);
+
             $($formStep3).validator().on('submit', doStep4);
             $($formStep4).validator().on('submit', doRegistration);
             $($formStep1).on('reset', onResetForm1);
             $($formStep2).on('reset', onResetForm2);
             $($formStep3).on('reset', onResetForm3);
             $($formStep4).on('reset', onResetForm4);
+
 
             //Load the T&C content externally.
             $('#tc_content').load(termsUrl + " " + termsElement);
