@@ -27,6 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+require.config({
+    urlArgs: "v=v6.2.1a"
+});
 require([
     "iweb/CoreModule", "iweb/modules/MapModule",
     "iweb/modules/core-view/View", "iweb/modules/DrawMenuModule", "iweb/modules/GeocodeModule",
@@ -68,12 +71,12 @@ require([
 
 	        //Load each module
 	        function loadModules() {
-	        	
+
 	        	//Add Title
 				Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>" +
 					((Core.Config.getProperty("main.site.label") || '') ? Core.Config.getProperty("main.site.label") :
 					"Situation Awareness &amp; Collaboration Tool" ) + "</b>"}]);
-	        	
+
 	        	Core.Mediator.getInstance().setCookies(
 	        			Core.Config.getProperty("endpoint.rest"), ["openam", "iplanet"]);
 
@@ -112,7 +115,7 @@ require([
 
                 // Add email report to Tools Menu
                 FeedbackReportModule.load();
-                
+
                 MapSyncLocation.load();
 	        }
 
