@@ -56,6 +56,7 @@ public class SessionFilter implements Filter {
 	private static String FORGOTPASSWORD_PAGE = "/nics/forgotpassword";
 	private static String REINIT_PARAM = "reinit";
 	private static String HOME_PAGE = "home.html";
+	private static String MAINAPP_JS = "main.js";
 	private static String USERNAME = "username";
 	private static String SESSION_ID = "sessionId";
 	
@@ -80,8 +81,9 @@ public class SessionFilter implements Filter {
 		String atmosphereTransport = req.getParameter("X-Atmosphere-Transport");
 		
 		//Do not cache the home page to allow the filter to redirect if the user 
-		//is not validated
-		if(requestURI.endsWith(HOME_PAGE)){
+		//is not validated.
+		//Also do not cache the main app js to allow cache busting to work.
+		if(requestURI.endsWith(HOME_PAGE) || requestURI.endsWith(MAINAPP_JS)){
 			resp.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0");
 	        resp.setHeader("Pragma", "no-cache");
 		}
