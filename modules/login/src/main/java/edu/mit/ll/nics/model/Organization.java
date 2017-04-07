@@ -173,10 +173,13 @@ public class Organization {
     }
 
     public boolean equals(Object o) {
-        return EqualsBuilder.reflectionEquals(this, o);
+        if(! (o instanceof Organization))
+            return false;
+        Organization otherOrganization = (Organization) o;
+        return this.getId() == otherOrganization.getId();
     }
 
     public int hashCode() {
-        return this.getId();
+        return Integer.hashCode(this.getId());
     }
 }

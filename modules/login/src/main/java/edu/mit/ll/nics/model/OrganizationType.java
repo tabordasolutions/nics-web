@@ -91,10 +91,13 @@ public class OrganizationType {
     }
 
     public boolean equals(Object o) {
-        return EqualsBuilder.reflectionEquals(this, o);
+        if(! (o instanceof OrganizationType))
+            return false;
+        OrganizationType otherOrganizationType = (OrganizationType) o;
+        return this.getId() == otherOrganizationType.getId();
     }
 
     public int hashCode() {
-        return this.getId();
+        return Integer.hashCode(this.getId());
     }
 }

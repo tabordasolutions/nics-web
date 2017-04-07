@@ -90,69 +90,42 @@ public class EmApiGateway {
     }
 
     public List<Organization> getOrganizations() throws IOException {
-        CookieTokenUtil tokenUtil = getCookieTokenUtil();
-        Response response = null;
-        List<Organization> orgList = Collections.emptyList();
-        try {
-            Builder builder = client.target(restEndpoint.toString()).path(ALL_ORGS_PATH).request(MediaType.APPLICATION_JSON_TYPE);
-            tokenUtil.setCookies(builder);
-            response = builder.get();
-            if(response.getStatus() == Response.Status.OK.getStatusCode()) {
-                String entity = response.readEntity(String.class);
-                orgList = organizationsResponseMapper.mapResponse(entity);
-            } else {
-                Map<String, Object> entity = response.readEntity(new GenericType<Map<String, Object>>(){});
-                throw new RuntimeException((String)entity.get("message"));
-            }
-        } finally {
-            if(response!= null) response.close();
-            tokenUtil.destroyToken();
-        }
-        return orgList;
+        String responseEntity = this.getRequest(ALL_ORGS_PATH);
+        List<Organization> organizations = organizationsResponseMapper.mapResponse(responseEntity);
+        return organizations;
     }
 
     public List<OrganizationType> getOrganizationTypes() throws IOException {
-        CookieTokenUtil tokenUtil = getCookieTokenUtil();
-        Response response = null;
-        List<OrganizationType> orgList = Collections.emptyList();
-        try {
-            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPES_PATH).request(MediaType.APPLICATION_JSON_TYPE);
-            tokenUtil.setCookies(builder);
-            response = builder.get();
-            if(response.getStatus() == Response.Status.OK.getStatusCode()) {
-                String entity = response.readEntity(String.class);
-                orgList = organizationTypeResponseMapper.mapResponse(entity);
-            } else {
-                Map<String, Object> entity = response.readEntity(new GenericType<Map<String, Object>>(){});
-                throw new RuntimeException((String)entity.get("message"));
-            }
-        } finally {
-            if(response!= null) response.close();
-            tokenUtil.destroyToken();
-        }
-        return orgList;
+        String responseEntity = this.getRequest(ORG_TYPES_PATH);
+        List<OrganizationType> organizationTypes = organizationTypeResponseMapper.mapResponse(responseEntity);
+        return organizationTypes;
     }
 
     public Map<Integer, Set<Integer>> getOrganizationTypeMap() throws IOException {
+        String responseEntity = this.getRequest(ORG_TYPE_MAP_PATH);
+        Map<Integer, Set<Integer>> organizationTypeMap = organizationTypeMapResponseMapper.mapResponse(responseEntity);
+        return organizationTypeMap;
+    }
+
+    private String getRequest(String path) {
         CookieTokenUtil tokenUtil = getCookieTokenUtil();
-        Map<Integer, Set<Integer>> organizationTypeMap = new HashMap<Integer, Set<Integer>>();
         Response response = null;
+        String entity;
         try {
-            Builder builder = client.target(restEndpoint.toString()).path(ORG_TYPE_MAP_PATH).request(MediaType.APPLICATION_JSON_TYPE);
+            Builder builder = client.target(restEndpoint.toString()).path(path).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();
             if(response.getStatus() == Response.Status.OK.getStatusCode()) {
-                String entity = response.readEntity(String.class);
-                organizationTypeMap = organizationTypeMapResponseMapper.mapResponse(entity);
+                entity = response.readEntity(String.class);
             } else {
-                Map<String, Object> entity = response.readEntity(new GenericType<Map<String, Object>>(){});
-                throw new RuntimeException((String)entity.get("message"));
+                Map<String, Object> mapEntity = response.readEntity(new GenericType<Map<String, Object>>(){});
+                throw new RuntimeException((String)mapEntity.get("message"));
             }
         } finally {
             if(response!= null) response.close();
             tokenUtil.destroyToken();
         }
-        return organizationTypeMap;
+        return entity;
     }
 
     public EmApiResponse registerUser(String jsonRequest) {
