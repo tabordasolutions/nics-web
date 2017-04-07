@@ -92,7 +92,7 @@
                     </div>
                     <div class="panel-body">
                         <dl id="announcements" class="dl-horizontal">
-                            <dd>There are currently no announcements.</dd>
+                            <dd style="margin-left: auto;margin-right: auto" class="text-center">There are currently no announcements.</dd>
                         </dl>
                     </div>
                 </div>
