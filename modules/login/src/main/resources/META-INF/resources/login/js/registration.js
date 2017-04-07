@@ -1,9 +1,9 @@
 var registration = function($) {
     var orgLookupData = {};
-    var bInitialized = false;
+    var initialized = false;
 
     var $formStep1, $formStep2,$formStep3,$formStep4; //Form selector cache.
-    var $dlgStep1, $dlgStep2,$dlgStep3,$dlgStep4,$dlgConfirmation,$dlgError; //Dialog selector cache.
+    var $dialogStep1, $dialogStep2,$dialogStep3,$dialogStep4,$dialogConfirmation,$dialogError; //Dialog selector cache.
     var $selectOrgType, $selectOrg, $selectImtUSAR, $selectImtFed, $selectImtCDF, $selectImtLocal; //Select selector cache.
 
     var endpointRoot = "";
@@ -23,19 +23,19 @@ var registration = function($) {
 
     function init() {
 
-        if (!bInitialized) {
+        if (!initialized) {
             //Selector cache
             $formStep1 = $('#formStep1');
             $formStep2 = $('#formStep2');
             $formStep3 = $('#formStep3');
             $formStep4 = $('#formStep4');
 
-            $dlgStep1 = $('#step1');
-            $dlgStep2 = $('#step2');
-            $dlgStep3 = $('#step3');
-            $dlgStep4 = $('#step4');
-            $dlgConfirmation = $('#regConfirmation');
-            $dlgError = $('#errordialog');
+            $dialogStep1 = $('#step1');
+            $dialogStep2 = $('#step2');
+            $dialogStep3 = $('#step3');
+            $dialogStep4 = $('#step4');
+            $dialogConfirmation = $('#regConfirmation');
+            $dialogError = $('#errordialog');
 
             $selectOrgType = $('#selectOrgAffiliates');
             $selectOrg = $('#selectOrganizations');
@@ -48,9 +48,6 @@ var registration = function($) {
             $($formStep1).validator().on('submit', doStep2);
 
             $($formStep2).validator().on('submit', doStep3);
-            //Listen for field validation events on Form2 in order to detect a valid email address
-            // was entered and send to the verify service.
-            //$($formStep2).validator().on('validated.bs.validator', form2OnValidateField);
 
             $($formStep3).validator().on('submit', doStep4);
             $($formStep4).validator().on('submit', doRegistration);
@@ -65,7 +62,7 @@ var registration = function($) {
             $("#phone").mask("(999) 999-9999");
 
             populateOrgData();
-            bInitialized = true;
+            initialized = true;
         }
 
 
@@ -76,12 +73,12 @@ var registration = function($) {
         $($formStep2)[0].reset();
         $($formStep3)[0].reset();
         $($formStep4)[0].reset();
-        $($dlgStep1).removeClass('hidden');
-        $($dlgStep2).addClass('hidden');
-        $($dlgStep3).addClass('hidden');
-        $($dlgStep4).addClass('hidden');
-        $($dlgConfirmation).addClass('hidden');
-        $($dlgError).addClass('hidden');
+        $($dialogStep1).removeClass('hidden');
+        $($dialogStep2).addClass('hidden');
+        $($dialogStep3).addClass('hidden');
+        $($dialogStep4).addClass('hidden');
+        $($dialogConfirmation).addClass('hidden');
+        $($dialogError).addClass('hidden');
 
     }
     function onResetForm1() {
@@ -144,7 +141,7 @@ var registration = function($) {
             .fail(function(result, errortext, error) {
                 console.log(errortext);
                 console.log(error);
-                $($dlgStep1).addClass('hidden');
+                $($dialogStep1).addClass('hidden');
                 doError('Failed to get Organization Data from server.');
                 return false;
             });
@@ -176,7 +173,6 @@ var registration = function($) {
         $('#btnNext1').prop('disabled', false);
     }
     function filterOrgs(OrgAffiliateId) {
-        // console.log('Org Affilated Id: ' + OrgAffiliateId);
         //Get the organizationIds for the selected Affiliate.
         var organizationIds = orgLookupData.organizationTypes[OrgAffiliateId].organizationIds;
         // console.log('OrgType id(s): ' + JSON.stringify(organizationIds) );
@@ -244,19 +240,19 @@ var registration = function($) {
 
     function doStep1() {
         //No need to handle an event here since doStep1 is only called from step2 '<< Previous'
-        $($dlgStep2).toggleClass('hidden');
-        $($dlgStep1).toggleClass('hidden');
+        $($dialogStep2).toggleClass('hidden');
+        $($dialogStep1).toggleClass('hidden');
     }
 
 
     function doStep2(event) {
         if (event == null || event.target.id == 'formStep3') {
-            $($dlgStep3).toggleClass('hidden');
-            $($dlgStep2).toggleClass('hidden');
+            $($dialogStep3).toggleClass('hidden');
+            $($dialogStep2).toggleClass('hidden');
         }
         else {
-            $($dlgStep1).toggleClass('hidden');
-            $($dlgStep2).toggleClass('hidden');
+            $($dialogStep1).toggleClass('hidden');
+            $($dialogStep2).toggleClass('hidden');
             $('#firstname').focus();
             event.preventDefault();
         }
@@ -272,15 +268,15 @@ var registration = function($) {
 
         if (event == null || event.target.id == 'formStep4') {
             //Then we came from step 4. Act accordingly.
-            $($dlgStep4).toggleClass('hidden');
-            $($dlgStep3).toggleClass('hidden');
+            $($dialogStep4).toggleClass('hidden');
+            $($dialogStep3).toggleClass('hidden');
         }
         else {
             //We came from step2. Check validation, then decide what to do.
             if (!event.isDefaultPrevented()) {
                 //The form is validated.
-                $($dlgStep2).toggleClass('hidden');
-                $($dlgStep3).toggleClass('hidden');
+                $($dialogStep2).toggleClass('hidden');
+                $($dialogStep3).toggleClass('hidden');
                 event.preventDefault(); //don't let the form post anywhere.
             }
             //Otherwise don't do anything, the user is left on the step2 dialog with a validation error.
@@ -290,8 +286,8 @@ var registration = function($) {
 
     }
     function doStep4(event) {
-        $($dlgStep3).toggleClass('hidden');
-        $($dlgStep4).toggleClass('hidden');
+        $($dialogStep3).toggleClass('hidden');
+        $($dialogStep4).toggleClass('hidden');
 
         $('#verifyorgname').text($('option:selected', $selectOrg).text());
         $('#verifyorgtype').text($('option:selected', $selectOrgType).text());
@@ -331,11 +327,11 @@ var registration = function($) {
             })
                 .done(function (data) {
                     console.log("Registration response: " + JSON.stringify(data));
-                    $($dlgStep4).toggleClass('hidden');
-                    $($dlgConfirmation).toggleClass('hidden');
+                    $($dialogStep4).toggleClass('hidden');
+                    $($dialogConfirmation).toggleClass('hidden');
                 })
                 .fail(function (result, errortext, error) {
-                    $($dlgStep4).toggleClass('hidden');
+                    $($dialogStep4).toggleClass('hidden');
 
                     errortext = "The server encountered an error while processing your registration request. Please try your request again. " +
                         "If this error continues, please email <a href=\"mailto:scout@caloes.ca.gov\">scout@caloes.ca.gov</a>";
@@ -378,7 +374,7 @@ var registration = function($) {
     }
     function doError(message) {
         $('#errormessage').html(message);
-        $($dlgError).removeClass('hidden');
+        $($dialogError).removeClass('hidden');
     }
 
     return {

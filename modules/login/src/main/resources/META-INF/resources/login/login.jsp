@@ -174,15 +174,13 @@
                                                data-pattern-error="Invalid Email Address"
                                                data-remote-error="The email is already registered"
                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
-                                               data-remote="http://nicsweb:8082/nics/verifyData" required>
+                                               data-remote="verifyData" required>
 
                                     </div>
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <!-- New pattern: pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%_!-])[a-zA-Z0-9@#$%_!-]{8,20}$" -->
-                                <!-- Pattern Used in em-api: pattern="((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!_-]).{8,20})" -->
                                 <div class="form-group">
                                     <div class="input-group" style="width:100%">
                                         <span class="input-group-addon glyphicon glyphicon-lock" style="top: 0"></span>
