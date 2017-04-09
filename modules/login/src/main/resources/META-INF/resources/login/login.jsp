@@ -130,7 +130,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button  id="btnNext1" type="submit" class="btn btn-success" disabled>Next >></button>
+                        <button  id="btnNext1" type="submit" class="btn btn-success" disabled>Next &gt;&gt;</button>
                     </div>
                 </form>
             </div><!-- /.modal-content -->
@@ -216,9 +216,9 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button id="btnPrev2" type="button" class="btn btn-primary" onclick="registration.doStep1()"><< Previous</button>
+                        <button id="btnPrev2" type="button" class="btn btn-primary" onclick="registration.doStep1()">&lt;&lt; Previous</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button id="btnNext2" type="submit" class="btn btn-success">Next >>
+                        <button id="btnNext2" type="submit" class="btn btn-success">Next &gt;&gt;
                         </button>
                     </div>
                 </form>
@@ -249,9 +249,9 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button  id="btnPrev3" type="button" class="btn btn-primary" onclick="registration.doStep2()"><< Previous</button>
+                        <button  id="btnPrev3" type="button" class="btn btn-primary" onclick="registration.doStep2()">&lt;&lt; Previous</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button  id="btnNext3" type="submit" class="btn btn-success">Next >></button>
+                        <button  id="btnNext3" type="submit" class="btn btn-success">Next &gt;&gt;</button>
                     </div>
                 </form>
             </div><!-- /.modal-content -->
@@ -292,7 +292,7 @@
                     </div>
                     <div class="modal-footer">
 
-                        <button id="btnPrev4" type="button" class="btn btn-primary" onclick="registration.doStep3()"><< Previous</button>
+                        <button id="btnPrev4" type="button" class="btn btn-primary" onclick="registration.doStep3()">&lt;&lt; Previous</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <button id="btnNext4" type="submit" class="btn btn-success">Submit Registration
                             Request
