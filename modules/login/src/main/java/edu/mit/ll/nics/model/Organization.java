@@ -180,6 +180,6 @@ public class Organization {
     }
 
     public int hashCode() {
-        return Integer.toString(this.getId()).toString().hashCode();
+        return Integer.toString(this.getId()).hashCode();
     }
 }
