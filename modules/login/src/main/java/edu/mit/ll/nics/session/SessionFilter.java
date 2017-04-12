@@ -59,6 +59,9 @@ public class SessionFilter implements Filter {
 	private static String MAINAPP_JS = "main.js";
 	private static String USERNAME = "username";
 	private static String SESSION_ID = "sessionId";
+    private static String ORGANIZATIONS_JSON = "/nics/organizations";
+    private static String ORGANIZATION_TYPES_JSON = "/nics/organizationTypes";
+    private static String VERIFY_EMAIL = "/nics/verifyData";
 	
 	private static Logger logger = Logger.getLogger(SessionFilter.class);
 	
@@ -102,8 +105,12 @@ public class SessionFilter implements Filter {
 			SessionHolder.addSession(session.getId(), data);
 			
 			chain.doFilter(req,resp);
-		}
-		// Allow everyone to resetpassword
+		} //Allow everyone to registration related AJAX requests
+        else if(requestURI.startsWith(ORGANIZATIONS_JSON) || requestURI.startsWith(ORGANIZATION_TYPES_JSON) || requestURI.startsWith(VERIFY_EMAIL)) {
+            req.getAuthType();
+            chain.doFilter(req, resp);
+        }
+        // Allow everyone to resetpassword
 		else if (requestURI.startsWith(FORGOTPASSWORD_PAGE)){
 			req.getSession();
 			chain.doFilter(req,resp);
@@ -112,7 +119,7 @@ public class SessionFilter implements Filter {
 		else if(isValidRequest(req)){
 			req.getSession();
 			chain.doFilter(request, response);
-		}
+        }
 		//Redirect to the login page
 		else{
 			redirect(resp);
