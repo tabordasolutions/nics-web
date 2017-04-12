@@ -98,6 +98,6 @@ public class OrganizationType {
     }
 
     public int hashCode() {
-        return Integer.hashCode(this.getId());
+        return Integer.toString(this.getId()).toString().hashCode();
     }
 }
