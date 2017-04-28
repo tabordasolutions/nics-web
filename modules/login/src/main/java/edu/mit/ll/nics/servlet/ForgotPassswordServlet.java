@@ -51,24 +51,16 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.log4j.Logger;
 
-import com.iplanet.services.cdm.DefaultClientTypesManager;
-import com.sun.identity.liberty.ws.authnsvc.jaxb.StatusType;
-
-import edu.mit.ll.iweb.message.ResponseMessage;
-import edu.mit.ll.iweb.session.SessionHolder;
 import edu.mit.ll.iweb.websocket.Config;
-import edu.mit.ll.nics.sso.util.SSOUtil;
 import edu.mit.ll.nics.util.CookieTokenUtil;
 
 
@@ -79,28 +71,22 @@ import edu.mit.ll.nics.util.CookieTokenUtil;
 @WebServlet("/forgotpassword")
 public class ForgotPassswordServlet extends HttpServlet implements Servlet
 {
-    private static Logger logger = Logger.getLogger(ForgotPassswordServlet.class);
-
     public static final String USERNAME = "username";
     public static final String WORKSPACE_ID = "workspaceId";
     public static final String EMAIL = "email";
     public static final String WORKSPACE = "workspace";
-
     private static final String JSP_PATH = "forgotpassword/forgotpassword.jsp";
     private static final String FAILED_JSP_PATH = "forgotpassword/forgotpasswordFailed.jsp";
     private static final String SUCCESS_JSP_PATH = "forgotpassword/forgotpasswordSuccess.jsp";
-
     private static final String ERROR_DESCRIPTION_KEY = "errorDescriptionKey";
     private static final String ERROR_MESSAGE_KEY = "errorMessageKey";
     private static final String FP_ERROR_INVALID_MESSAGE = "forgotpassword.error.invalid.message";
     private static final String FP_ERROR_INVALID_DESCRIPTION = "forgotpassword.error.invalid.description";
     private static final String FP_ERROR_CONFIG_MESSAGE = "forgotpassword.error.config.message";
     private static final String FP_ERROR_CONFIG_DESCRIPTION = "forgotpassword.error.config.description";
-
-
     private static final String MANIFEST_PATH = "/META-INF/MANIFEST.MF";
     private static final String IMPL_VERSION = "Implementation-Version";
-
+    private static Logger logger = Logger.getLogger(ForgotPassswordServlet.class);
     private String workspaceUrl;
     private String restEndpoint;
     private String cookieDomain;
