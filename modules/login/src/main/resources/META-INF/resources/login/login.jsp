@@ -168,7 +168,7 @@
                                 <div class="form-group">
                                     <div class="input-group" style="width:100%">
                                         <span class="input-group-addon glyphicon glyphicon-envelope" style="top: 0"></span>
-                                        <input type="email" id="regemail" name="email"
+                                        <input type="email" id="regemail" name="email" title="user@domain"
                                                class="form-control requiredtext"
                                                placeholder="Work email"
                                                data-pattern-error="Invalid Email Address"
