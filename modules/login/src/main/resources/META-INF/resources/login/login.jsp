@@ -50,40 +50,42 @@
     <form id="login" action="login" method="post">
         <div>
             <div style="display: table;margin: 0 auto">
-                <div class="text-center"><img src="login/images/scout_logo.png" height="290px" /></div>
-                <div class="form-group form-inline text-center col-xs-12 hidden">
-                    <label for="method">Login Method:</label>
-                    <select id="method" name="method" class="form-control">
-                        <option value="">OpenAM</option>
-                    </select>
-                </div>
-                <div id="workspaces" class="form-group text-center">
-                    <label for="server">Workspace:</label>
-                    <select id="server" class="form-control" name="workspace" style="width:auto;display: inline-block" required>
-                    </select>
-                </div>
-                <div class="form-group ">
-                    <label for="email" class="sr-only">Email:</label>
-                    <div class="input-group" style="width:100%">
-                        <span class="input-group-addon glyphicon glyphicon-envelope" style="top: 0"></span>
-                        <input type="email" id="email" name="email" autofocus="autofocus" class="form-control" placeholder="Email" required/>
+                <div style="max-width: 400px;margin: 0 auto">
+                    <div class="text-center"><img src="login/images/scout_logo.png" height="290px" /></div>
+                    <div class="form-group form-inline text-center col-xs-12 hidden">
+                        <label for="method">Login Method:</label>
+                        <select id="method" name="method" class="form-control">
+                            <option value="">OpenAM</option>
+                        </select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="password" class="sr-only">Password:</label>
-                    <div class="input-group" style="width: 100%">
-                        <span class="input-group-addon glyphicon glyphicon-lock" style="top: 0"></span>
-                        <input type="password" id="password" name="password" placeholder="Password" class="form-control" required/>
+                    <div id="workspaces" class="form-group text-center">
+                        <label for="server">Workspace:</label>
+                        <select id="server" class="form-control" name="workspace" style="width:auto;display: inline-block" required>
+                        </select>
                     </div>
-                </div>
-                <div class="form-group text-center">
-                    <button type="submit" class="btn btn-success" style="width:150px">Login</button>
-                </div>
-                <div class="form-group col-sm-12 text-center">
-                    <button id="btnRegister" type="button" class="btn btn-sm btn-primary" style="width:150px" data-toggle="modal" data-backdrop="static" data-target="#modalRegistration">Register</button>
-                </div>
-                <div class="form-group col-sm-12 text-center">
-                    <a href="./forgotpassword"><button id="btnForgotPwd" type="button" style="width:150px" class="btn btn-sm btn-warning">Forgotten Password?</button></a>
+                    <div class="form-group ">
+                        <label for="email" class="sr-only">Email:</label>
+                        <div class="input-group" style="width:100%">
+                            <span class="input-group-addon glyphicon glyphicon-envelope" style="top: 0"></span>
+                            <input type="email" id="email" name="email" autofocus="autofocus" class="form-control" placeholder="Email" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Password:</label>
+                        <div class="input-group" style="width: 100%">
+                            <span class="input-group-addon glyphicon glyphicon-lock" style="top: 0"></span>
+                            <input type="password" id="password" name="password" placeholder="Password" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-success" style="width:150px">Login</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <button id="btnRegister" type="button" class="btn btn-sm btn-primary" style="width:150px" data-toggle="modal" data-backdrop="static" data-target="#modalRegistration">Register</button>
+                    </div>
+                    <div class="form-group text-center">
+                        <a href="./forgotpassword"><button id="btnForgotPwd" type="button" style="width:150px" class="btn btn-sm btn-warning">Forgotten Password?</button></a>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
                 <div class= "panel panel-default" >
