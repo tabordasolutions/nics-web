@@ -376,7 +376,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
                          fill: blackFill,
                          stroke: blackStroke,
                          text: new ol.style.Text({
-                             text: feature.get('air_temperature').replace(/.0/, '') + '℉',
+                             text: feature.get('air_temperature').replace(/.0$/, '') + '℉',
                              scale: 1.3,
                              offsetX: -11,
                              offsetY:-11,
