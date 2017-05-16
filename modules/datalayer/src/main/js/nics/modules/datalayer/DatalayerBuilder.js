@@ -94,7 +94,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 						  "&srsname=EPSG:3857&bbox={4}{5}",
 					  window.location.protocol,
 					  window.location.host,
-					  url, layername, extent.join(','), '&EPSG:3857');
+					  url, layername, extent.join(','), ',EPSG:3857');
 				  
 					if(config.secure){
 						var token = TokenManager.getToken(config.datasourceid);
