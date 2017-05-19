@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2017, Taborda Solutions
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,7 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * s
  */
 define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManager'], 
 		function(Core, ol, TokenManager, ArcGISFeatureRequest){
@@ -138,29 +139,12 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 			vectorSource.set("deferReload", true);
 			
 			//create default style
-			var stroke = new ol.style.Stroke({
-	    	   color: '#3399CC',
-	    	   width: 1.25
-	    	 });
-			
-			var fill = new ol.style.Fill({
-				color: 'rgba(215, 40, 40, 0.9)'
-	        });
-			
-			var style = new ol.style.Style({
-    	     image: new ol.style.Circle({
-    	         fill: fill,
-    	         stroke: stroke,
-    	         radius: 5
-    	       }),
-	           fill: fill,
-    	       stroke: stroke
-    	     });
+			var style = this.buildWFSStyle(url, layername, config);
 			
 			return new ol.layer.Vector({
 				opacity: config.opacity || 1,
 				source: vectorSource,
-				style: style 
+				style: style
 		    });	
 		},
 		
@@ -355,6 +339,65 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 			
 			return layer;
 			
-		}
-	});
+		},
+
+        buildWFSStyle: function(url, layername, config) {
+            var style;
+            if(layername != 'scout:raws_view') {
+                var stroke = new ol.style.Stroke({
+                    color: '#3399CC',
+                    width: 1.25
+                });
+                var fill = new ol.style.Fill({
+                    color: 'rgba(215, 40, 40, 0.9)'
+                });
+
+                style = new ol.style.Style({
+                    image: new ol.style.Circle({
+                         fill: fill,
+                         stroke: stroke,
+                         radius: 5
+                    }),
+                    fill: fill,
+                    stroke: stroke
+                });
+            } else {
+            style = function(feature, resolution) {
+                var blackFill = new ol.style.Fill({color: 'black'});
+                var blackStroke = new ol.style.Stroke({color: 'black', width: 0.3});
+                var whiteStroke = new ol.style.Stroke({color: 'white', width: 1.25});
+                if(feature.get('air_temperature')) {
+                    return new ol.style.Style({
+                         image: new ol.style.Circle({
+                             fill: blackFill,
+                             stroke: whiteStroke,
+                             radius: 5
+                         }),
+                         fill: blackFill,
+                         stroke: blackStroke,
+                         text: new ol.style.Text({
+                             text: feature.get('air_temperature').replace(/.0$/, '') + '℉',
+                             scale: 1.3,
+                             offsetX: -11,
+                             offsetY:-11,
+                             fill: blackFill,
+                             stroke: blackStroke
+                         })
+                    });
+                } else {
+                    return new ol.style.Style({
+                        image: new ol.style.Circle({
+                            fill: blackFill,
+                            stroke: stroke,
+                            radius: 3
+                            }),
+                            fill: blackFill,
+                            stroke: whiteStroke,
+                        });
+                    }
+                };
+            }
+            return style;
+        }
+     });
 });
