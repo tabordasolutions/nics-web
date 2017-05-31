@@ -151,7 +151,7 @@ public class EmApiGateway {
         Response response = null;
         EmApiResponse apiResponse;
         try{
-            String path = String.format(VERIFY_EMAIL_PATH, email);
+            String path = String.format(VERIFY_EMAIL_PATH, email.toLowerCase());
             Builder builder = client.target(restEndpoint.toString()).path(path).request(MediaType.APPLICATION_JSON_TYPE);
             tokenUtil.setCookies(builder);
             response = builder.get();

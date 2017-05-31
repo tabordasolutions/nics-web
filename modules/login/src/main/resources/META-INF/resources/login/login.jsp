@@ -175,7 +175,7 @@
                                                placeholder="Work email"
                                                data-pattern-error="Invalid Email Address"
                                                data-remote-error="The email is already registered"
-                                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
+                                               pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$"
                                                data-remote="verifyData" required>
 
                                     </div>
