@@ -38,7 +38,7 @@ var loginpage = function($, w, moment) {
         if (pageData.announcements.length > 0) { $('#announcements').empty() }
         pageData.announcements.forEach(function(item) {
             $('#announcements').append('<dt>' + moment(item.createdate).format('M-D-YYYY h:mm a') + '</dt><dd>'
-                + item.message + '</dd>');
+                + $('<textarea/>').html(item.message).text()) + '</dd>';
         })
     }
 
