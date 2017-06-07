@@ -32,7 +32,9 @@ define([
 	function(Core, LoginModel, UserProfile){
 	
 		var LOGOUT = false;
-	
+		var wasLoginCleanedUp = false;
+
+
 		Ext.define('modules.login.LoginPresenter', {
 			extend : 'Ext.app.ViewController',
 			
@@ -54,6 +56,9 @@ define([
 			},
 			
 			bindEvents: function(){
+                window.addEventListener("beforeunload", this.loginCleanup); //Works only for Chrome
+                window.addEventListener("unload", this.loginCleanup);  //Works for other browsers
+
 				Core.EventManager.addListener(UserProfile.PROPERTIES_LOADED, this.requestUserOrgs(this));
 				Core.EventManager.addListener(UserProfile.PROFILE_LOADED, this.setReinitUrl.bind(this));
 				
@@ -66,28 +71,14 @@ define([
 				
 				Core.EventManager.fireEvent('logout'); //Give everyone a chance to clean up
 				
-				//Remove the session from the database
-				var _mediator = this.mediator;
-				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
-				if(UserProfile.getCurrentUserSessionId()){
-					var url = Ext.String.format("{0}/users/{1}/removesession?currentUserSessionId={2}",
-							endpoint,
-							UserProfile.getWorkspaceId(), 
-							UserProfile.getCurrentUserSessionId());
-					
-					this.mediator.sendPostMessage(url,"", {});
-				}
-				
-				//remove from openam
 				var topic = "nics.logout.usersession.callback";
 				Core.EventManager.createCallbackHandler(topic, this, function(){
-					_mediator.close();
+                    this.mediator.close();
 					location.href = "./login";
 				});
-				
-				this.mediator.sendDeleteMessage(
-						Ext.String.format("{0}/login/{1}", endpoint, UserProfile.getUsername()), topic);
-			},
+                this.loginCleanup();
+
+            },
 			
 			logoutFromMessage: function(evt, currentUserSessionId){
 				if(!LOGOUT && currentUserSessionId === UserProfile.getCurrentUserSessionId()){
@@ -201,28 +192,44 @@ define([
 				}else{
 					this.logout();
 				}
-				//log out otherwise...no session id!
-				
-				var _mediator = this.mediator;
-				var _userProfile = UserProfile;
-				var config = Core.Config;
-				
-				var onUnload = function(){
-					if(!LOGOUT){
-						var url = Ext.String.format("{0}/users/{1}/removesession?currentUserSessionId={2}",
-								config.getProperty(UserProfile.REST_ENDPOINT),
-								_userProfile.getWorkspaceId(), 
-								_userProfile.getCurrentUserSessionId());
-						_mediator.sendPostMessage(url,"",{});
-						//NOTE: Token is not getting removed
-					}
-				};
 
-				window.addEventListener("beforeunload", onUnload);
-				
 				Core.EventManager.fireEvent("nics.userorg.change", userOrg);
 			},
-			
+			loginCleanup: function() {
+                if(!wasLoginCleanedUp){
+					var _mediator = Core.Mediator.getInstance();
+                    var _userProfile = UserProfile;
+                    var config = Core.Config;
+
+                    //Whether this current sessionid exists is a matter of timing (after setUserSessionId)
+					// If the user has been assigned a session id, then make sure it's cleaned up from the db.
+                    if (_userProfile.getCurrentUserSessionId()) {
+                        var url = Ext.String.format("{0}/users/{1}/removesession?currentUserSessionId={2}",
+                            config.getProperty(UserProfile.REST_ENDPOINT),
+                            _userProfile.getWorkspaceId(),
+                            _userProfile.getCurrentUserSessionId());
+                        _mediator.sendPostMessage(url, "", {});
+                    }
+
+                    //Get rid of the OpenAm Token.
+                    var topic = "nics.logout.usersession.callback";
+                    var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+                    _mediator.sendDeleteMessage(
+                        Ext.String.format("{0}/login", endpoint), topic);
+
+					//Issue a get of the login page with the loggedOut param set, which will clean up the java session.
+                    $.ajax({
+                        type: 'GET',
+                        async: false,
+                        url: './login?loggedOut=true',
+                        success: function ()
+                        {
+                            wasLoginCleanedUp = true;
+                        }
+                    });
+                }
+			},
+
 			refreshToken: function(){
 				var url = './refresh?currentUserSessionId=' + UserProfile.getCurrentUserSessionId();
 				var _this = this;
@@ -248,8 +255,7 @@ define([
 				    buttons: Ext.Msg.OK,
 				    icon: Ext.Msg.WARNING,
 				    fn: function(btn) {
-				    	 _mediator.close();
-				    	 location.href = "./login";
+				    	 this.logout();
 				    }
 				});
 			}
