@@ -186,56 +186,56 @@
           <artifactId>frontend-maven-plugin</artifactId>
           <version>1.3</version>
         </plugin>
-		<plugin>
-                    <!-- This plugin formats source files by checking and adding a copyright 
-                        header if it's missing. -->
-                    <groupId>com.mycila.maven-license-plugin</groupId>
-                    <artifactId>maven-license-plugin</artifactId>
-                    <version>${license.plugin.version}</version>
-                    <configuration>
-                        <aggregate>true</aggregate>
-                        <header>${basedir}/copyright.txt</header>
-                        <strictCheck>true</strictCheck>
-                        <properties>
-                            <year>2017</year>
-                        </properties>
-                        <useDefaultExcludes>false</useDefaultExcludes>
+		<!--<plugin>-->
+                    <!--&lt;!&ndash; This plugin formats source files by checking and adding a copyright -->
+                        <!--header if it's missing. &ndash;&gt;-->
+                    <!--<groupId>com.mycila.maven-license-plugin</groupId>-->
+                    <!--<artifactId>maven-license-plugin</artifactId>-->
+                    <!--<version>${license.plugin.version}</version>-->
+                    <!--<configuration>-->
+                        <!--<aggregate>true</aggregate>-->
+                        <!--<header>${basedir}/copyright.txt</header>-->
+                        <!--<strictCheck>true</strictCheck>-->
+                        <!--<properties>-->
+                            <!--<year>2017</year>-->
+                        <!--</properties>-->
+                        <!--<useDefaultExcludes>false</useDefaultExcludes>-->
 
-                        <!-- Additional file-to-comment-style mappings -->
-                        <mapping>
-                            <xslt>XML_STYLE</xslt>
-                        </mapping>
+                        <!--&lt;!&ndash; Additional file-to-comment-style mappings &ndash;&gt;-->
+                        <!--<mapping>-->
+                            <!--<xslt>XML_STYLE</xslt>-->
+                        <!--</mapping>-->
 
-                        <includes>
-                            <includes>**/src/**/*.java</includes>
-                            <includes>**/src/**/*.js</includes>
-                            <includes>**/src/**/*.css</includes>
-                            <includes>**/src/**/*.xml</includes>
-                            <includes>**/src/**/*.html</includes>
-                            <includes>**/src/**/*.properties</includes>
-                            <includes>**/src/**/*.jsp</includes>
-                            <includes>**/pom.xml</includes>
-                            <includes>**/Gruntfile.js</includes>
-                        </includes>
-                    </configuration>
-                    <inherited>false</inherited>
-                    <executions>
-                        <execution>
-                            <id>update-copyright</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>format</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>verify-copyright</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+                        <!--<includes>-->
+                            <!--<includes>**/src/**/*.java</includes>-->
+                            <!--<includes>**/src/**/*.js</includes>-->
+                            <!--<includes>**/src/**/*.css</includes>-->
+                            <!--<includes>**/src/**/*.xml</includes>-->
+                            <!--<includes>**/src/**/*.html</includes>-->
+                            <!--<includes>**/src/**/*.properties</includes>-->
+                            <!--<includes>**/src/**/*.jsp</includes>-->
+                            <!--<includes>**/pom.xml</includes>-->
+                            <!--<includes>**/Gruntfile.js</includes>-->
+                        <!--</includes>-->
+                    <!--</configuration>-->
+                    <!--<inherited>false</inherited>-->
+                    <!--<executions>-->
+                        <!--<execution>-->
+                            <!--<id>update-copyright</id>-->
+                            <!--<phase>generate-sources</phase>-->
+                            <!--<goals>-->
+                                <!--<goal>format</goal>-->
+                            <!--</goals>-->
+                        <!--</execution>-->
+                        <!--<execution>-->
+                            <!--<id>verify-copyright</id>-->
+                            <!--<phase>verify</phase>-->
+                            <!--<goals>-->
+                                <!--<goal>check</goal>-->
+                            <!--</goals>-->
+                        <!--</execution>-->
+                    <!--</executions>-->
+                <!--</plugin>-->
       </plugins>
     </pluginManagement>
 	<plugins>
