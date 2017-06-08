@@ -169,6 +169,9 @@ define([
 			},
 			
 			setUserOrg: function(userOrg){
+				//Set a tracking cookie for the userorg
+				Ext.util.Cookies.set('uoid',userOrg.userorgid);
+				
 				//Create a new User Session
 				var topic = "nics.login.usersession.callback";
 				
