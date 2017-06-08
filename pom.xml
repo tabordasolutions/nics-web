@@ -229,7 +229,8 @@
                         </execution>
                         <execution>
                             <id>verify-copyright</id>
-                            <phase>verify</phase>
+                            <!--Disabled by default. Replace phase with 'verify' to enable-->
+                            <phase>none</phase>
                             <goals>
                                 <goal>check</goal>
                             </goals>
