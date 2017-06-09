@@ -32,7 +32,7 @@ define([
 	function(Core, LoginModel, UserProfile){
 	
 		var LOGOUT = false;
-		var wasLoginCleanedUp = false;
+		var wasCurrentSessionCleanedUp = false;
 
 
 		Ext.define('modules.login.LoginPresenter', {
@@ -56,8 +56,7 @@ define([
 			},
 			
 			bindEvents: function(){
-                window.addEventListener("beforeunload", this.loginCleanup); //Works only for Chrome
-                window.addEventListener("unload", this.loginCleanup);  //Works for other browsers
+                window.addEventListener("beforeunload", this.currentSessioncleanup); //Works only for Chrome
 
 				Core.EventManager.addListener(UserProfile.PROPERTIES_LOADED, this.requestUserOrgs(this));
 				Core.EventManager.addListener(UserProfile.PROFILE_LOADED, this.setReinitUrl.bind(this));
@@ -68,15 +67,14 @@ define([
 			
 			logout: function(){
 				LOGOUT = true;
-				
-				Core.EventManager.fireEvent('logout'); //Give everyone a chance to clean up
+                this.loginCleanup();
+                Core.EventManager.fireEvent('logout'); //Give everyone a chance to clean up
 				
 				var topic = "nics.logout.usersession.callback";
 				Core.EventManager.createCallbackHandler(topic, this, function(){
                     this.mediator.close();
 					location.href = "./login";
 				});
-                this.loginCleanup();
 
             },
 			
@@ -195,40 +193,32 @@ define([
 
 				Core.EventManager.fireEvent("nics.userorg.change", userOrg);
 			},
-			loginCleanup: function() {
-                if(!wasLoginCleanedUp){
-					var _mediator = Core.Mediator.getInstance();
-                    var _userProfile = UserProfile;
-                    var config = Core.Config;
-
-                    //Whether this current sessionid exists is a matter of timing (after setUserSessionId)
-					// If the user has been assigned a session id, then make sure it's cleaned up from the db.
-                    if (_userProfile.getCurrentUserSessionId()) {
-                        var url = Ext.String.format("{0}/users/{1}/removesession?currentUserSessionId={2}",
-                            config.getProperty(UserProfile.REST_ENDPOINT),
-                            _userProfile.getWorkspaceId(),
-                            _userProfile.getCurrentUserSessionId());
-                        _mediator.sendPostMessage(url, "", {});
-                    }
-
-                    //Get rid of the OpenAm Token.
-                    var topic = "nics.logout.usersession.callback";
-                    var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
-                    _mediator.sendDeleteMessage(
-                        Ext.String.format("{0}/login", endpoint), topic);
-
-					//Issue a get of the login page with the loggedOut param set, which will clean up the java session.
-                    $.ajax({
-                        type: 'GET',
-                        async: false,
-                        url: './login?loggedOut=true',
-                        success: function ()
-                        {
-                            wasLoginCleanedUp = true;
-                        }
-                    });
+            currentSessioncleanup: function() {
+                //Whether this current sessionid exists is a matter of timing (after setUserSessionId)
+                // If the user has been assigned a session id, then make sure it's cleaned up from the db.
+                if (!wasCurrentSessionCleanedUp && UserProfile.getCurrentUserSessionId()) {
+                    var url = Ext.String.format("{0}/users/{1}/removesession?currentUserSessionId={2}",
+                        Core.Config.getProperty(UserProfile.REST_ENDPOINT),
+                        UserProfile.getWorkspaceId(),
+                        UserProfile.getCurrentUserSessionId());
+                    Core.Mediator.getInstance().sendPostMessage(url, "", {});
+                    wasCurrentSessionCleanedUp = true;
                 }
+            },
+
+			loginCleanup: function() {
+                this.currentSessioncleanup();
+
+				//Get rid of the OpenAm Token.
+				var topic = "nics.logout.usersession.callback";
+				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+                Core.Mediator.getInstance().sendDeleteMessage(
+					Ext.String.format("{0}/login", endpoint), topic);
+
+				//Issue a get of the login page with the loggedOut param set, which will clean up the java session.
+                $.get('./login?loggedOut=true');
 			},
+
 
 			refreshToken: function(){
 				var url = './refresh?currentUserSessionId=' + UserProfile.getCurrentUserSessionId();
@@ -246,7 +236,6 @@ define([
 			      }
 			   });
 			},
-			
 			logoutWithMessage: function(message){
 				var _mediator = this.mediator;
 				Ext.Msg.show({
