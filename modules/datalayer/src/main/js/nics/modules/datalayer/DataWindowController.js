@@ -88,7 +88,7 @@ define(['ext', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 						workspaceId: this.workspaceId
 					}),
 					new DatasourceImportPanel({
-						title: 'ArcGISRest',
+						title: 'ArcGIS MapServer',
 						dataSourceType: 'arcgisrest',
 						capabilitiesFormat: new ArcGISCapabilities(),
 						workspaceId: this.workspaceId
