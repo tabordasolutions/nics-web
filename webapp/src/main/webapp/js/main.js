@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 require.config({
-    urlArgs: "v=2017.1.5"
+    urlArgs: "v=2017.1.6"
 });
 require([
     "iweb/CoreModule", "iweb/modules/MapModule",
