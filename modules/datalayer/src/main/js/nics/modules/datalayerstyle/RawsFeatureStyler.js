@@ -67,7 +67,7 @@ define(["jquery", "ol"], function($, ol){
                         opacity: 1,
                         src: 'images/windbarb/arrow' + barbSpeed + '.png',
                         scale: 1,
-                        rotation:wind_direction
+                        rotation:wind_direction * Math.PI/180
                     }),
                     text: featuretext
                 });
