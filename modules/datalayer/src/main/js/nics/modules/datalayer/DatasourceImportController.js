@@ -195,7 +195,7 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 							   		"username={3}&password={4}",
 									endpoint,
 									UserProfile.getWorkspaceId(),
-									internalurl, username, password);
+									internalurl, username, encodeURIComponent(password));
 								
 								var topic = Core.Util.generateUUID();
 								Core.EventManager.createCallbackHandler(topic, _this, _this.handleTokenResponse, 
