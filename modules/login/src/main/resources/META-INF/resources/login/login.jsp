@@ -37,8 +37,8 @@
     <script src="login/js/validator.min.js"></script>
     <script src="login/js/jquery.maskedinput.min.js"></script>
     <script src="login/js/moment.min.js"></script>
-    <script src="login/js/registration.min.js"></script>
-    <script src="login/js/login.min.js"></script>
+    <script src="login/js/registration.min.js?v=2017.1.6"></script>
+    <script src="login/js/login.min.js?v=2017.1.6"></script>
 </head>
 <body>
 
