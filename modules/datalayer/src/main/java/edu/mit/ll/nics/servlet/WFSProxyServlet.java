@@ -69,7 +69,7 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 			String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
 			headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
 		}
-		headerOptions.put("User-Agent", "");
+		headerOptions.put("User-Agent", "NicsWeb");
         
         BasicRequest basicRequest = new BasicRequest();
         String result = (String) basicRequest.getRequest(url, headerOptions);
