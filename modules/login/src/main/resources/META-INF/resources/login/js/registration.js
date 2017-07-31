@@ -56,6 +56,8 @@ var registration = function($) {
             $($formStep3).on('reset', onResetForm3);
             $($formStep4).on('reset', onResetForm4);
 
+            //Watch for focusout on the email field so we can convert to lowercase
+            $('#regemail').focusout(function() {this.value = this.value.toLowerCase();})
 
             //Load the T&C content externally.
             $('#tc_content').load(termsUrl + " " + termsElement);

@@ -37,8 +37,8 @@
     <script src="login/js/validator.min.js"></script>
     <script src="login/js/jquery.maskedinput.min.js"></script>
     <script src="login/js/moment.min.js"></script>
-    <script src="login/js/registration.min.js"></script>
-    <script src="login/js/login.min.js"></script>
+    <script src="login/js/registration.min.js?v=2017.1.6"></script>
+    <script src="login/js/login.min.js?v=2017.1.6"></script>
 </head>
 <body>
 
@@ -175,7 +175,7 @@
                                                placeholder="Work email"
                                                data-pattern-error="Invalid Email Address"
                                                data-remote-error="The email is already registered"
-                                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
+                                               pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$"
                                                data-remote="verifyData" required>
 
                                     </div>
