@@ -39,7 +39,7 @@ define(["jquery", "ol"], function($, ol){
         var wind_speed = feature.get('wind_speed');
         var air_temp = feature.get('air_temperature');
         var feature_id = feature.get('id');
-        if (wind_direction >= 0 && wind_speed > 0) {
+        if (wind_direction >= 0 && wind_speed >= 0) {
             var barbSpeed = Math.round(wind_speed / 5) * 5;
             if (barbSpeed > 150) {
                 barbSpeed = 150;
