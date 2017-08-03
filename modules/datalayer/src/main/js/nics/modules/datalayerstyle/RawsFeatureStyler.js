@@ -30,16 +30,50 @@
 define(["jquery", "ol"], function($, ol){
 
     var barbstyles = new Array();
+    var redFill = new ol.style.Fill({color: '#FF0000'});
+    var orangeFill = new ol.style.Fill({color: '#FFA500'});
+    var blackfill = new ol.style.Fill({color:'#000000'});
+    var whiteStroke = new ol.style.Stroke({color: 'white', width: 3});
 
+    var barbstyles = new Array();
+    var dotOffset = [0,0];
+    var redDotStyle = new ol.style.Style({
+        image : new ol.style.Circle({
+            radius : 6,
+            fill: redFill,
+            stroke: new ol.style.Stroke({color: '#000000',width: 1}),
+            anchor: [0,0],
+            offset: dotOffset
+        })
+    });
+
+    var orangeDotStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 6,
+            fill: orangeFill,
+            stroke: new ol.style.Stroke({color: '#000000',width: 1}),
+            anchor: [0,0],
+            offset: dotOffset
+        })
+    });
+
+    var blackDotStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 5,
+            fill: blackfill,
+            anchor: [0,0],
+            offset: dotOffset
+        })
+    });
     function getRawsStyle(feature,resolution) {
-        var redFill = new ol.style.Fill({color: 'red'});
-        var whiteStroke = new ol.style.Stroke({color: 'white', width: 3});
 
         var wind_direction = feature.get('wind_direction');
         var wind_speed = feature.get('wind_speed');
         var air_temp = feature.get('air_temperature');
         var feature_id = feature.get('id');
-        if (wind_direction >= 0 && wind_speed >= 0) {
+        var qc_status = feature.get('qc_status');
+        var statusStyle;
+        if (wind_direction >= 0 && wind_speed > 0) {
             var barbSpeed = Math.round(wind_speed / 5) * 5;
             if (barbSpeed > 150) {
                 barbSpeed = 150;
@@ -49,8 +83,6 @@ define(["jquery", "ol"], function($, ol){
                 return style;
             }
             else {
-                var arrowWidth = 40;
-                //var windbarbsvg = windbarbs.GetWindArrowSvg(parseInt(wind_speed),parseFloat(wind_direction),arrowWidth);
                 var featuretext;
                 if (air_temp) {
                     featuretext = new ol.style.Text({
@@ -62,15 +94,26 @@ define(["jquery", "ol"], function($, ol){
                         stroke: whiteStroke
                     })
                 }
-                barbstyles[feature_id] = new ol.style.Style({
+                if (qc_status == 'OK') {
+                    statusStyle = blackDotStyle;
+                }
+                if (qc_status == 'WARNING') {
+                    statusStyle = orangeDotStyle;
+                }
+                else if (qc_status == 'ERROR') {
+                    statusStyle = redDotStyle;
+                }
+                barbstyles[feature_id] = [new ol.style.Style({
                     image: new ol.style.Icon({
                         opacity: 1,
                         src: 'images/windbarb/arrow' + barbSpeed + '.png',
                         scale: 1,
-                        rotation:wind_direction * Math.PI/180
+                        rotation:wind_direction * Math.PI/180,
+                        anchor: [0,0],
+                        offset: [0,0]
                     }),
                     text: featuretext
-                });
+                }),statusStyle];
                 return barbstyles[feature_id];
             }
 
