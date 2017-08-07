@@ -342,9 +342,9 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 		},
 
         buildWFSStyle: function(url, layername, config) {
-            var styler = WfsStylerFactory.GetStyler(config);
+            var styler = WfsStylerFactory.getStyler(config);
 
-            return styler.GetStyle;
+            return styler.getStyle;
         }
      });
 });

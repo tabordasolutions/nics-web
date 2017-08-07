@@ -34,10 +34,10 @@ define(["./DefaultWfsStyler","./RawsFeatureStyler"], function(defaultStyler,raws
         if(layername != 'scout:raws_view') {
             return defaultStyler;
         } else {
-            return rawsStyler;
+            return new rawsStyler();
         }
     }
     return {
-        GetStyler:getStyler
+        getStyler:getStyler
     }
 });
