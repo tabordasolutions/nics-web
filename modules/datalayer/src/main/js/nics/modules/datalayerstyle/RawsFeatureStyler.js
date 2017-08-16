@@ -30,23 +30,48 @@
 define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], function($, ol,Ext, Core, MapModule){
     return Ext.define('modules.datalayerstyle.RawsFeatureStyler', function() {
         var barbstyles = new Array();
-        var redFill = new ol.style.Fill({color: '#FF0000'});
-        var orangeFill = new ol.style.Fill({color: '#FFA500'});
-        var blackfill = new ol.style.Fill({color: '#000000'});
+        var QCCOLLORS = {
+            error: '#FF0000',
+            warning: '#FFA500',
+            ok: '#000000'
+        };
+        var errorFill = new ol.style.Fill({color: QCCOLLORS.error});
+        var warningFill = new ol.style.Fill({color: QCCOLLORS.warning});
+        var okfill = new ol.style.Fill({color: 'black'});
         var whiteStroke = new ol.style.Stroke({color: 'white', width: 3});
 
         var barbstyles = new Array();
         var dotOffset = [0.5, 0.5];
-        var redDotStyle = new ol.style.Style({
+        var errorDotStyle = new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
-                fill: redFill,
+                fill: errorFill,
                 stroke: new ol.style.Stroke({color: '#000000', width: 1}),
                 anchor: [0.5, 0.5],
                 offset: dotOffset
             })
         });
 
+
+
+        var warningDotStyle = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: warningFill,
+                stroke: new ol.style.Stroke({color: '#000000', width: 1}),
+                anchor: [0.5, 0.5],
+                offset: dotOffset
+            })
+        });
+
+        var okDotStyle = new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: okfill,
+                anchor: [0.5, 0.5],
+                offset: dotOffset
+            })
+        });
         var selectedStyle = new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 10,
@@ -58,28 +83,8 @@ define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], func
                 })
             })
         });
-
-        var orangeDotStyle = new ol.style.Style({
-            image: new ol.style.Circle({
-                radius: 5,
-                fill: orangeFill,
-                stroke: new ol.style.Stroke({color: '#000000', width: 1}),
-                anchor: [0.5, 0.5],
-                offset: dotOffset
-            })
-        });
-
-        var blackDotStyle = new ol.style.Style({
-            image: new ol.style.Circle({
-                radius: 5,
-                fill: blackfill,
-                anchor: [0.5, 0.5],
-                offset: dotOffset
-            })
-        });
-
         function constructor() {
-            //MapModule.getClickListener().addRenderer(this);
+            MapModule.getClickListener().addRenderer(this);
             MapModule.getMapStyle().addStyleFunction(this.getStyle.bind(this));
         }
 
@@ -115,7 +120,7 @@ define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], func
                             scale: 1.3,
                             offsetX: -11,
                             offsetY: -11,
-                            fill: redFill,
+                            fill: errorFill,
                             stroke: whiteStroke
                         })
                     }
@@ -131,14 +136,14 @@ define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], func
                         text: featuretext
                     });
                     finalStyle.push(barbStyle);
-                    if (qc_status == 'OK') {
-                        finalStyle.push(blackDotStyle);
+                    if (!qc_status || qc_status == 'OK') {
+                        finalStyle.push(okDotStyle);
                     }
                     if (qc_status == 'WARNING') {
-                        finalStyle.push(orangeDotStyle);
+                        finalStyle.push(warningDotStyle);
                     }
                     else if (qc_status == 'ERROR') {
-                        finalStyle.push(redDotStyle);
+                        finalStyle.push(errorDotStyle);
                     }
 
                     barbstyles[feature_id] = finalStyle;
@@ -151,8 +156,29 @@ define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], func
         }
 
         function renderDescription(container, feature) {
-            //TODO
+            var qc_status = feature.get('qc_status');
+
+            if (qc_status) {
+                container.add(new Ext.form.field.Display({
+                    fieldLabel: 'QC Status',
+                    value: '<a href=\"http://mesowest.utah.edu/html/help/qc.html\" target=\"_blank\" style=\"color: ' + qcStatusColor(qc_status) + '\" >' + qc_status + '</a>'
+                }));
+            }
         }
+
+        function qcStatusColor(qcstatus) {
+            if (!qcstatus || qcstatus == 'OK') {
+                return QCCOLLORS.ok;
+            }
+            else if (qcstatus == 'WARNING') {
+                return QCCOLLORS.warning;
+            }
+            else {
+                return QCCOLLORS.error;
+            }
+        }
+
+
         return {
             constructor: constructor,
             getStyle: getRawsStyle,
