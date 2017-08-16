@@ -30,14 +30,16 @@
 define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], function($, ol,Ext, Core, MapModule){
     return Ext.define('modules.datalayerstyle.RawsFeatureStyler', function() {
         var barbstyles = new Array();
-        var QCCOLLORS = {
-            error: '#FF0000',
-            warning: '#FFA500',
-            ok: '#000000'
-        };
-        var errorFill = new ol.style.Fill({color: QCCOLLORS.error});
-        var warningFill = new ol.style.Fill({color: QCCOLLORS.warning});
-        var okfill = new ol.style.Fill({color: 'black'});
+
+        var QCStatusDisplayMap = {
+            'OK': {text: 'OK', color: '#000000'},
+            'WARNING': {text: 'Caution', color: '#FFA500'},
+            'ERROR': {text: 'Suspect', color: '#FF0000' },
+            'UNKNOWN': {text: 'Unknown', color: '#000000'}
+        }
+        var errorFill = new ol.style.Fill({color: QCStatusDisplayMap.ERROR.color});
+        var warningFill = new ol.style.Fill({color: QCStatusDisplayMap.WARNING.color});
+        var okfill = new ol.style.Fill({color: QCStatusDisplayMap.OK.color});
         var whiteStroke = new ol.style.Stroke({color: 'white', width: 3});
 
         var barbstyles = new Array();
@@ -161,23 +163,31 @@ define(['jquery', 'ol', 'ext', 'iweb/CoreModule','iweb/modules/MapModule'], func
             if (qc_status) {
                 container.add(new Ext.form.field.Display({
                     fieldLabel: 'QC Status',
-                    value: '<a href=\"http://mesowest.utah.edu/html/help/qc.html\" target=\"_blank\" style=\"color: ' + qcStatusColor(qc_status) + '\" >' + qc_status + '</a>'
+                    value: '<a href=\"http://mesowest.utah.edu/html/help/qc.html\" target=\"_blank\" style=\"color: ' + qcStatusColor(qc_status) + '\" >' + qcStatusString(qc_status) + '</a>'
                 }));
+                return true;
+            } else {
+                return false;
             }
         }
 
         function qcStatusColor(qcstatus) {
-            if (!qcstatus || qcstatus == 'OK') {
-                return QCCOLLORS.ok;
-            }
-            else if (qcstatus == 'WARNING') {
-                return QCCOLLORS.warning;
-            }
+            var displayprops = QCStatusDisplayMap[qcstatus];
+            if (displayprops)
+                return displayprops.color;
             else {
-                return QCCOLLORS.error;
+                return QCStatusDisplayMap.UNKNOWN.color;
             }
         }
+        function qcStatusString(qcstatus) {
+            var displayprops = QCStatusDisplayMap[qcstatus];
+            if (displayprops)
+                return displayprops.text;
+            else {
+                return QCStatusDisplayMap.UNKNOWN.text;
+            }
 
+        }
 
         return {
             constructor: constructor,

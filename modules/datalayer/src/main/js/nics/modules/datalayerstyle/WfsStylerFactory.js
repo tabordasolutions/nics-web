@@ -27,14 +27,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(["./DefaultWfsStyler","./RawsFeatureStyler"], function(defaultStyler,rawsStyler){
+define(["./DefaultWfsStyler","./RawsFeatureStyler"], function(defaultStyler,RawsFeatureStyler){
+
+    var rawsStyler;
 
     function getStyler(config) {
         var layername = config.layername;
         if(layername != 'scout:raws_view') {
             return defaultStyler;
         } else {
-            return new rawsStyler();
+            if (!rawsStyler)
+                rawsStyler = new RawsFeatureStyler();
+            return rawsStyler;
         }
     }
     return {
