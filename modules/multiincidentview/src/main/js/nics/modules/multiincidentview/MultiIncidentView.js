@@ -31,133 +31,197 @@
  	function(Core, MultiIncidentController, MapModule) {
  
 		Ext.define('modules.multiincidentview.MultiIncidentView', {
-			extend: 'Ext.panel.Panel',
-		
-			controller: 'multiincidentviewcontroller',
+            extend: 'Ext.panel.Panel',
+            title: 'Multi Incident View',
+            controller: 'multiincidentviewcontroller',
+            layout: {
+                type: 'vbox'
+            },
+            items: [
+                {
+                    xtype: 'container',
+                    width: '100%',
+                    layout: {
+                        type: 'hbox',
+                        pack: 'center'
+                    },
+                    padding: '10 0 0 0',
+                    border: false,
+                    buttonAlign: 'center',
 
-			title: 'Multi Incident View',
+                    items: [{
+                        xtype: 'button',
+                        reference: 'mivviewbutton',
+                        text: 'Enable All Views',
+                        height: 20,
+                        handler: 'enableIncidentView'
+                    },
+                        {
+                            xtype: 'box', width: '20px'
+                        },
+                        {
+                            xtype: 'button',
+                            reference: 'miveditbutton',
+                            text: 'Edit Selected Incident',
+                            height: 20,
+                            handler: 'editIncident'
+                        }]
 
-			layout: {
-					type: 'vbox'
-			},
-			
-			items:[
-			{
-				xtype: 'panel',
-				width: '100%',
-				layout: {
-						type: 'hbox',
-						pack: 'center'
-				},
-				bodyPadding: '10',
-				bodyBorder: false,
-				buttonAlign: 'center',
-				
-				items: [{
-						xtype: 'button',
-						reference: 'mivviewbutton',
-						text: 'Enable All Views',
-						height: 25,
-						handler: 'enableIncidentView'
-					},
-					{
-						xtype: 'box', width: '20px'
-					},
-					{
-						xtype: 'button',
-						reference: 'miveditbutton',
-						text: 'Edit Selected Incident',
-						height: 25,
-						handler: 'editIncident'
-					}]
-			
-			},
-			{ 
-			
-				xtype: 'treepanel',
-				reference: 'multiincidentsgrid',
-				rootVisible: false,
-				cls: 'multi-incident-tree',
-		        layout: 'fit',
-		        flex: 1,
-		        width: '100%',
-		        
-		        listeners: {
-		        	selectionchange: 'onSelectionChange',
-		        	itemdblclick: 'onItemDblClick'
-		        },
+                },
+                {
+                    xtype: 'fieldset',
+                    title: 'Filter Incidents',
+                    width: '100%',
+                    layout: 'column',
+                    padding: 5,
+                    collapsible: true,
+                    items: [
+                        {
+                            xtype: 'container',
+                            columnWidth: 1,
+                            layout: {
+                                type: 'vbox'
+                            },
+                            border: false,
+                            padding: 0,
+                            items: [
+                                {
+                                    xtype: 'textfield',
+                                    reference: 'searchFilter',
+                                    emptyText: 'Search by Incident Name',
+                                    width: '100%',
+                                    enableKeyEvents: true,
+                                    datacolumn: 'incidentname',
+                                    triggers: {
+                                        clear: {
+                                            cls: 'x-form-clear-trigger',
+                                            handler: 'onClearTriggerClick',
+                                            hidden: true
+                                        }
+                                    },
+                                    listeners: {
+                                        keyup: {
+                                            fn: 'onSearchKeyUp',
+                                            buffer: 300
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+                ,
+                {
+                    xtype: 'container',
+                    margin: '0 5 10 5',
+                    border: false,
+                    layout:  {
+                        type  : 'vbox',
+                        pack  : 'center',
+                        align : 'middle'
+                    },
+                    width: '100%',
+                    items: [
+                        {
+                            xtype: 'label',
+                            reference: 'searchStatus',
+                            html: 'Search Status'
+                        }
+                    ]
+                },
 
-				fields: ['incidentname', 'lastupdate', 'incidenttypes', 'description'],
-				columns: [{
-			            text: 'Incident',
-			            dataIndex: 'incidentname',
-			            xtype: 'treecolumn',
-			            flex: 1
-			        }, {
-			            text: 'Last Update',
-			            xtype: 'datecolumn',
-			            dataIndex: 'lastUpdate',
-            			format: 'Y-m-d H:i:s',
-			            width: 120
-			        }, {
-			            text: 'Type',
-			            dataIndex: 'incidenttypes',
-			            width: 150
-			        }, {
-			        	text: 'Description',
-			        	dataIndex: 'description',
-			        	width: 150
-			        }]
-			},
-			{
-				xtype:'form',
-				title: 'Incident Details',
-				reference: 'multiincidentform',
-				collapsible: true,
-				collapsed: true,
-				scrollable: true,
-				maxHeight: 300,
-				width: '100%',
-				items:[{
-					
-					xtype: 'fieldset',
-					title: 'Incident Data',
-					collapsible: true,
-					items: [{
-					
-						xtype: 'displayfield',
-						fieldLabel: 'Incident Name',
-						name: 'incidentname',
-						value: ''
-					
-					},
-					{
-						
-						xtype: 'displayfield',
-						fieldLabel: 'Created',
-						name: 'created',
-						value: ''
-					
-					},
-					{
-					
-						xtype: 'displayfield',
-						fieldLabel: 'Time since creation',
-						name: 'timesincecreated',
-						value: ''
-					
-					},
-					{
-					
-						xtype: 'displayfield',
-						fieldLabel: 'Description',
-						name: 'description',
-						value: ''
-					
-					}]
-					
-				}]
-			}]
+                {
+
+                    xtype: 'treepanel',
+                    reference: 'multiincidentsgrid',
+                    rootVisible: false,
+                    cls: 'multi-incident-tree',
+                    layout: 'fit',
+                    flex: 1,
+                    useArrows: true,
+                    width: '100%',
+                    listeners: {
+                        selectionchange: 'onIncidentTreeSelectionChange',
+                        itemdblclick: 'onIncidentTreeItemDblClick'
+                    },
+
+                    fields: ['incidentname', 'lastupdate', 'incidenttypes', 'description'],
+                    columns: [
+                    	{
+                            text: 'Incident',
+                            dataIndex: 'incidentname',
+                            xtype: 'treecolumn',
+                            flex: 1,
+                            renderer: 'onRenderIncidentNameCol'
+                        }, {
+                            text: 'Last Update',
+                            xtype: 'datecolumn',
+                            dataIndex: 'lastUpdate',
+                            format: 'Y-m-d H:i:s',
+                            width: 120
+                        }, {
+                            text: 'Type',
+                            dataIndex: 'incidenttypes',
+                            width: 150
+                        },
+                        {
+                            text: 'Description',
+                            dataIndex: 'description',
+                            width: 150
+                        }
+                    ]
+                },
+                {
+                    xtype:'form',
+                    title: 'Incident Details',
+                    reference: 'multiincidentform',
+                    collapsible: true,
+                    collapsed: true,
+                    collapseDirection: 'bottom',
+                    scrollable: true,
+                    maxHeight: 300,
+                    width: '100%',
+                    items:[{
+
+                        xtype: 'fieldset',
+                        border: false,
+                        items: [
+                            {
+
+                                xtype: 'displayfield',
+                                fieldLabel: 'Incident Name',
+                                name: 'incidentname',
+                                value: ''
+
+                            },
+                            {
+
+                                xtype: 'displayfield',
+                                fieldLabel: 'Created',
+                                name: 'created',
+                                value: ''
+
+                            },
+                            {
+
+                                xtype: 'displayfield',
+                                fieldLabel: 'Time since creation',
+                                name: 'timesincecreated',
+                                value: ''
+
+                            },
+                            {
+
+                                xtype: 'displayfield',
+                                fieldLabel: 'Description',
+                                name: 'description',
+                                value: ''
+
+                            }]
+
+                    }]
+                }
+            ]
 
 		});
 });
