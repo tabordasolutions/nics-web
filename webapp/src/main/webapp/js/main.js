@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 require.config({
-    urlArgs: "v=2017.1.7",
+    urlArgs: "v=2017.1.8", // +  (new Date()).getTime(),
     paths: {
         'ext': 'lib/extjs/build/ext-all',
         'ext-charts': 'lib/extjs/build/packages/sencha-charts/build/sencha-charts',
