@@ -50,6 +50,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                     this.updateFilterCountLabel();
                 }
             },this)
+            this.treestore.setAutoLoad(true);
             this.searchField = this.lookupReference('searchFilter');
 
             this.searchStatus = this.lookupReference('searchStatus');
@@ -101,7 +102,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			
 		},
 		
-		getAllIncidents: function(){
+		getAllIncidents: function(obj1, obj2){
 		
 			var url = Ext.String.format("{0}/incidents/{1}/getincidenttree",
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
@@ -153,7 +154,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 })
                 this.IncidentOrgsLookup = IncidentOrgsLookup;
                 var storeData = {
-                    expanded : true
+
                 };
 
                 //fix the incident data
@@ -163,30 +164,6 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 }
                 storeData.children = incidentData.incidents;
                 this.treestore.setRoot(storeData);
-
-                var uniqueorgsdata = incidentData.incidents.map(function(obj) {
-                    return obj.orgname;
-                })
-                    .filter(function(value, index, arr) {
-                        return arr.indexOf(value) === index;
-                    })
-                    .map(function(orgname) {
-                        return { name: orgname}
-                    })
-                var uniqueincidenttypes = incidentData.incidents.map(function(inc) {
-                    return inc.incidentIncidenttypes.map(function(incinctype) {
-                        return incinctype.incidentType.incidentTypeName;
-                    })
-                })
-                    .reduce(function(a,b) {
-                        return a.concat(b); //flatten
-                    })
-                    .filter(function(value, index, arr) {
-                        return arr.indexOf(value) === index;
-                    })
-                    .map(function(incidentTypeName) {
-                        return { name: incidentTypeName }
-                    })
 
                 this.incidentCount = this.treestore.getTotalCount();
                 this.updateFilterCountLabel();
