@@ -38,10 +38,24 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 		incidentColor : 'rgb(0,0,0)',
 		
 		viewEnabled: false,
-		
+
+
+
 		init: function(){
 			this.mediator = Core.Mediator.getInstance();
-			
+
+			this.treestore = this.lookupReference('multiincidentsgrid').getStore();
+            this.treestore.addListener('filterchange', function(store,filters) {
+                if (filters instanceof Ext.util.FilterCollection) {
+                    this.updateFilterCountLabel();
+                }
+            },this)
+            this.treestore.setAutoLoad(true);
+            this.searchField = this.lookupReference('searchFilter');
+
+            this.searchStatus = this.lookupReference('searchStatus');
+            this.lastFilterValue = "";
+            this.incidentCount = 0;
 			var source = new ol.source.Vector();
 			this.vectorLayer = new ol.layer.Vector({
 				source : source,
@@ -88,21 +102,16 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			
 		},
 		
-		getAllIncidents: function(){
+		getAllIncidents: function(obj1, obj2){
 		
-			var url = Ext.String.format("{0}/incidents/{1}/getincidenttree?accessibleByUserId={2}", 
+			var url = Ext.String.format("{0}/incidents/{1}/getincidenttree",
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
-					UserProfile.getWorkspaceId(),
-					UserProfile.getUserId());
+					UserProfile.getWorkspaceId());
 				
 			this.mediator.sendRequestMessage(url, "nics.miv.onloadallincidents");
 		
 		},
-		
-		disableEditButton: function(disabled){
-			this.lookupReference('miveditbutton').setDisabled(disabled);
-		},
-		
+
 		
 		//TODO: Add new incident rather than loading the whole grid
 		onNewIncident: function(e, incident){},
@@ -118,36 +127,169 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 		},
 		
 		onLoadAllIncidents: function(e,response) {
-		
-			if(response != null && response.incidents != null){
+		    var self = this;
+			if(response != null){
 				
-				if(this.lookupReference('multiincidentsgrid').getSelectionModel().getSelection()){
-					this.lookupReference('multiincidentsgrid').getSelectionModel().clearSelections();
-				}
-				
-				this.lookupReference('multiincidentsgrid').getRootNode().removeAll();
-				
-				response.incidents.forEach(function(incident){
-					
-					var root = this.lookupReference('multiincidentsgrid').getRootNode();
-					
-					root.appendChild(this.createTree(incident));
-					
-					
-				}, this);
-				
-				this.addMIVLayer(response.incidents);
-			
+				this.getIncidentOrgs(function (err, incidentorgsdata) {
+                    if (err) {
+                        console.log(err); //TODO: Present to user.
+                    }
+                    else {
+                        self.processIncidentData(response, incidentorgsdata);
+                    }
+                })
 			}
-			
-			//Request the org ownership if the user is an admin or a super user
-			if(UserProfile.getSystemRoleId() == 4){
-				this.loadIncidentOrgs();
-			}
-			
+			else {
+			    console.log(new Error('Bad incident data response'));
+            }
+
 		},
-		
-		loadIncidentOrgs: function(){
+        processIncidentData: function(incidentData, incidentorgsdata) {
+
+            if(incidentData != null && incidentData.incidents != null && incidentorgsdata != null && incidentorgsdata.data){
+                //Create a lookup map
+                var IncidentOrgsLookup = {};
+                incidentorgsdata.data.forEach(function(incidentOrg) {
+                    IncidentOrgsLookup[incidentOrg.incidentid] = incidentOrg;
+                })
+                this.IncidentOrgsLookup = IncidentOrgsLookup;
+                var storeData = {
+
+                };
+
+                //fix the incident data
+                for(var i=0;i<incidentData.incidents.length;i++) {
+                    var incident = incidentData.incidents[i];
+                    this.adjustIncident.call(this, incident);
+                }
+                storeData.children = incidentData.incidents;
+                this.treestore.setRoot(storeData);
+
+                this.incidentCount = this.treestore.getTotalCount();
+                this.updateFilterCountLabel();
+
+                this.addMIVLayer(incidentData.incidents);
+            }
+        },
+        updateFilterCountLabel: function() {
+            var text = 'Showing ' + this.treestore.getCount() + ' of ' + this.incidentCount + ' incidents.';
+            this.searchStatus.setHtml(text);
+
+        },
+        adjustIncident: function(incident){
+
+            incident.orgname = this.IncidentOrgsLookup[incident.incidentid].name;
+            incident.orgid = this.IncidentOrgsLookup[incident.incidentid].orgid;
+            if(!incident.lastUpdate){
+                incident.lastUpdate = incident.created;
+            }
+
+            incident.lastUpdate = new Date(incident.lastUpdate);
+
+            incident.incidenttypes = incident.incidentIncidenttypes.map(function(incidentIncentType) {
+                return incidentIncentType.incidentType.incidentTypeName;
+            }).filter(function(typename) {
+                return typename != null;
+            }).join(", ");
+
+            if(!incident.leaf){
+                incident.children.forEach(function(incident){
+                    var childIncident = this.adjustIncident(incident);
+                    incident.lastUpdate = childIncident.lastUpdate;
+                    incident.incidenttypesstring = childIncident.incidenttypesstring;
+                }, this);
+            }
+            return incident;
+
+        },
+        filterStore: function(value, column) {
+            var me = this,
+                store = me.treestore,
+                searchString = value.toLowerCase(),
+                filterFn = function(node) {
+                    var children = node.childNodes,
+                        len = children && children.length,
+                        visible = v.test(node.get(column)),
+                        i;
+
+                    // If the current node does NOT match the search condition
+                    // specified by the user...
+                    if (!visible) {
+
+                        // Check to see if any of the child nodes of this node
+                        // match the search condition.  If they do then we will
+                        // mark the current node as visible as well.
+                        for (i = 0; i < len; i++) {
+                            if (children[i].isLeaf()) {
+                                visible = children[i].get('visible');
+                            } else {
+                                visible = filterFn(children[i]);
+                            }
+                            if (visible) {
+                                break;
+                            }
+                        }
+
+                    } else { // Current node matches the search condition...
+
+                        // Force all of its child nodes to be visible as well so
+                        // that the user is able to select an example to display.
+                        for (i = 0; i < len; i++) {
+                            children[i].set('visible', true);
+                        }
+
+                    }
+
+                    return visible;
+                },
+                v;
+
+            if (searchString.length < 1) {
+                store.getFilters().removeByKey(column);
+
+            } else {
+                v = new RegExp(searchString, 'i');
+                var f = store.getFilters();
+                store.getFilters().replace({
+                    id: column,
+                    filterFn: filterFn
+                });
+            }
+        },
+        onRenderIncidentNameCol: function(value) {
+            var searchString = this.searchField.getValue();
+
+            if (searchString.length > 0) {
+                return this.strMarkRedPlus(searchString, value);
+            }
+
+            return value;
+        },
+        strMarkRedPlus: function(search, subject) {
+            return subject.replace(
+                new RegExp('(' + search + ')', "gi"), "<span style='color: red;'><b>$1</b></span>");
+        },
+        onSearchKeyUp: function(field, event, eOpts) {
+            var value = field.getValue();
+            const column = field.datacolumn;
+            // Only filter if they actually changed the field value.
+            // Otherwise the view refreshes and scrolls to top.
+            if (value == '') {
+                field.getTrigger('clear').hide();
+                this.filterStore(value,column);
+                this.lastFilterValue = value;
+            } else if (value && value !== this.lastFilterValue) {
+                field.getTrigger('clear')[(value.length > 0) ? 'show' : 'hide']();
+                this.filterStore(value,column);
+                this.lastFilterValue = value;
+            }
+        },
+        onClearTriggerClick: function(obj) {
+            obj.setValue();
+            this.filterStore('', obj.datacolumn);
+            obj.getTrigger('clear').hide();
+        },
+        getIncidentOrgs: function(callback){
 			var topic = Core.Util.generateUUID();
 
 			var orgId = UserProfile.getOrgId();
@@ -155,13 +297,12 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			Core.EventManager.createCallbackHandler(topic, this, 
 					function(orgId, evt, response){
 						this.incidentOrgs = [];
-						if (response && response.data && response.data.length) {
-							for(var i=0; i<response.data.length; i++){
-								if(response.data[i].orgid == orgId){
-									this.incidentOrgs.push(response.data[i].incidentid);
-								}
-							}
+						if (response) {
+							callback(null,response);
 						}
+						else {
+						    callback(new Error("Bad response getting incident orgs"));
+                        }
 					},
 					[orgId]
 			);
@@ -172,40 +313,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			
 			this.mediator.sendRequestMessage(url, topic);
 		},
-		
-		createTree: function(incident){
-			
-			if(!incident.lastUpdate){
-				incident.lastUpdate = incident.created;
-			}
-			
-			incident.lastUpdate = new Date(incident.lastUpdate)
 
-			incident.incidenttypes = "";
-
-			for(var i = 0; i < incident.incidentIncidenttypes.length; i++){
-		
-				incident.incidenttypes += incident.incidentIncidenttypes[i].incidentType.incidentTypeName;
-				
-				if(i != incident.incidentIncidenttypes.length - 1){
-					incident.incidenttypes += ", "
-				}
-		
-			}
-			
-			if(!incident.leaf){
-				incident.children.forEach(function(incident){
-					var childIncident = this.createTree(incident);
-					incident.lastUpdate = childIncident.lastUpdate;
-					incident.incidenttypesstring = childIncident.incidenttypesstring;
-				}, this);
-			}
-			
-			
-			return incident;
-		
-		},
-		
 		addMIVLayer: function(incidents){
 			
 			for(var i = 0; i < incidents.length; i++){
@@ -268,8 +376,8 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			}
 			
 		},
-		
-		onItemDblClick: function(dv, incident, item, index, e){
+
+        onIncidentTreeItemDblClick: function(dv, incident, item, index, e){
     		var latAndLonValues = [incident.data.lon,incident.data.lat];
     		var center = ol.proj.transform(latAndLonValues,'EPSG:4326','EPSG:3857');
     		MapModule.getMap().getView().setCenter(center);
@@ -278,44 +386,49 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
     			this.lookupReference('mivviewbutton').el.dom.click();
     		}
 		},
-		
-		onSelectionChange: function(grid, selected, eOpts) {
-			var incident = selected[0].data;
-			var form = this.lookupReference('multiincidentform');
-			var date = new Date(incident.created);
-			
-			
-			
-			var dateFormat = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-			var diff = date.getTime() - Date.now();
-			var hours = Math.abs(Math.round((((diff/1000)/60)/60)));
-			var days = Math.abs(Math.round(hours / 24));
-			
-			form.getForm().findField('incidentname').setValue(incident.incidentname);
-			form.getForm().findField('created').setValue(dateFormat);
-			
-			if(incident.description == ""){
-				form.getForm().findField('description').setValue("No description available");
-			}
-			else{
-				form.getForm().findField('description').setValue(incident.description);
-			}
-			
-			if(days == 0){
-				form.getForm().findField('timesincecreated').setValue(hours + " hours");
-			}
-			else{
-				
-				form.getForm().findField('timesincecreated').setValue(days + " days, " + hours + " hours");
-			}
-			
-			form.expand();
-			
-			if(UserProfile.getSystemRoleId() == 4){
-				this.disableEditButton(($.inArray(selected[0].data.incidentid, this.incidentOrgs) == -1));
-			}
-			
-		}		
+
+        onIncidentTreeSelectionChange: function(grid, selected, eOpts) {
+            var form = this.lookupReference('multiincidentform');
+            if (selected.length > 0) {
+                var incident = selected[0].data;
+                var date = new Date(incident.created);
+
+                var dateFormat = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                var diff = date.getTime() - Date.now();
+                var hours = Math.abs(Math.round((((diff/1000)/60)/60)));
+                var days = Math.abs(Math.round(hours / 24));
+
+                form.getForm().findField('incidentname').setValue(incident.incidentname);
+                form.getForm().findField('created').setValue(dateFormat);
+
+                if(incident.description == ""){
+                    form.getForm().findField('description').setValue("No description available");
+                }
+                else{
+                    form.getForm().findField('description').setValue(incident.description);
+                }
+
+                if(days == 0){
+                    form.getForm().findField('timesincecreated').setValue(hours + " hours");
+                }
+                else{
+
+                    form.getForm().findField('timesincecreated').setValue(days + " days, " + hours + " hours");
+                }
+                if(UserProfile.getSystemRoleId() == 4){
+                    this.lookup('miveditbutton').setDisabled(UserProfile.getOrgId() != incident.orgid);
+                }
+                form.expand();
+
+            }
+            else {
+                this.resetFormPanel();
+                form.collapse();
+            }
+
+
+
+        }
 		
 	});
 });
