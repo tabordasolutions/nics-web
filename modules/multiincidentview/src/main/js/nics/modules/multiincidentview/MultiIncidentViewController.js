@@ -87,7 +87,6 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 				this.resetFormPanel();
 			}
 			
-			//TODO: Update instead of reload everytime a change occurs
 			var topic = Ext.String.format("iweb.NICS.ws.{0}.newIncident", UserProfile.getWorkspaceId());
 			Core.EventManager.addListener(topic, this.getAllIncidents.bind(this));
 			
@@ -102,7 +101,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			
 		},
 		
-		getAllIncidents: function(obj1, obj2){
+		getAllIncidents: function(){
 		
 			var url = Ext.String.format("{0}/incidents/{1}/getincidenttree",
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
@@ -112,10 +111,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 		
 		},
 
-		
-		//TODO: Add new incident rather than loading the whole grid
-		onNewIncident: function(e, incident){},
-		
+
 		onUpdateIncident: function(e, response, incident){
 			if(response.message != "OK"){
 					Ext.MessageBox.alert("Status", response.message);
@@ -132,7 +128,8 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 				
 				this.getIncidentOrgs(function (err, incidentorgsdata) {
                     if (err) {
-                        console.log(err); //TODO: Present to user.
+                        console.log(err);
+                        self.searchStatus.setHtml('<p class=error>Error:' + err.message + '</p>');
                     }
                     else {
                         self.processIncidentData(response, incidentorgsdata);
@@ -140,7 +137,9 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 })
 			}
 			else {
-			    console.log(new Error('Bad incident data response'));
+			    var err = new Error('Bad incident data response');
+			    console.log(err);
+			    self.searchStatus.setHtml('<p class=error>Error:' + err.message + '</p>');
             }
 
 		},
@@ -292,22 +291,18 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
         getIncidentOrgs: function(callback){
 			var topic = Core.Util.generateUUID();
 
-			var orgId = UserProfile.getOrgId();
-			//populate the user grids
-			Core.EventManager.createCallbackHandler(topic, this, 
-					function(orgId, evt, response){
-						this.incidentOrgs = [];
+			Core.EventManager.createCallbackHandler(topic, this,
+					function(evt, response){
 						if (response) {
 							callback(null,response);
 						}
 						else {
-						    callback(new Error("Bad response getting incident orgs"));
+						    callback(new Error("Bad response from server getting incident orgs"));
                         }
-					},
-					[orgId]
+					}
 			);
 			
-			var url = Ext.String.format('{0}/incidents/{1}/incidentorgs', 
+			var url = Ext.String.format('{0}/incidents/{1}/incidentorgs',
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 					UserProfile.getWorkspaceId());
 			
