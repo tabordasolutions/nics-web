@@ -265,13 +265,15 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 store.getFilters().removeByKey(column);
 
             } else {
-                v = new RegExp(searchString, 'i');
-                var f = store.getFilters();
+                v = new RegExp(this.escapeRegExp(searchString), 'i');
                 store.getFilters().replace({
                     id: column,
                     filterFn: filterFn
                 });
             }
+        },
+        escapeRegExp: function(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
         },
         onRenderIncidentNameCol: function(value) {
             var searchString = this.searchField.getValue();
