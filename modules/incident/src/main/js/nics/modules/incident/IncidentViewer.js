@@ -37,12 +37,9 @@
 		requires: [ 'Ext.Panel', 'Ext.Button', 'Ext.form.TextField', 'Ext.Container' ],
 
 		initComponent: function(){
-			this.createIncidentButton = this.addMenuItem(
-				"Create New Incident", true);
-				
-			this.menu.add({
-				xtype : 'menuseparator'
-			});
+            this.findIncidentsButton = this.menu.add(Ext.create('Ext.menu.Item',{text: 'Find Incidents', iconCls: 'fa fa-search'}));
+            this.createIncidentButton = this.menu.add(Ext.create('Ext.menu.Item',{text: 'Create New Incident', iconCls: 'fa fa-plus'}));
+			this.menu.add('-');
 			
 			this.countryDropdown = Core.UIBuilder.buildComboBox(
 					"country", "Country <em>optional</em>", 135, ['country', 'countryCode'], {valueField: 'countryCode', displayField: 'country',  allowBlank: true, typeAhead: true,  });
@@ -423,8 +420,8 @@
 		},
 
 		clearMenuItems: function(){
-			//Start at 2 to avoid removing the Create Room Button and menu separator
-			while(this.menu.items.length > 2){
+			//Start at 3 to avoid removing the Find incidents, Create Room Button and menu separator
+			while(this.menu.items.length > 3){
 				this.menu.remove(this.menu.items.get(this.menu.items.length-1));
 			}
 		},

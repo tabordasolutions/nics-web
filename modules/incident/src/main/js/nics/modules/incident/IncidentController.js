@@ -65,8 +65,10 @@ define(['iweb/CoreModule',
 	 
 			bindEvents: function(){
 				//Bind UI Elements
-				this.getView().createIncidentButton.on("click", this.showIncidentMenu, this);
-				this.getView().createButton.on("click", this.createIncident, this);
+				this.view.createIncidentButton.on("click", this.showIncidentMenu, this);
+                this.view.findIncidentsButton.on("click", this.sendFindIncidentMessage, this);
+
+                this.getView().createButton.on("click", this.createIncident, this);
 				this.getView().locateButton.on("toggle", this.locateIncident, this);
 		
 				//Subscribe to UI Events
@@ -94,7 +96,7 @@ define(['iweb/CoreModule',
 				this.mediator.subscribe(removeTopic);
 				Core.EventManager.addListener(removeTopic, this.onRemoveIncident.bind(this));
 				
-				var url = Ext.String.format("{0}/incidents/{1}?accessibleByUserId={2}",
+				var url = Ext.String.format("{0}/incidents/{1}",
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 					UserProfile.getWorkspaceId(), UserProfile.getUserId());
 				//request incidents
@@ -248,7 +250,10 @@ define(['iweb/CoreModule',
 						}
 					}
 			},
-
+			sendFindIncidentMessage: function() {
+				console.log("Sending message to show MIV panel.");
+				Core.EventManager.fireEvent("nics.incident.find");
+			},
 			showIncidentMenu: function(){
 				var view = this.getView();
 				
