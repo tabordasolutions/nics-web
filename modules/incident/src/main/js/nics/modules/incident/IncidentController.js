@@ -251,8 +251,7 @@ define(['iweb/CoreModule',
 					}
 			},
 			sendFindIncidentMessage: function() {
-				console.log("Sending message to show MIV panel.");
-				Core.EventManager.fireEvent("nics.incident.find");
+				Core.EventManager.fireEvent("nics.incident.find"); //Not handled in this controller.
 			},
 			showIncidentMenu: function(){
 				var view = this.getView();

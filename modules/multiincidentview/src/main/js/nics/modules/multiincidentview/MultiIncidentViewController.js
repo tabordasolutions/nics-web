@@ -76,7 +76,6 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			
 		},
         onShowFindIncidents: function(){
-            console.log('MIV: Showing find incidents.');
             var sidepanel = Ext.getCmp('cSidePanel');
             sidepanel.setActiveTab(this.view);
             sidepanel.expand();
