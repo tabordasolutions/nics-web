@@ -48,10 +48,12 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
             this.treestore.addListener('filterchange', function(store,filters) {
                 if (filters instanceof Ext.util.FilterCollection) {
                     this.updateFilterCountLabel();
+                    this.lookup('clearFiltersButton').setDisabled(filters.length == 0);
                 }
             },this)
             this.treestore.setAutoLoad(true);
             this.searchField = this.lookupReference('searchFilter');
+            this.orgsStore = this.lookupReference('orgsCombo').getStore();
 
             this.searchStatus = this.lookupReference('searchStatus');
             this.lastFilterValue = "";
@@ -168,6 +170,17 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 }
                 storeData.children = incidentData.incidents;
                 this.treestore.setRoot(storeData);
+                var uniqueorgsdata = incidentData.incidents.map(function(obj) {
+                    return obj.orgname;
+                })
+                    .filter(function(value, index, arr) {
+                        return arr.indexOf(value) === index;
+                    })
+                    .map(function(orgname) {
+                        return { name: orgname}
+                    })
+                this.orgsStore.setData(uniqueorgsdata);
+
 
                 this.incidentCount = this.treestore.getTotalCount();
                 this.updateFilterCountLabel();
@@ -288,10 +301,21 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 this.lastFilterValue = value;
             }
         },
+        clearAllFilters: function() {
+            var filterComponents = ['searchFilter','orgsCombo'];
+            filterComponents.forEach(function(componentname) {
+                this.onClearTriggerClick(this.lookup(componentname));
+            },this)
+        },
         onClearTriggerClick: function(obj) {
             obj.setValue();
             this.filterStore('', obj.datacolumn);
             obj.getTrigger('clear').hide();
+        },
+        onFilterSelect: function(field, rec) {
+            var name = rec.get('name');
+            field.getTrigger('clear').show();
+            this.filterStore(name, field.datacolumn);
         },
         getIncidentOrgs: function(callback){
 			var topic = Core.Util.generateUUID();
