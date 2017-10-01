@@ -1,0 +1,12 @@
+.multi-incident-tree .x-tree-icon {
+
+    display: none !important;
+    align: left;
+
+}
+.multi-incident-tree .searchmatch {
+
+    color: green;
+    font-weight: bold;
+
+}

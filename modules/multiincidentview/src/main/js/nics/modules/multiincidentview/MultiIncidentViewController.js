@@ -279,14 +279,14 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
             var searchString = this.searchField.getValue();
 
             if (searchString.length > 0) {
-                return this.strMarkRedPlus(searchString, value);
+                return this.strMarkClassPlus(searchString, value);
             }
 
             return value;
         },
-        strMarkRedPlus: function(search, subject) {
+        strMarkClassPlus: function(search, subject) {
             return subject.replace(
-                new RegExp('(' + search + ')', "gi"), "<span style='color: red;'><b>$1</b></span>");
+                new RegExp('(' + search + ')', "gi"), "<span class='searchmatch'>$1</span>");
         },
         onSearchKeyUp: function(field, event, eOpts) {
             var value = field.getValue();
