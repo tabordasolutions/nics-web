@@ -220,6 +220,7 @@
                             text: 'Incident',
                             dataIndex: 'incidentname',
                             xtype: 'treecolumn',
+                            width: 150,
                             flex: 1,
                             renderer: 'onRenderIncidentNameCol'
                         }, {
@@ -231,12 +232,12 @@
                         }, {
                             text: 'Type',
                             dataIndex: 'incidenttypes',
-                            width: 150
+                            width: 100
                         },
                         {
                             text: 'Description',
                             dataIndex: 'description',
-                            width: 150
+                            width: 100
                         },
                         {
                             text: 'Organization',
