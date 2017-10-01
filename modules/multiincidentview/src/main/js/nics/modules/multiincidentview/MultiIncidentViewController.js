@@ -321,7 +321,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
             }
         },
         clearAllFilters: function() {
-            var filterComponents = ['searchFilter','orgsCombo'];
+            var filterComponents = ['searchFilter','orgsCombo','incidentTypeCombo'];
             filterComponents.forEach(function(componentname) {
                 this.onClearTriggerClick(this.lookup(componentname));
             },this)
