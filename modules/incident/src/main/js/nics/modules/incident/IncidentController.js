@@ -212,7 +212,7 @@ define(['iweb/CoreModule',
 						incident.incidentid,
 						incident.lat, incident.lon,
 						incident.incidenttypes, //need to figure out incidenttypes? -- Not returning from API atm
-						2, false, //0 is the Create Incident option & 1 is the menu separator
+						3, false, //0 is Find Incidents, 1 is the Create Incident option & 2 is the menu separator
 						this.onJoinIncident.bind(this)); 
 						
 				
@@ -224,7 +224,7 @@ define(['iweb/CoreModule',
 				var items = this.getView().getMenu().items;
 				for(var i=0; i<items.length; i++){
 					var item = items.getAt(i);
-					if(item.config && item.config.incidentId == incidentId){
+					if(item.config && item.config.incidentId === incidentId){
 						this.getView().getMenu().remove(item);
 						return;
 					}

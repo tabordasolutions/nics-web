@@ -222,7 +222,8 @@
                     <executions>
                         <execution>
                             <id>update-copyright</id>
-                            <phase>generate-sources</phase>
+                            <!--<phase>generate-sources</phase>-->
+                            <phase>none</phase>
                             <goals>
                                 <goal>format</goal>
                             </goals>
