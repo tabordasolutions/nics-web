@@ -78,7 +78,7 @@
                     items: [
                         {
                             xtype: 'container',
-                            columnWidth: 1,
+                            columnWidth: 0.33,
                             layout: {
                                 type: 'vbox'
                             },
@@ -105,6 +105,50 @@
                                             buffer: 300
                                         }
                                     }
+                                },
+                                {
+                                    xtype: 'button',
+                                    reference: 'clearFiltersButton',
+                                    text: 'Clear Filters',
+                                    handler: 'clearAllFilters',
+                                    disabled: true
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'container',
+                            columnWidth: 0.67,
+                            layout: {
+                                type: 'vbox',
+                                align: 'stretch'
+                            },
+                            border: false,
+                            padding: 0,
+                            items: [
+                                {
+                                    xtype: 'combobox',
+                                    flex: 1,
+                                    datacolumn: 'orgname',
+                                    reference: 'orgsCombo',
+                                    emptyText: 'By Organization',
+                                    padding: '0 5',
+                                    store: {
+                                        sorters: 'name',
+                                        data: [{name: 'loading'}]
+                                    },
+                                    listeners: {
+                                        select: 'onFilterSelect'
+                                    },
+                                    triggers: {
+                                        clear: {
+                                            cls: 'x-form-clear-trigger',
+                                            handler: 'onClearTriggerClick',
+                                            hidden: true
+                                        }
+                                    },
+                                    queryMode: 'local',
+                                    displayField: 'name',
+                                    valueField: 'name'
                                 }
                             ]
                         }
@@ -145,12 +189,13 @@
                         itemdblclick: 'onIncidentTreeItemDblClick'
                     },
 
-                    fields: ['incidentname', 'lastupdate', 'incidenttypes', 'description'],
+                    fields: ['incidentname', 'lastupdate', 'incidenttypes', 'description', 'orgname'],
                     columns: [
                     	{
                             text: 'Incident',
                             dataIndex: 'incidentname',
                             xtype: 'treecolumn',
+                            width: 150,
                             flex: 1,
                             renderer: 'onRenderIncidentNameCol'
                         }, {
@@ -162,12 +207,17 @@
                         }, {
                             text: 'Type',
                             dataIndex: 'incidenttypes',
-                            width: 150
+                            width: 100
                         },
                         {
                             text: 'Description',
                             dataIndex: 'description',
-                            width: 150
+                            width: 100
+                        },
+                        {
+                            text: 'Organization',
+                            dataIndex: 'orgname',
+                            width: 120
                         }
                     ]
                 },
