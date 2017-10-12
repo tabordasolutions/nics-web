@@ -71,10 +71,15 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 			Core.EventManager.addListener("nics.incident.update.callback", this.onUpdateIncident.bind(this));
 			Core.EventManager.addListener("nics.miv.update.mivpanel", this.loadAllIncidents.bind(this));
 			Core.EventManager.addListener("nics.incident.create.callback", this.loadAllIncidents.bind(this));
+			Core.EventManager.addListener('nics.incident.find', this.onShowFindIncidents.bind(this));
 			
 			
 		},
-		
+        onShowFindIncidents: function(){
+            var sidepanel = Ext.getCmp('cSidePanel');
+            sidepanel.setActiveTab(this.view);
+            sidepanel.expand();
+        },
 		loadAllIncidents: function(e) {
 			var grid = this.lookupReference('multiincidentsgrid');
 			

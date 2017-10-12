@@ -65,8 +65,10 @@ define(['iweb/CoreModule',
 	 
 			bindEvents: function(){
 				//Bind UI Elements
-				this.getView().createIncidentButton.on("click", this.showIncidentMenu, this);
-				this.getView().createButton.on("click", this.createIncident, this);
+				this.view.createIncidentButton.on("click", this.showIncidentMenu, this);
+                this.view.findIncidentsButton.on("click", this.sendFindIncidentMessage, this);
+
+                this.getView().createButton.on("click", this.createIncident, this);
 				this.getView().locateButton.on("toggle", this.locateIncident, this);
 		
 				//Subscribe to UI Events
@@ -94,7 +96,7 @@ define(['iweb/CoreModule',
 				this.mediator.subscribe(removeTopic);
 				Core.EventManager.addListener(removeTopic, this.onRemoveIncident.bind(this));
 				
-				var url = Ext.String.format("{0}/incidents/{1}?accessibleByUserId={2}",
+				var url = Ext.String.format("{0}/incidents/{1}",
 					Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 					UserProfile.getWorkspaceId(), UserProfile.getUserId());
 				//request incidents
@@ -210,7 +212,7 @@ define(['iweb/CoreModule',
 						incident.incidentid,
 						incident.lat, incident.lon,
 						incident.incidenttypes, //need to figure out incidenttypes? -- Not returning from API atm
-						2, false, //0 is the Create Incident option & 1 is the menu separator
+						3, false, //0 is Find Incidents, 1 is the Create Incident option & 2 is the menu separator
 						this.onJoinIncident.bind(this)); 
 						
 				
@@ -222,7 +224,7 @@ define(['iweb/CoreModule',
 				var items = this.getView().getMenu().items;
 				for(var i=0; i<items.length; i++){
 					var item = items.getAt(i);
-					if(item.config && item.config.incidentId == incidentId){
+					if(item.config && item.config.incidentId === incidentId){
 						this.getView().getMenu().remove(item);
 						return;
 					}
@@ -248,7 +250,9 @@ define(['iweb/CoreModule',
 						}
 					}
 			},
-
+			sendFindIncidentMessage: function() {
+				Core.EventManager.fireEvent("nics.incident.find"); //Not handled in this controller.
+			},
 			showIncidentMenu: function(){
 				var view = this.getView();
 				
