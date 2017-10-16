@@ -230,6 +230,13 @@
                             format: 'Y-m-d H:i:s',
                             width: 120
                         }, {
+                            text: 'Created',
+                            xtype: 'datecolumn',
+                            dataIndex: 'created',
+                            format: 'Y-m-d H:i:s',
+                            hidden: true,
+                            width: 120
+                        }, {
                             text: 'Type',
                             dataIndex: 'incidenttypes',
                             width: 100
