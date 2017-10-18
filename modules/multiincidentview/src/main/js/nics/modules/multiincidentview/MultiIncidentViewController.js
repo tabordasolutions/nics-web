@@ -54,7 +54,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
             this.treestore.setAutoLoad(true);
             this.searchField = this.lookupReference('searchFilter');
             this.orgsStore = this.lookupReference('orgsCombo').getStore();
-
+            this.incidentTypeStore = this.lookupReference('incidentTypeCombo').getStore();
             this.searchStatus = this.lookupReference('searchStatus');
             this.lastFilterValue = "";
             this.incidentCount = 0;
@@ -170,6 +170,8 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 }
                 storeData.children = incidentData.incidents;
                 this.treestore.setRoot(storeData);
+                this.incidentCount = this.treestore.getTotalCount();
+
                 var uniqueorgsdata = incidentData.incidents.map(function(obj) {
                     return obj.orgname;
                 })
@@ -179,10 +181,25 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                     .map(function(orgname) {
                         return { name: orgname}
                     })
+
                 this.orgsStore.setData(uniqueorgsdata);
+                var uniqueincidenttypes = incidentData.incidents.map(function(inc) {
+                    return inc.incidentIncidenttypes.map(function(incinctype) {
+                        return incinctype.incidentType.incidentTypeName;
+                    })
+                })
+                    .reduce(function(a,b) {
+                        return a.concat(b); //flatten
+                    })
+                    .filter(function(value, index, arr) {
+                        return arr.indexOf(value) === index;
+                    })
+                    .map(function(incidentTypeName) {
+                        return { name: incidentTypeName }
+                    })
+                this.incidentTypeStore.setData(uniqueincidenttypes);
 
 
-                this.incidentCount = this.treestore.getTotalCount();
                 this.updateFilterCountLabel();
 
                 this.addMIVLayer(incidentData.incidents);
@@ -304,7 +321,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
             }
         },
         clearAllFilters: function() {
-            var filterComponents = ['searchFilter','orgsCombo'];
+            var filterComponents = ['searchFilter','orgsCombo','incidentTypeCombo'];
             filterComponents.forEach(function(componentname) {
                 this.onClearTriggerClick(this.lookup(componentname));
             },this)

@@ -149,6 +149,31 @@
                                     queryMode: 'local',
                                     displayField: 'name',
                                     valueField: 'name'
+                                },
+                                {
+                                    xtype: 'combobox',
+                                    flex: 1,
+                                    datacolumn: 'incidenttypes',
+                                    reference: 'incidentTypeCombo',
+                                    emptyText: 'By Incident Type',
+                                    padding: '0 5',
+                                    store: {
+                                        sorters: 'name',
+                                        data: [{name: 'loading'}]
+                                    },
+                                    listeners: {
+                                        select: 'onFilterSelect'
+                                    },
+                                    triggers: {
+                                        clear: {
+                                            cls: 'x-form-clear-trigger',
+                                            handler: 'onClearTriggerClick',
+                                            hidden: true
+                                        }
+                                    },
+                                    queryMode: 'local',
+                                    displayField: 'name',
+                                    valueField: 'name'
                                 }
                             ]
                         }
