@@ -217,7 +217,7 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
             if(!incident.lastUpdate){
                 incident.lastUpdate = incident.created;
             }
-
+            incident.created = new Date(incident.created);
             incident.lastUpdate = new Date(incident.lastUpdate);
 
             incident.incidenttypes = incident.incidentIncidenttypes.map(function(incidentIncentType) {
