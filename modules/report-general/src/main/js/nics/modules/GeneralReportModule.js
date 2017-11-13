@@ -40,7 +40,7 @@ define([
 		GeneralReportModule.prototype.load = function(){
 			var generalReportViewer = new GeneralReportView({
 				controller: new GeneralReportController({
-					reportTitle: "General Messages",
+					reportTitle: "Field Repoorts",
 					reportType: 'SR',
 					loadEvt: 'LoadGeneralReports',
 					fillColor: 'green',
