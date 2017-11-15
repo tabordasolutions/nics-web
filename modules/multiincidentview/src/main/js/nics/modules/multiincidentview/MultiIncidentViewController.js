@@ -39,16 +39,19 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 		
 		viewEnabled: false,
 
-
-
 		init: function(){
 			this.mediator = Core.Mediator.getInstance();
 
 			this.treestore = this.lookupReference('multiincidentsgrid').getStore();
             this.treestore.addListener('filterchange', function(store,filters) {
                 if (filters instanceof Ext.util.FilterCollection) {
-                    this.updateFilterCountLabel();
-                    this.lookup('clearFiltersButton').setDisabled(filters.length == 0);
+                    var grid = this.lookupReference('multiincidentsgrid');
+                    //Expand the grid so that the counts represent accurately.
+                    grid.expandAll(function() {
+                        this.updateFilterCountLabel();
+                        this.lookup('clearFiltersButton').setDisabled(filters.length == 0);
+                    },this);
+
                 }
             },this)
             this.treestore.setAutoLoad(true);
@@ -170,7 +173,10 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                 }
                 storeData.children = incidentData.incidents;
                 this.treestore.setRoot(storeData);
-                this.incidentCount = this.treestore.getTotalCount();
+                this.incidentCount = 0; //Excludes the root.
+                var allincidentCount = -1;
+                this.treestore.root.cascadeBy(function() {allincidentCount++});
+                this.incidentCount = (allincidentCount >= 0 ? allincidentCount : 0);
 
                 var uniqueorgsdata = incidentData.incidents.map(function(obj) {
                     return obj.orgname;
@@ -199,8 +205,11 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
                     })
                 this.incidentTypeStore.setData(uniqueincidenttypes);
 
-
-                this.updateFilterCountLabel();
+                var grid = this.lookupReference('multiincidentsgrid');
+                //Expand the grid so that the counts represent accurately.
+                grid.expandAll(function() {
+                    this.updateFilterCountLabel();
+                },this);
 
                 this.addMIVLayer(incidentData.incidents);
             }
