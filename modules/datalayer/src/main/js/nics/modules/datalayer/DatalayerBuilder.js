@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * s
  */
-define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManager','../datalayerstyle/WfsStylerFactory'],
-		function(Core, ol, TokenManager, ArcGISFeatureRequest, WfsStylerFactory){
+define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISWMSFeatureRequestManager','../datalayerstyle/WfsStylerFactory'],
+		function(Core, ol, TokenManager, ArcGISWMSFeatureRequest, WfsStylerFactory){
 	
 	// matches href tags with relative urls
 	//var relativeHrefRegex = /<href>(?!http|#)(.*)<\/href>/gi;
@@ -39,7 +39,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 		
 		constructor: function() {
 			this.mediator = Core.Mediator.getInstance();
-			ArcGISFeatureRequest.init();
+			ArcGISWMSFeatureRequest.init();
 		},
 				
 		buildLayer: function(type, config){
@@ -68,7 +68,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 		
 		buildWMSLayer: function (url, layername, config) {
 			var attrs = (config.attributes) ? JSON.parse(config.attributes) : {};
-			return new ol.layer.Tile({
+			var wmsLayer = new ol.layer.Tile({
 				opacity: config.opacity || 1,
 				source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
 					url: url,
@@ -79,6 +79,8 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 					}
 				}))
 			});
+			ArcGISWMSFeatureRequest.addLayer(wmsLayer);
+			return wmsLayer;
 		},
 		
 		buildWFSLayer: function (url, layername, config, style) {
@@ -335,7 +337,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISFeatureRequestManage
 					params: {'LAYERS': 'show:' + layername }
 				})
 			});
-			ArcGISFeatureRequest.addLayer(layer);
+			ArcGISWMSFeatureRequest.addLayer(layer);
 			
 			return layer;
 			
