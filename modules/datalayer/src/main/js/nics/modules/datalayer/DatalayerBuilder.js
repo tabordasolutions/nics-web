@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * s
  */
-define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISWMSFeatureRequestManager','../datalayerstyle/WfsStylerFactory'],
-		function(Core, ol, TokenManager, ArcGISWMSFeatureRequest, WfsStylerFactory){
+define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','../datalayerstyle/WfsStylerFactory'],
+		function(Core, ol, TokenManager, FeatureRequest, WfsStylerFactory){
 	
 	// matches href tags with relative urls
 	//var relativeHrefRegex = /<href>(?!http|#)(.*)<\/href>/gi;
@@ -39,7 +39,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISWMSFeatureRequestMan
 		
 		constructor: function() {
 			this.mediator = Core.Mediator.getInstance();
-			ArcGISWMSFeatureRequest.init();
+			FeatureRequest.init();
 		},
 				
 		buildLayer: function(type, config){
@@ -79,7 +79,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISWMSFeatureRequestMan
 					}
 				}))
 			});
-			ArcGISWMSFeatureRequest.addLayer(wmsLayer);
+			FeatureRequest.addLayer(wmsLayer);
 			return wmsLayer;
 		},
 		
@@ -337,7 +337,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './ArcGISWMSFeatureRequestMan
 					params: {'LAYERS': 'show:' + layername }
 				})
 			});
-			ArcGISWMSFeatureRequest.addLayer(layer);
+			FeatureRequest.addLayer(layer);
 			
 			return layer;
 			
