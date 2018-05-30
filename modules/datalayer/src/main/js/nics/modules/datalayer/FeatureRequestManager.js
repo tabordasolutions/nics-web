@@ -103,11 +103,12 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 
         function requestWMSFeatureInfo(layer, evt, container) {
             map = MapModule.getMap();
+            var infoFormat = layer.getSource().urls[0].includes('geoserver') ? 'application/json' : 'application/geojson';
             var url = layer.getSource().getGetFeatureInfoUrl(
                     evt.mapBrowserEvent.coordinate,
                     map.getView().getResolution(),
                     map.getView().getProjection(),
-                    {'INFO_FORMAT': 'application/json'}
+                    {'INFO_FORMAT': infoFormat}
                 );
 
             if(url) {
