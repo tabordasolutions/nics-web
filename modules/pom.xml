@@ -36,7 +36,7 @@
   <parent>
     <groupId>com.tabordasolutions.nics</groupId>
     <artifactId>nics-web</artifactId>
-    <version>2018.1</version>
+    <version>2018.1.3</version>
     <relativePath>..</relativePath>
   </parent>
 
