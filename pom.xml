@@ -80,9 +80,9 @@
     <junit.version>3.8.1</junit.version>
 
     <iweb.version>6.2</iweb.version>
-    <nics.common.version>2018.1</nics.common.version>
-    <sso.tools.version>2018.1</sso.tools.version>
-    <openam.tools.version>2018.1</openam.tools.version>
+    <nics.common.version>2018.1.3</nics.common.version>
+    <sso.tools.version>2018.1.3</sso.tools.version>
+    <openam.tools.version>2018.1.3</openam.tools.version>
 
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
