@@ -90,12 +90,22 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 			} 
 			
 			var style = [];
-			
+			var textStyle;
+			var labelText = feature.get('VehicleName');
+			if(labelText && MapModule.getMapController().getZoom() > 11) {
+				textStyle = new ol.style.Text({
+					text: labelText,
+					offsetX: 0,
+					offsetY: -15
+				});
+			}
+
 			style.push(new ol.style.Style({
 				image: new ol.style.Icon({
 					src: graphic,
 					scale: .15
-				})
+				}),
+				text: textStyle
 			}));
 			
 			if(selected){
@@ -108,7 +118,8 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 						stroke: new ol.style.Stroke({
 							color: 'rgb(0, 255, 255)'
 						})
-					})
+					}),
+					text: textStyle
 				}));
 			}
 
