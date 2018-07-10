@@ -91,7 +91,8 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 			
 			var style = [];
 			var textStyle;
-			var labelText = feature.get('VehicleName');
+			var jurisdiction = feature.get('Jurisdiction') && feature.get('Jurisdiction') != 'Unavailable'? feature.get('Jurisdiction') : '';
+			var labelText = jurisdiction ? jurisdiction + ' ' + feature.get('VehicleName') : feature.get('VehicleName');
 			if(labelText && MapModule.getMapController().getZoom() > 11) {
 				textStyle = new ol.style.Text({
 					text: labelText,
