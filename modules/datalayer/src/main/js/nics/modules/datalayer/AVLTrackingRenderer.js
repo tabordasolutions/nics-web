@@ -37,7 +37,25 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 			MapModule.getClickListener().addRenderer(this);
 			MapModule.getMapStyle().addStyleFunction(this.getStyle.bind(this));
 		},
-		
+
+		hashCode: function(str) {
+			var hash = 0, i, str;
+			if(str.length == 0)
+				return hash;
+			for(i=0;i<str.length; i++) {
+				hash = ((hash << 5) - hash) + str.charCodeAt(i);
+				hash |= 0;
+			}
+			return hash;
+		},
+
+		randomTextLabelOffset: function(labelText) {
+			var labelOffsetArray = [[0, -15, 'left'], [0, -15, 'right'], [15, 0, 'left'], [0, 15, 'center'], [-10, 0, 'right']];
+			var offsetIndex = Math.abs(this.hashCode(labelText)) % labelOffsetArray.length;
+			var offset = labelOffsetArray[offsetIndex];
+			return offset;
+		},
+
 		getStyle: function(feature, resolution, selected){
 			var course = feature.get('course') ? feature.get('course') : feature.get('Course');
 			
@@ -94,10 +112,12 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 			var jurisdiction = feature.get('Jurisdiction') && feature.get('Jurisdiction') != 'Unavailable'? feature.get('Jurisdiction') : '';
 			var labelText = jurisdiction ? jurisdiction + ' ' + feature.get('VehicleName') : feature.get('VehicleName');
 			if(labelText && MapModule.getMapController().getZoom() > 11) {
+				var offset = this.randomTextLabelOffset(labelText);
 				textStyle = new ol.style.Text({
 					text: labelText,
-					offsetX: 0,
-					offsetY: -15
+					offsetX: offset[0],
+					offsetY: offset[1],
+					textAlign: offset[2],
 				});
 			}
 
@@ -126,7 +146,7 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
 
 			return style
 		},
-		
+
 		render: function(container, feature) {
 			//check for feature.get('course')
 			if(feature && !feature.get('description') && !feature.get("type")){
