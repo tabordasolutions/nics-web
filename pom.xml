@@ -38,7 +38,7 @@
   <artifactId>nics-web</artifactId>
   <packaging>pom</packaging>
   <name>NICS Web Pom</name>
-  <version>2017.1</version>
+  <version>2018.1.3</version>
 
   <modules>
     <module>modules</module>
@@ -80,9 +80,9 @@
     <junit.version>3.8.1</junit.version>
 
     <iweb.version>6.2.1</iweb.version>
-    <nics.common.version>2017.1.0</nics.common.version>
-    <sso.tools.version>2017.1</sso.tools.version>
-    <openam.tools.version>2017.1</openam.tools.version>
+    <nics.common.version>2018.1.3</nics.common.version>
+    <sso.tools.version>2018.1.3</sso.tools.version>
+    <openam.tools.version>2018.1.3</openam.tools.version>
 
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -197,7 +197,7 @@
                         <header>${basedir}/copyright.txt</header>
                         <strictCheck>true</strictCheck>
                         <properties>
-                            <year>2017</year>
+                            <year>2018</year>
                         </properties>
                         <useDefaultExcludes>false</useDefaultExcludes>
 
