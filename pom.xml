@@ -79,7 +79,7 @@
     <esapi.version>2.1.0</esapi.version>
     <junit.version>3.8.1</junit.version>
 
-    <iweb.version>6.2</iweb.version>
+    <iweb.version>6.2.1</iweb.version>
     <nics.common.version>2017.1.0</nics.common.version>
     <sso.tools.version>2017.1</sso.tools.version>
     <openam.tools.version>2017.1</openam.tools.version>
