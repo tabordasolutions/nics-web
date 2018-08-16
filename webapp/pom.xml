@@ -46,7 +46,7 @@
 	<name>NICS Webapp</name>
 
     <properties>
-        <mit-lib.version>6.2</mit-lib.version>
+        <mit-lib.version>6.2.1</mit-lib.version>
     </properties>
 	<dependencies>
 
