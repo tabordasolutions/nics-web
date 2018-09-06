@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 require.config({
-    urlArgs: "v=2018.1.4",
+    urlArgs: "v=2018.1.5",
     //urlArgs: 'v=' +  (new Date()).getTime(),
     paths: {
         'ext': 'lib/extjs/build/ext-all',
