@@ -42,10 +42,10 @@ function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
 
 
 	var ReportModule = function() {};
+	var buttonStyle = 'nontb_style';
 
 	ReportModule.prototype.load = function() {
-		var reportViewer = Ext.create('modules.report.ReportViewer');
-		
+	    var reportViewer = Ext.create('modules.report.ReportViewer');
 		GeneralReportModule.load();
 		DamageReportModule.load();
 		RocReportModule.load();
@@ -53,8 +53,23 @@ function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
 		FmagReportModule.load();
 
 
-		reportViewer.setDisabled(true); // Enables when user joins an incident
+		// Enables ROC by default. All other report types are enabled when user joins an incident
 		Core.View.addToSidePanel(reportViewer);
+		var rocButton = Ext.create('Ext.Button', {
+			text: 'ROC',
+			baseCls: buttonStyle,
+			handler: function() {
+				Core.View.showSidePanel();
+				if(reportViewer.getActiveTab().title != 'ROC') {
+					var rocElement = reportViewer.items.items.find(function(element) {
+						return element.title == 'ROC';
+					});
+					reportViewer.setActiveItem(rocElement);
+				}
+				Core.View.setActiveTabOnSidePanel(reportViewer);
+			}
+		});
+		Core.View.addToTitleBar([rocButton, {xtype: 'tbspacer', width: 15}]);
 	};
 
 	return new ReportModule();
