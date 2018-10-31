@@ -45,7 +45,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.lookupReference('updateButton').disable();
 			this.lookupReference('finalButton').disable();
 			this.lookupReference('printButton').disable();
-		
+			this.emailList = UserProfile.getUsername();
 			
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
@@ -74,15 +74,17 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			Core.EventManager.addListener("LoadOrgAdminList", this.loadOrgAdminList.bind(this));
 			Core.EventManager.addListener("LoadOrgDistList", this.loadOrgDistList.bind(this));
 		},
-	
+
 		onJoinIncident: function(e, incident) {
 			this.incidentName = incident.name;
 			this.incidentId = incident.id;
-			this.emailList ="";
-			
-			this.getView().enable();				
-			
+			this.emailList = UserProfile.getUsername();
+
+			this.getView().enable();
+
 			var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+
+			this.clearReportsInView();
 			//Load reports
 			this.mediator.sendRequestMessage(endpoint +
 					"/reports/" + this.incidentId + '/ROC', "LoadROCReports");
@@ -90,20 +92,19 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			var url = Ext.String.format("{0}/orgs/{1}/adminlist/{2}",endpoint, UserProfile.getWorkspaceId(), UserProfile.getOrgId());
 			this.mediator.sendRequestMessage(url, "LoadOrgAdminList");
 			var url = Ext.String.format("{0}/orgs/{1}/org/{2}",endpoint, UserProfile.getWorkspaceId(), UserProfile.getOrgName());
-			
+
 			this.mediator.sendRequestMessage(url, "LoadOrgDistList");
-			
+
 			//Subscribe to New ROC report message on the bus
 			this.newTopic = Ext.String.format(
 					"iweb.NICS.incident.{0}.report.{1}.new", this.incidentId,
 					'ROC');
 			this.mediator.subscribe(this.newTopic);
 			
-			this.newHandler = this.onReportAdded.bind(this)
+			this.newHandler = this.onReportAdded.bind(this);
 			Core.EventManager.addListener(this.newTopic, this.newHandler);
-			
-			
 		},
+
 		onCloseIncident: function(e, incidentId) {
 			this.mediator.unsubscribe(this.newTopic);
 			
@@ -111,23 +112,27 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			Core.EventManager.removeListener("LoadOrgAdminList", this.loadOrgAdminList);
 			Core.EventManager.removeListener("LoadOrgDistList", this.loadOrgDistList);
 			Core.EventManager.removeListener("PrintROCReport", this.onReportReady);
-			
-			
-			
+
+			this.clearReportsInView();
+
+			this.lookupReference('createButton').enable();
+			this.lookupReference('updateButton').disable();
+			this.lookupReference('finalButton').disable();
+			this.lookupReference('printButton').disable();
+
+			this.incidentId = null;
+			this.incidentName = null;
+			this.emailList = UserProfile.getUsername();
+		},
+
+		clearReportsInView: function() {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			rocReportContainer.removeAll();
-			
 			var rocList = this.lookupReference('rocList');
 			rocList.clearValue();
 			rocList.getStore().removeAll()
-			this.getView().disable();
-			
-			this.incidentId = null;
-			this.incidentName = null;
-			this.emailList = null;
-			
 		},
-		
+
 	onAddROC: function(e) {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
@@ -137,8 +142,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				formTypeId: this.formTypeId,
 				email: this.emailList,
 				simplifiedEmail: true
-				
-			
 			});
             rocReportContainer.removeAll();
             rocReportContainer.add(rocForm);

@@ -47,6 +47,7 @@ define([
 					strokeColor: 'green'
 				})
 			});
+			generalReportViewer.setDisabled(true);
 		};
 		
 		return new GeneralReportModule();

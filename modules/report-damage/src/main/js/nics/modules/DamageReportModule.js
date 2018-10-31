@@ -47,6 +47,7 @@ define([
 					strokeColor: 'red'
 				})
 			});
+			damageReportViewer.setDisabled(true);
 		};
 		
 		return new DamageReportModule();
