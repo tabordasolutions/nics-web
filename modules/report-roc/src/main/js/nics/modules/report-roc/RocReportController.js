@@ -46,6 +46,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.lookupReference('finalButton').disable();
 			this.lookupReference('printButton').disable();
 			this.emailList = UserProfile.getUsername();
+			this.incidentNameReadOnly = false;
 			
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
@@ -73,6 +74,15 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			Core.EventManager.fireEvent("nics.report.add", {title: "ROC", component: this.getView()});
 			Core.EventManager.addListener("LoadOrgAdminList", this.loadOrgAdminList.bind(this));
 			Core.EventManager.addListener("LoadOrgDistList", this.loadOrgDistList.bind(this));
+			Core.EventManager.addListener("nics.active.incidents.ready", this.loadActiveIncidents.bind(this));
+			Core.EventManager.addListener("nics.active.incidents.update", this.updateActiveIncident.bind(this));
+			var topic = Ext.String.format("iweb.NICS.ws.{0}.newIncident", UserProfile.getWorkspaceId());
+			this.mediator.subscribe(topic);
+			Core.EventManager.addListener(topic, this.addActiveIncident.bind(this));
+			var removeTopic = Ext.String.format("iweb.NICS.ws.{0}.removeIncident", UserProfile.getWorkspaceId());
+			this.mediator.subscribe(topic);
+			Core.EventManager.addListener(removeTopic, this.removeActiveIncident.bind(this));
+
 		},
 
 		onJoinIncident: function(e, incident) {
@@ -103,6 +113,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			
 			this.newHandler = this.onReportAdded.bind(this);
 			Core.EventManager.addListener(this.newTopic, this.newHandler);
+			this.incidentNameReadOnly = true;
 		},
 
 		onCloseIncident: function(e, incidentId) {
@@ -123,6 +134,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.incidentId = null;
 			this.incidentName = null;
 			this.emailList = UserProfile.getUsername();
+			this.incidentNameReadOnly = false;
 		},
 
 		clearReportsInView: function() {
@@ -136,24 +148,29 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 	onAddROC: function(e) {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
-            var rocForm = Ext.create('modules.report-roc.RocFormView',{
-            	incidentId: this.incidentId,
+			var rocForm = Ext.create('modules.report-roc.RocFormView',{
+				incidentId: this.incidentId,
 				incidentName: this.incidentName,
 				formTypeId: this.formTypeId,
 				email: this.emailList,
-				simplifiedEmail: true
+				simplifiedEmail: true,
+				incidentNameReadOnly: this.incidentNameReadOnly,
+				activeIncidentsStore: this.activeIncidentsStore
 			});
-            rocReportContainer.removeAll();
-            rocReportContainer.add(rocForm);
-        	var initialData= {incidentId: this.incidentId, 
-        			incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
-        			reportType: 'NEW',
-        			date: new Date(),
-        			starttime: new Date(),
-        			formTypeId:this.formTypeId,
-        			reportBy:  username,
-        			email:this.emailList};
-			rocForm.viewModel.set(initialData);	
+			rocReportContainer.removeAll();
+			rocReportContainer.add(rocForm);
+			var initialData= {incidentId: this.incidentId,
+					incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
+					reportType: 'NEW',
+					date: new Date(),
+					starttime: new Date(),
+					formTypeId:this.formTypeId,
+					reportBy:  username,
+		 			email:this.emailList,
+					incidentNameReadOnly: this.incidentNameReadOnly,
+					activeIncidentsStore: this.activeIncidentsStore
+			};
+			rocForm.viewModel.set(initialData);
 			this.lookupReference('createButton').disable();
 			
 		},
@@ -186,9 +203,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					incidentId: this.incidentId,
 					incidentName: this.incidentName,
 					formTypeId: this.formTypeId
-				
-					
-					
 				});
 				 //rocReportContainer.show();
 		         rocReportContainer.add(rocForm);				//Pull data from the report, and add in the incidentName and Id
@@ -196,6 +210,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.incidentId = record.data.incidentId;
 			    formData.report.incidentName = record.data.incidentName;
 			    formData.report.formTypeId = this.formTypeId;
+			    formData.report.incidentNameReadOnly = this.incidentNameReadOnly;
 				   
 			    //Convert date and starttime back to date objects so they will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
@@ -213,6 +228,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					this.lookupReference('printButton').disable();
 				}
 				rocForm.viewModel.set(formData.report);
+				rocForm.viewModel.set(this.incidentNameReadOnly);
 			}
 			
 			
@@ -375,6 +391,23 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 		
 			}
 			
+	},
+	loadActiveIncidents: function(e, incidents) {
+		this.activeIncidentsStore = Ext.create('Ext.data.Store', {
+			fields: ['incidentName', 'incidentId'],
+			data: incidents
+		});
+	},
+	addActiveIncident: function(e, incident) {
+		this.activeIncidentsStore.insert(0, incident);
+	},
+	updateActiveIncident: function(e, incidentId, incidentNameNew) {
+		var updatedIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
+		updatedIncidentRecord.set("incidentName", incidentNameNew);
+	},
+	removeActiveIncident: function(e, incidentId) {
+		var removeIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
+		this.activeIncidentsStore.remove(removeIncidentRecord);
 	}
 	});
 });

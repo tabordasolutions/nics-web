@@ -34,11 +34,11 @@ define(['ext','iweb/CoreModule'], function(Ext, Core) {
 		 alias: 'viewmodel.roc', // connects to viewModel
 	 	
 		 data: {
-		    	incidentId: this.incidentId,
-		    	incidentName: this.incidentName,
-		    	formTypeId: this.formTypeId
-				
-				
+				incidentId: this.incidentId,
+				incidentName: this.incidentName,
+				formTypeId: this.formTypeId,
+				activeIncidentsStore: this.activeIncidentsStore,
+				incidentNameReadOnly: this.incidentNameReadOnly
 		    	
 		    	
 		    },

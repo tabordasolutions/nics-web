@@ -42,13 +42,10 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 			
 				this.mediator = Core.Mediator.getInstance();
 				Core.EventManager.addListener("EmailROCReport", this.emailROC.bind(this));
-			
-				
-				
 			},
 			clearForm: function () {
 				
-			 var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();	
+			 var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
 			 this.view.getForm().getFields().each (function (field) {
 					 field.setValue("");
 		    	});
@@ -71,11 +68,15 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 			    	this.view.lookupReference('resetButton').show();
 			    },
 
-			    
+			onIncidentSelect: function(cb, record, index) {
+				this.getViewModel().set('incidentId', record.data.incidentId);
+				this.getViewModel().notify();
+			},
+
 		    buildReport: function(data, simple, reportType){			    	
 			
 		    	var emailMessage=null;
-				  
+
 				if (simple){
 					
 					emailMessage  = "<html><body >Intel - for internal use only. Numbers subject to change<br/><br/";

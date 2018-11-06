@@ -58,10 +58,18 @@ function(Core, RocFormController, RocFormModel ) {
 	    	 items:[  {bind:'{reportType}',fieldLabel: 'Report Type',xtype:'displayfield'},
 	    	 	      
 	    	         { xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
-	    	          items:[ {bind: '{incidentName}',vtype:'simplealphanum',fieldLabel: 'Incident Name*', flex:2,allowBlank:false,cls:'roc-required'},
-	    	        	      {bind: '{incidentId}',vtype:'alphanum',fieldLabel: 'Incident Number*',padding:'0 0 0 5', flex:1,labelWidth:125,labelAlign:"left",allowBlank:false,cls:'roc-required'}
-	    	           ]
-	    	         },
+							items:[
+								{bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'}, xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name*',
+									queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
+									allowBlank: false, cls:'roc-required', flex:2,
+									listeners: {
+										select: 'onIncidentSelect'
+									}
+								},
+								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelWidth:125, labelAlign:"left",
+									cls:'roc-required', readOnly: true}
+							]
+					},
 	    	            {xtype: 'hiddenfield',bind:'{formTypeId}' },
 	    	 	        
 	    	 	        {bind:'{rocDisplayName}',vtype:'simplealphanum',fieldLabel: 'ROC Display Name*',allowBlank:false,cls:'roc-required'},
