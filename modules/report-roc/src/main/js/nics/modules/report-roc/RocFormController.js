@@ -73,6 +73,10 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 				this.getViewModel().notify();
 			},
 
+			onIncidentChange: function(cb, newValue, oldValue, eOpts) {
+				this.getViewModel().set('incidentId', '');
+			},
+
 		    buildReport: function(data, simple, reportType){			    	
 			
 		    	var emailMessage=null;
@@ -190,7 +194,7 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 	    			   //Don't capture the buttons, or the incident name and id in the report
 	    			   var buttonRE = /button$/i;
 	    			  // var isButton = buttonRE.test(item);
-	    			   if (item != 'incidentId' && item != 'incidentName' && !(buttonRE.test(item)) )
+	    			   if (item != 'incidentId' && item != 'incidentName' && !(buttonRE.test(item)) && item != 'activeIncidentsStore'  && item != 'incidentNameReadOnly')
 	    					report[item] = formView.data[item];
 	    		  }
 	    		   message.report = report;

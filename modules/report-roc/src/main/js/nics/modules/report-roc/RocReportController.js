@@ -228,7 +228,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					this.lookupReference('printButton').disable();
 				}
 				rocForm.viewModel.set(formData.report);
-				rocForm.viewModel.set(this.incidentNameReadOnly);
 			}
 			
 			

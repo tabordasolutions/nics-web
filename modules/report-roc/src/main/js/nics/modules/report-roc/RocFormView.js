@@ -63,7 +63,8 @@ function(Core, RocFormController, RocFormModel ) {
 									queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
 									allowBlank: false, cls:'roc-required', flex:2,
 									listeners: {
-										select: 'onIncidentSelect'
+										select: 'onIncidentSelect',
+										change: 'onIncidentChange'
 									}
 								},
 								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelWidth:125, labelAlign:"left",
