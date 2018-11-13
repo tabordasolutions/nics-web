@@ -56,7 +56,7 @@ function(Core, RocFormController, RocFormModel ) {
 	             
 	         },
 	    	 items:[  {bind:'{reportType}',fieldLabel: 'Report Type',xtype:'displayfield'},
-	    	 	      
+	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
 	    	         { xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
 							items:[
 								{bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'}, xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name*',
@@ -67,21 +67,33 @@ function(Core, RocFormController, RocFormModel ) {
 										change: 'onIncidentChange'
 									}
 								},
-								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelWidth:125, labelAlign:"left",
+								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
 									cls:'roc-required', readOnly: true}
 							]
 					},
-	    	            {xtype: 'hiddenfield',bind:'{formTypeId}' },
-	    	 	        
-	    	 	        {bind:'{rocDisplayName}',vtype:'simplealphanum',fieldLabel: 'ROC Display Name*',allowBlank:false,cls:'roc-required'},
-	    	 	        {bind:'{county}',vtype:'simplealphanum',fieldLabel: 'County*',allowBlank:false,cls:'roc-required',emptyText:'county name only'},
-	    	 	        {bind: '{date}',xtype: 'datefield',fieldLabel: 'Date*',format: 'm/d/y',cls:'roc-required',allowBlank:false},
-	    	 	        {bind: '{starttime}',xtype: 'timefield',fieldLabel: 'Start Time*',format: 'H:i',hideTrigger:true,allowBlank:false,cls:'roc-required',
-	    	 	        	listeners: {beforequery : function() { return false;  }}},
-	    	 	        {bind: '{location}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Location*',allowBlank:false,cls:'roc-required'},
-	    	 	        {bind: '{jurisdiction}',vtype:'simplealphanum',fieldLabel: 'Jurisdiction*',allowBlank:false,cls:'roc-required',emptyText:'SRA,FRA,LRA'},
-	    	 	        {bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
-	    	 	        {bind: '{incidentCause}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Incident Cause'} 
+					{ xtype: 'button', text: 'Edit Incident', handler: 'onEditIncidentClick', maxWidth: 100},
+					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', defaults: {anchor: '100%'},
+						items: [
+							//{ text: 'Incident Location', xtype: 'label'},
+							{ bind: '{longitude}', reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220 },
+							{ bind: '{latitude}', reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220, padding:'0 0 0 5' },
+							{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', width: 60, margin:'0 0 0 20'}
+						]
+					},
+					{bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
+					{bind:'{country}',vtype:'simplealphanum',fieldLabel: 'Country*',allowBlank:false,cls:'roc-required',emptyText:'country name only'},
+					{bind:'{state}',vtype:'simplealphanum',fieldLabel: 'State*',allowBlank:false,cls:'roc-required',emptyText:'state name only'},
+					{ bind: '{incidentDescription}', xtype: 'textarea', fieldLabel: 'Description', width: 100 ,  maxLength: 500, enforceMaxLength: true},
+					{xtype: 'hiddenfield',bind:'{formTypeId}' },
+//	    	 	        {bind:'{rocDisplayName}',vtype:'simplealphanum',fieldLabel: 'ROC Display Name*',allowBlank:false,cls:'roc-required'},
+//	    	 	        {bind:'{county}',vtype:'simplealphanum',fieldLabel: 'County*',allowBlank:false,cls:'roc-required',emptyText:'county name only'},
+//	    	 	        {bind: '{date}',xtype: 'datefield',fieldLabel: 'Date*',format: 'm/d/y',cls:'roc-required',allowBlank:false},
+//	    	 	        {bind: '{starttime}',xtype: 'timefield',fieldLabel: 'Start Time*',format: 'H:i',hideTrigger:true,allowBlank:false,cls:'roc-required',
+//	    	 	        	listeners: {beforequery : function() { return false;  }}},
+//	    	 	        {bind: '{location}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Location*',allowBlank:false,cls:'roc-required'},
+//	    	 	        {bind: '{jurisdiction}',vtype:'simplealphanum',fieldLabel: 'Jurisdiction*',allowBlank:false,cls:'roc-required',emptyText:'SRA,FRA,LRA'},
+//	    	 	        {bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
+//	    	 	        {bind: '{incidentCause}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Incident Cause'}
 	    	]
 	    },
 	    

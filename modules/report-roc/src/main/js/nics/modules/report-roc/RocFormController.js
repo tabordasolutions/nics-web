@@ -27,9 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView','./RocFormModel'],
+define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView','./RocFormModel'],
 
-	function(Core, UserProfile, RocReportView, RocFormView , RocFormModel ){
+	function(ol, Core, MapModule, UserProfile, RocReportView, RocFormView , RocFormModel ){
 	
 		
 	
@@ -37,11 +37,13 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 			extend : 'Ext.app.ViewController',
 			
 			alias: 'controller.rocformcontroller',
+			mixins: {geoApp: 'modules.geocode.AbstractController'},
 			
 			init : function(args) {
 			
 				this.mediator = Core.Mediator.getInstance();
 				Core.EventManager.addListener("EmailROCReport", this.emailROC.bind(this));
+				this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
 			},
 			clearForm: function () {
 				
@@ -75,6 +77,25 @@ define(['iweb/CoreModule', "nics/modules/UserProfileModule", './RocReportView', 
 
 			onIncidentChange: function(cb, newValue, oldValue, eOpts) {
 				this.getViewModel().set('incidentId', '');
+			},
+
+			onEditIncidentClick : function(button) {
+				button.setMaxWidth(100);
+			},
+
+			onLocateToggle: function(locateButton, state) {
+				this.mixins.geoApp.onLocateToggle(locateButton, state);
+			},
+
+			onLocateCallback: function(feature) {
+				this.lookupReference('locateButton').toggle(false);
+				var view = MapModule.getMap().getView();
+				var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
+				var coord = clone.getCoordinates();
+				this.lookupReference('latitude').setValue(coord[1]);
+				this.lookupReference('longitude').setValue(coord[0]);
+				this.mixins.geoApp.removeLayer();
+				this.mixins.geoApp.resetInteractions();
 			},
 
 		    buildReport: function(data, simple, reportType){			    	
