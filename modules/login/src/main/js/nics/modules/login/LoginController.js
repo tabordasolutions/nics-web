@@ -56,7 +56,7 @@ define([
 			},
 			
 			bindEvents: function(){
-                window.addEventListener("beforeunload", this.currentSessioncleanup); //Works only for Chrome
+                //window.addEventListener("beforeunload", this.currentSessioncleanup); //Works only for Chrome
 
 				Core.EventManager.addListener(UserProfile.PROPERTIES_LOADED, this.requestUserOrgs(this));
 				Core.EventManager.addListener(UserProfile.PROFILE_LOADED, this.setReinitUrl.bind(this));
