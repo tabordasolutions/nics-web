@@ -31,8 +31,8 @@
  * Feature Request Manager for ArcGIS & WMS data layers. Requests feature details when
  * user clicks on WMS / ArcGIS layer features.
  */
-define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'], 
-	function(ol, Ext, Core, MapModule){
+define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule', 'iweb/modules/map/FeatureDetailUtils'],
+	function(ol, Ext, Core, MapModule, FeatureDetailUtils){
 		
 		var layers = []; 
 		
@@ -96,7 +96,7 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
                         sr: 3857
                     },
                     method: 'GET',
-                    success: onRequestSuccess.bind(this, evt, container)
+                    success: onRequestSuccess.bind(this, evt, container, mapSize)
                 });
             }
         }
@@ -115,18 +115,19 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule'],
                 Ext.Ajax.request({
                     url: 'proxy?url=' + url,
                     method: 'GET',
-                    success: onRequestSuccess.bind(this, evt, container)
+                    success: onRequestSuccess.bind(this, evt, container, map.getSize())
                 });
             }
         }
 
-		function onRequestSuccess(evt, container, response) {
+		function onRequestSuccess(evt, container, mapSize, response) {
 		    var attributes = getAttributesFromFeatureResponse(response);
             if (attributes) {
 				container.removeAll();
 				render(container, attributes);
+				var containerLocalXY = FeatureDetailUtils.calculateFeatureDetailsContainerXY(evt.mapBrowserEvent.pixel, container, mapSize);
 				container.show();
-				container.setLocalXY(evt.mapBrowserEvent.pixel);
+				container.setLocalXY(containerLocalXY);
 			}
 		}
 

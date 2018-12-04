@@ -38,7 +38,7 @@
   <artifactId>nics-web</artifactId>
   <packaging>pom</packaging>
   <name>NICS Web Pom</name>
-  <version>2018.1.3</version>
+  <version>2018.1.5</version>
 
   <modules>
     <module>modules</module>
@@ -79,10 +79,10 @@
     <esapi.version>2.1.0</esapi.version>
     <junit.version>3.8.1</junit.version>
 
-    <iweb.version>6.2</iweb.version>
-    <nics.common.version>2018.1.3</nics.common.version>
-    <sso.tools.version>2018.1.3</sso.tools.version>
-    <openam.tools.version>2018.1.3</openam.tools.version>
+    <iweb.version>6.2.1</iweb.version>
+    <nics.common.version>2018.1.5</nics.common.version>
+    <sso.tools.version>2018.1.5</sso.tools.version>
+    <openam.tools.version>2018.1.5</openam.tools.version>
 
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>

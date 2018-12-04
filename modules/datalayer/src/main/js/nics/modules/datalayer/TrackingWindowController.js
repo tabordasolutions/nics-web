@@ -62,8 +62,10 @@ define(['ext', 'iweb/CoreModule', './WindowController', './TrackingLocatorWindow
 								node.data.layerType, node.data);
 						if(node.data.layer){
 							this.addNewLayer(node);
-							
-							node.data.layer.setStyle(this.avlRenderer.getStyle);
+
+							if(node.data.layer.setStyle) {
+								node.data.layer.setStyle(this.avlRenderer.getStyle);
+							}
 							Core.EventManager.fireEvent("nics.datalayer.tracking.click", node.data);
 						}
 					}else{
