@@ -35,10 +35,6 @@ define(['./ActiveUsersController'], function(ActiveUsersController) {
 	 	controller: 'activeuserscontroller',
 	 	
 	 	title: 'Active Users',
-	 	
-        viewConfig: {
-            emptyText: 'There are no active users'
-        },
         
         listeners: {
         	selectionchange: 'onSelectionChange'
@@ -91,6 +87,7 @@ define(['./ActiveUsersController'], function(ActiveUsersController) {
 	    },
         
         viewConfig: {
+            emptyText: 'There are no active users',
             plugins: {
                 ptype: 'gridviewdragdrop',
                 ddGroup: 'privateChatDDGroup',

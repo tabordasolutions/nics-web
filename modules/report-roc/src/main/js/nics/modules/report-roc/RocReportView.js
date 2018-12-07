@@ -101,7 +101,6 @@ define(['iweb/CoreModule','./RocReportController', './RocReportModel'],
 		           	enableToggle: true,
 		            tooltip: 'Finalize Report',
 		            reference: 'finalButton',
-		            enableToggle:false,
 		            disabled: true,
 		            listeners: {
 						click: 'onFinalizeROC'

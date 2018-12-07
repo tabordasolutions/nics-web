@@ -81,5 +81,15 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.6</version>
+            </plugin>
+        </plugins>
+    </build>
   
 </project>

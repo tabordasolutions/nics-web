@@ -43,7 +43,6 @@
 	
 		config: {
 			title: 'Legends',
-			layout: 'auto',
 			bodyPadding: '10',
 			autoHeight: true,
 			autoWidth: true,

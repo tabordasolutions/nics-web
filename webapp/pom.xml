@@ -207,13 +207,38 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<archive>
+                    <warSourceExcludes>**/main.js</warSourceExcludes>
+                    <archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.6</version>
+                <configuration combine.self="override">
+                    <webappSourceDir>${basedir}/src/main/webapp/</webappSourceDir>
+                    <webappTargetDir>${project.build.directory}/nics</webappTargetDir>
+                    <skipMerge>true</skipMerge>
+                    <nosuffix>true</nosuffix>
+                    <jsSourceIncludes>
+                        <jsSourceInclude>**/main.js</jsSourceInclude>
+                    </jsSourceIncludes>
+                    <jsEngine>CLOSURE</jsEngine>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
 		</plugins>
 	</build>
@@ -300,14 +325,10 @@
 									<arguments></arguments>
 								</configuration>
 							</execution>
-
 						</executions>
 					</plugin>
 				</plugins>
-
 			</build>
-
 		</profile>
 	</profiles>
-
 </project>
