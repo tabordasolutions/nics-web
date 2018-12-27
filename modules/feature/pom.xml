@@ -46,7 +46,6 @@
   <name>NICS Feature Persistence Module</name>
   
   <dependencies>
-  
     <!-- test dependencies -->
     <dependency>
       <groupId>junit</groupId>
@@ -57,11 +56,20 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.6</version>
+                <groupId>com.github.bringking</groupId>
+                <artifactId>requirejs-maven-plugin</artifactId>
+                <version>2.0.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>optimize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>${basedir}/src/main/js/feature-rs-build.js</configFile>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-  
 </project>

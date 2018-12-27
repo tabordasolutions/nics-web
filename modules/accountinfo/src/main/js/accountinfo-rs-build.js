@@ -1,6 +1,4 @@
 ({
-    findNestedDependencies: false,
-
     paths: {
         'ext': 'empty:',
         'iweb/CoreModule': 'empty:',
