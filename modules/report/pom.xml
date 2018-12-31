@@ -55,6 +55,18 @@
   </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/js/</directory>
+                <excludes>
+                    <exclude>nics/modules/**/*.js</exclude>
+                    <exclude>report-rs-build.js</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.bringking</groupId>
