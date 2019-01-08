@@ -178,12 +178,6 @@
         <resource>
             <directory>src/main/resources</directory>
         </resource>
-        <resource>
-            <directory>src/main/js/nics/modules/</directory>
-            <excludes>
-                <exclude>**/*.js</exclude>
-            </excludes>
-        </resource>
     </resources>
 
     <pluginManagement>

@@ -56,8 +56,12 @@ define(['ext', 'ol', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
             this.lookupWindow = new UserLookupView({
             	callback: { fnc: this.addUserOrgs, scope: this}
             });
-            
-            this.getOrgTypes();
+
+			if(UserProfile.arePropertiesReady() == true) {
+				this.getOrgTypes();
+			} else {
+				Core.EventManager.addListener(UserProfile.PROPERTIES_LOADED, this.getOrgTypes.bind(this));
+			}
 		},
 		
 		getOrgTypes: function(){

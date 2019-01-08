@@ -55,6 +55,14 @@
   </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/js/nics/modules</directory>
+                <excludes>
+                    <exclude>**/*.js</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.bringking</groupId>
@@ -68,7 +76,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/accountinfo-rs-build.js</configFile>
+                    <configFile>src/main/config/accountinfo-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>
