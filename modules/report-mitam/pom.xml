@@ -68,7 +68,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/report-mitam-rs-build.js</configFile>
+                    <configFile>src/main/config/report-mitam-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>

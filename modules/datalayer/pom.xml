@@ -84,7 +84,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/datalayer-rs-build.js</configFile>
+                    <configFile>src/main/config/datalayer-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>

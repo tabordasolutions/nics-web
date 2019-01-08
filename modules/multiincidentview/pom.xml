@@ -68,7 +68,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/multiincidentview-rs-build.js</configFile>
+                    <configFile>src/main/config/multiincidentview-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>

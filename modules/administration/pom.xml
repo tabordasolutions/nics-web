@@ -68,7 +68,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/administration-rs-build.js</configFile>
+                    <configFile>src/main/config/administration-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>

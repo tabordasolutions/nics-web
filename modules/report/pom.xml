@@ -80,7 +80,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/report-rs-build.js</configFile>
+                    <configFile>src/main/config/report-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>

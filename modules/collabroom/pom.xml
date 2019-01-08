@@ -79,7 +79,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configFile>${basedir}/src/main/js/collabroom-rs-build.js</configFile>
+                    <configFile>src/main/config/collabroom-rs-build.js</configFile>
                 </configuration>
             </plugin>
         </plugins>
