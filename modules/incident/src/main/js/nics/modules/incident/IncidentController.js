@@ -237,7 +237,6 @@ define(['iweb/CoreModule',
 					
 					if(response.incidents && response.incidents[0]){
 						var incident = response.incidents[0];
-						this.model.addNewIncidentToIncidentsList(incident.incidentname, incident.incidentid, incident.lat, incident.lon);
 						this.onJoinIncident({
 								text: incident.incidentname,
 								incidentId: incident.incidentid,

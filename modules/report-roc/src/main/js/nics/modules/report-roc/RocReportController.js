@@ -36,10 +36,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 	Ext.define('modules.report-roc.RocReportController', {
 		extend : 'Ext.app.ViewController',
 		alias : 'controller.rocreportcontroller',
-		
-		
+
 		init : function(args) {
-		
 			this.mediator = Core.Mediator.getInstance();
 			this.lookupReference('createButton').enable();
 			this.lookupReference('updateButton').disable();
@@ -47,7 +45,9 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.lookupReference('printButton').disable();
 			this.emailList = UserProfile.getUsername();
 			this.incidentNameReadOnly = false;
-			
+			this.incidentId = null;
+			this.incidentName = null;
+
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
 					topic, this, function(evt, response){
