@@ -42,11 +42,13 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			init : function(args) {
 			
 				this.mediator = Core.Mediator.getInstance();
+				this.endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
 				Core.EventManager.addListener("EmailROCReport", this.emailROC.bind(this));
 				this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
+				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.processLocationBasedData.bind(this));
 			},
+
 			clearForm: function () {
-				
 			 var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
 			 this.view.getForm().getFields().each (function (field) {
 					 field.setValue("");
@@ -72,11 +74,63 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 			onIncidentSelect: function(cb, record, index) {
 				this.getViewModel().set('incidentId', record.data.incidentId);
+				this.view.lookupReference('locateButton').disable();
+				this.setErrorMessage(null);
+				this.getLocationBasedData();
 				this.getViewModel().notify();
 			},
 
+			getLocationBasedData: function() {
+				if(this.getViewModel().get('incidentId')) {
+					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/" + this.getViewModel().get('incidentId') + '/locationBasedData', 'LoadLocationBasedDataByIncident');
+				} else {
+					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/locationBasedData", 'LoadLocationBasedData' );
+				}
+			},
+
+			processLocationBasedData: function(e, response) {
+				//handle validation errors
+				if(response.status ==  200) {
+					if(response.data.reportType == 'FINAL') {
+						this.setErrorMessage('Selected incident has Finalized ROC, cannot submit another ROC');
+					} else {
+						//bind response data to form
+						this.getViewModel().set('latitude', response.data.latitude);
+						this.getViewModel().set('longitude', response.data.longitude);
+//						this.getViewModel().set('incidenttypes', response.data.incidentType);
+						var message = response.data.message;
+						this.getViewModel().set('state', message.state);
+						this.getViewModel().set('county', message.county);
+						this.getViewModel().set('location', message.location);
+						this.getViewModel().set('sra', message.sra);
+						this.getViewModel().set('dpa', message.dpa);
+						this.getViewModel().set('jurisdiction', message.jurisdiction);//contract county comes in jurisdiction
+						if(response.data.reportType == 'NEW') {
+							this.getViewModel().set('temperature', message.temperature);
+							this.getViewModel().set('humidity', message.relHumidity);
+							this.getViewModel().set('windSpeed', message.windSpeed);
+							this.getViewModel().set('windDirection', message.windDirection);
+						}
+					}
+				}
+				if(response.status == 400){
+					this.setErrorMessage(response.validationErrors);
+				} else if(response.status == 500) {
+					this.setErrorMessage(response.message);
+				}
+				this.getViewModel().notify();
+			},
+
+			setErrorMessage: function(message) {
+				this.getViewModel().set('errorMessage', message);
+				this.view.lookupReference('errorLabel').setHidden(message == null);
+			},
+
 			onIncidentChange: function(cb, newValue, oldValue, eOpts) {
-				this.getViewModel().set('incidentId', '');
+				if(!this.getViewModel().getData().incidentNameReadOnly) {
+					this.getViewModel().set('incidentId', '');
+					this.setErrorMessage(null);
+				}
 			},
 
 			onEditIncidentClick : function(button) {

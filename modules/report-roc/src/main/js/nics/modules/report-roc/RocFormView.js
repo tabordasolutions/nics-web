@@ -47,6 +47,8 @@ function(Core, RocFormController, RocFormModel ) {
         bodyPadding: 10,
 		referenceHolder: true,
 	    items:[
+	    {bind:'{errorMessage}', xtype:'displayfield', reference: 'errorLabel', xtype: 'label', hidden: true,
+        	    	 			style: {color: 'red'}, padding: '0 0 0 5', border: true},
 	    { 
 	    	 xtype: 'fieldset',
 	         title: 'Incident Info',
