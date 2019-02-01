@@ -45,7 +45,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
 				Core.EventManager.addListener("EmailROCReport", this.emailROC.bind(this));
 				this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
-				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.processLocationBasedData.bind(this));
+				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.processLocationBasedDataForIncident.bind(this));
+				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedData.bind(this));
 			},
 
 			clearForm: function () {
@@ -84,11 +85,13 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				if(this.getViewModel().get('incidentId')) {
 					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/" + this.getViewModel().get('incidentId') + '/locationBasedData', 'LoadLocationBasedDataByIncident');
 				} else {
-					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/locationBasedData", 'LoadLocationBasedData' );
+					var requestPathWithParams = "/reports/1/locationBasedData?longitude=" + this.lookupReference('longitude').getValue() + "&latitude=" +
+						this.lookupReference('latitude').getValue();
+					this.mediator.sendRequestMessage(this.endpoint + requestPathWithParams, 'LoadLocationBasedData' );
 				}
 			},
 
-			processLocationBasedData: function(e, response) {
+			processLocationBasedDataForIncident: function(e, response) {
 				//handle validation errors
 				if(response.status ==  200) {
 					if(response.data.reportType == 'FINAL') {
@@ -98,19 +101,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('latitude', response.data.latitude);
 						this.getViewModel().set('longitude', response.data.longitude);
 //						this.getViewModel().set('incidenttypes', response.data.incidentType);
-						var message = response.data.message;
-						this.getViewModel().set('state', message.state);
-						this.getViewModel().set('county', message.county);
-						this.getViewModel().set('location', message.location);
-						this.getViewModel().set('sra', message.sra);
-						this.getViewModel().set('dpa', message.dpa);
-						this.getViewModel().set('jurisdiction', message.jurisdiction);//contract county comes in jurisdiction
-						if(response.data.reportType == 'NEW') {
-							this.getViewModel().set('temperature', message.temperature);
-							this.getViewModel().set('humidity', message.relHumidity);
-							this.getViewModel().set('windSpeed', message.windSpeed);
-							this.getViewModel().set('windDirection', message.windDirection);
-						}
+						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
 				}
 				if(response.status == 400){
@@ -119,6 +110,21 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.setErrorMessage(response.message);
 				}
 				this.getViewModel().notify();
+			},
+
+			bindLocationBasedData : function (data, reportType='NEW'){
+				this.getViewModel().set('state', data.state);
+					this.getViewModel().set('county', data.county);
+					this.getViewModel().set('location', data.location);
+					this.getViewModel().set('sra', data.sra);
+					this.getViewModel().set('dpa', data.dpa);
+					this.getViewModel().set('jurisdiction', data.jurisdiction);//contract county comes in jurisdiction
+					if(reportType == 'NEW') {
+						this.getViewModel().set('data', data.temperature);
+						this.getViewModel().set('data', data.relHumidity);
+						this.getViewModel().set('data', data.windSpeed);
+						this.getViewModel().set('data', data.windDirection);
+					}
 			},
 
 			setErrorMessage: function(message) {
@@ -138,6 +144,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onLocateToggle: function(locateButton, state) {
+				this.setErrorMessage('');
 				this.mixins.geoApp.onLocateToggle(locateButton, state);
 			},
 
@@ -150,6 +157,19 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.lookupReference('longitude').setValue(coord[0]);
 				this.mixins.geoApp.removeLayer();
 				this.mixins.geoApp.resetInteractions();
+				this.getLocationBasedData();
+			},
+
+			processLocationBasedData: function(e, response) {
+				if(response.status == 200) {
+					this.bindLocationBasedData(response.data);
+				} else if(response.status == 400) {
+					//handle validation errors
+					this.setErrorMessage(response.validationErrors);
+				} else if(response.status == 500) {
+					//handle internal server error
+					this.setErrorMessage(response.errorMessage);
+				}
 			},
 
 		    buildReport: function(data, simple, reportType){			    	
