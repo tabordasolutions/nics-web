@@ -34,7 +34,6 @@ define([
 		var LOGOUT = false;
 		var wasCurrentSessionCleanedUp = false;
 
-
 		Ext.define('modules.login.LoginPresenter', {
 			extend : 'Ext.app.ViewController',
 			
@@ -56,15 +55,17 @@ define([
 			},
 			
 			bindEvents: function(){
-                //window.addEventListener("beforeunload", this.currentSessioncleanup); //Works only for Chrome
-
-				Core.EventManager.addListener(UserProfile.PROPERTIES_LOADED, this.requestUserOrgs(this));
+				if(UserProfile.arePropertiesReady() == true) {
+					this.requestUserOrgs();
+				} else {
+					Core.EventManager.addListener(UserProfile.PROPERTIES_LOADED, this.requestUserOrgs.bind(this));
+				}
 				Core.EventManager.addListener(UserProfile.PROFILE_LOADED, this.setReinitUrl.bind(this));
 				
 				Core.EventManager.addListener('nics.userorg.load', this.loadUserOrg.bind(this));
 				Core.EventManager.addListener('onLogout', this.logout.bind(this));
 			},
-			
+
 			logout: function(){
 				LOGOUT = true;
                 this.loginCleanup();
@@ -108,7 +109,7 @@ define([
 				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
 				var url = Ext.String.format("{0}/users/{1}/userOrgs?userName={2}",
 						endpoint, UserProfile.getWorkspaceId(), UserProfile.getUsername());
-				
+
 				this.mediator.sendRequestMessage(url, "nics.userorg.load");
 			},
 			

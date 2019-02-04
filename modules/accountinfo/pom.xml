@@ -44,7 +44,7 @@
   <artifactId>account-info-module</artifactId>
   <packaging>jar</packaging>
   <name>NICS Account Info Module</name>
-  
+
   <dependencies>
   
     <!-- test dependencies -->
@@ -53,5 +53,32 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
-  
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/js/nics/modules</directory>
+                <excludes>
+                    <exclude>**/*.js</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>com.github.bringking</groupId>
+                <artifactId>requirejs-maven-plugin</artifactId>
+                <version>2.0.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>optimize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>src/main/config/accountinfo-rs-build.js</configFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

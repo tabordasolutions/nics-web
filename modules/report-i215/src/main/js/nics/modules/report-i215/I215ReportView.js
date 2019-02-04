@@ -103,7 +103,6 @@ define(['iweb/CoreModule','./I215ReportController', './I215ReportModel' , 'nics/
 		           	enableToggle: true,
 		            tooltip: 'Finalize Report',
 		            reference: 'finalButton',
-		            enableToggle:false,
 		            disabled: true,
 		            listeners: {
 						click: 'onFinalize'

@@ -44,8 +44,6 @@ define(['iweb/CoreModule','./OrganizationView','./announcements/AnnouncementView
 	 	
 	 	layout: 'fit',
 	 	
-	 	referenceHolder: true,
-	 	
 	 	reference: 'adminButtonRef',
 	 	
 	 	itemId: 'adminButtonItemId',

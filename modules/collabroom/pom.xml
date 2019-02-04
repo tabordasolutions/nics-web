@@ -64,5 +64,25 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.bringking</groupId>
+                <artifactId>requirejs-maven-plugin</artifactId>
+                <version>2.0.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>optimize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>src/main/config/collabroom-rs-build.js</configFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
   
 </project>

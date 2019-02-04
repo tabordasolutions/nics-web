@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'], 
+define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 	function(Core, ol, MapModule){
 	
 		return function() {
@@ -57,6 +57,7 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			
 			var propertiesLoadedEvt = "nics.user.properties.loaded";
 			var profileLoadedEvt = "nics.user.profile.loaded";
+			var arePropertiesLoaded = false;
 			
 			function _init(){
 				loadUserProperties();
@@ -68,7 +69,6 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			
 			function loadUserProperties(){
 				var successHandler = setUserProperties.bind(this);
-				
 				$.ajax({
 			      url:  'properties',
 			      dataType: 'json',
@@ -80,11 +80,12 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			};
 			
 			function setUserProperties(data){
-				 workspaceId = data.workspaceId;
-		    	 username = data.username;
-		    	 sessionId = data.sessionId;
-		    	 
-		    	 Core.EventManager.fireEvent(propertiesLoadedEvt);
+				workspaceId = data.workspaceId;
+				username = data.username;
+				sessionId = data.sessionId;
+
+				arePropertiesLoaded = true;
+				Core.EventManager.fireEvent(propertiesLoadedEvt);
 			};
 			
 			function requestUserProfile(event, userOrg){
@@ -152,6 +153,10 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 				PROFILE_LOADED: profileLoadedEvt,
 				
 				PROPERTIES_LOADED: propertiesLoadedEvt,
+
+				arePropertiesReady: function() {
+					return arePropertiesLoaded;
+				},
 				
 				REST_ENDPOINT: "endpoint.rest",
 				

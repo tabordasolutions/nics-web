@@ -482,10 +482,6 @@ define(['ext', 'iweb/CoreModule', "ol", "iweb/modules/MapModule", "nics/modules/
 				return this.round(areaSqrFeet) + ' ft²';
 			}
 		},
-
-		round: function(value) {
-			return (Math.round(value * 100) / 100);
-		},
 		
 	});
 

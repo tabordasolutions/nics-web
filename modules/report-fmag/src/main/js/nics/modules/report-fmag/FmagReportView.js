@@ -102,7 +102,6 @@ define(['iweb/CoreModule','./FmagReportController', './FmagReportModel'],
 		           	enableToggle: true,
 		            tooltip: 'Finalize Report',
 		            reference: 'finalButton',
-		            enableToggle:false,
 		            disabled: true,
 		            listeners: {
 						click: 'onFinalizeFmag'
