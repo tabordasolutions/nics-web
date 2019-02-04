@@ -160,6 +160,12 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.getLocationBasedData();
 			},
 
+			onLocationChange: function() {
+				if(this.lookupReference('latitude').getValue() && this.lookupReference('longitude').getValue()) {
+					this.getLocationBasedData();
+				}
+			},
+
 			processLocationBasedData: function(e, response) {
 				if(response.status == 200) {
 					this.bindLocationBasedData(response.data);

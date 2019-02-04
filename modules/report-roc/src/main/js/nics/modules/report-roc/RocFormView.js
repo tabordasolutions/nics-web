@@ -55,7 +55,6 @@ function(Core, RocFormController, RocFormModel ) {
 	         defaultType: 'textfield',
 	         defaults: {
 	             anchor: '100%'
-	             
 	         },
 	    	 items:[  {bind:'{reportType}',fieldLabel: 'Report Type',xtype:'displayfield'},
 	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
@@ -77,15 +76,22 @@ function(Core, RocFormController, RocFormModel ) {
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', defaults: {anchor: '100%'},
 						items: [
 							//{ text: 'Incident Location', xtype: 'label'},
-							{ bind: '{longitude}', reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220 },
-							{ bind: '{latitude}', reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220, padding:'0 0 0 5' },
+							{ bind: '{longitude}', reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220,
+								listeners: {
+									change: {fn: 'onLocationChange', delay: 100}
+								}
+							},
+							{ bind: '{latitude}', reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220, padding:'0 0 0 5',
+								listeners: {
+									change: {fn: 'onLocationChange', delay: 100}
+								}
+							},
 							{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', width: 60, margin:'0 0 0 20'}
 						]
 					},
 					{bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
-					{bind:'{country}',vtype:'simplealphanum',fieldLabel: 'Country*',allowBlank:false,cls:'roc-required',emptyText:'country name only'},
-					{bind:'{state}',vtype:'simplealphanum',fieldLabel: 'State*',allowBlank:false,cls:'roc-required',emptyText:'state name only'},
-					{ bind: '{incidentDescription}', xtype: 'textarea', fieldLabel: 'Description', width: 100 ,  maxLength: 500, enforceMaxLength: true},
+					{bind:'{state}',vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required',emptyText:'state name only'},
+					{bind:'{county}',vtype:'simplealphanum',fieldLabel: 'Initial County*',allowBlank:false,cls:'roc-required',emptyText:'country name only'},
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
 //	    	 	        {bind:'{rocDisplayName}',vtype:'simplealphanum',fieldLabel: 'ROC Display Name*',allowBlank:false,cls:'roc-required'},
 //	    	 	        {bind:'{county}',vtype:'simplealphanum',fieldLabel: 'County*',allowBlank:false,cls:'roc-required',emptyText:'county name only'},
@@ -98,98 +104,105 @@ function(Core, RocFormController, RocFormModel ) {
 //	    	 	        {bind: '{incidentCause}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Incident Cause'}
 	    	]
 	    },
-	    
+
 	    {
-	    	xtype: 'fieldset',
-	    	title: 'Incident Scope',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%'
-	        },
-	        items: [{bind:'{scope}',vtype:'extendedalphanum',fieldLabel: 'Size/scope of Incident*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{spreadRate}',vtype:'extendedalphanum',fieldLabel: 'Rate of Spread*',allowBlank:false,cls:'roc-required',emptyText:'Critical, Moderate, Slow'},
-	                {bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type'},
-	                {bind:'{potential}',vtype:'extendedalphanum',fieldLabel: 'Potential'},
-	                {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{estimatedContainment}',vtype:'extendedalphanum',fieldLabel: 'Estimated Containment'},
-		            {bind:'{estimatedControl}',vtype:'extendedalphanum',fieldLabel: 'Estimated Control'}
-	                
-	        ]
-	   },
-	   {
-	    	xtype: 'fieldset',
-	    	title: 'Weather',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%'
-	        },
-	        items: [{bind:'{temperature}',vtype:'extendednum',fieldLabel: 'Temperature*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{relHumidity}',vtype:'extendednum',fieldLabel: 'Relative Humidity*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{windSpeed}',vtype:'extendedalphanum',fieldLabel: 'Wind Speed  mph*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{windDirection}',vtype:'extendedalphanum',fieldLabel: 'Wind Direction*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{predictedWeather}',vtype:'extendedalphanum',fieldLabel: 'Predicted Weather Conditions*',allowBlank:false,cls:'roc-required'}
-	        ]
-	                
-	   },
-	   {
-	    	xtype: 'fieldset',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%',
-	             vtype:'simplealphanum'
-	        },
-	        items: [{bind:'{evacuations}',xtype: 'textarea',fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{structuresThreat}',xtype: 'textarea',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{infrastructuresThreat}',xtype: 'textarea',fieldLabel: 'Infrastructures Structures Threat*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{icpLocation}',xtype: 'textarea',fieldLabel: 'ICP Location'}
-	        ]
-	   },
-	  
-	   {
-	    	xtype: 'fieldset',
-	    	title: 'Resources Committed',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%',
-     	        vtype:'simplealphanum'
-	        },
-	        items: [{
-	        	    xtype: 'fieldset',
-	        	    title: 'Aircraft',
-	        	    defaultType: 'textfield',
-	        	    defaults: {
-	        	        anchor: '100%'
-	        	    },
-	        	    items: [{bind:'{airAttack}',fieldLabel: 'Air Attack'},
-	        	            {bind:'{airTankers}',fieldLabel: 'Air Tankers'},
-	        	            {bind:'{helicopters}',fieldLabel: 'Helicopters'}
-	        	    ]
-	        	               
-	        	},
-	        		{bind:'{overhead}',fieldLabel: 'Overhead'},
-	                {bind:'{typeIEngine}',fieldLabel: 'Type I Engine'},
-	                {bind:'{typeIIEngine}',fieldLabel: 'Type II Engine'},
-	                {bind:'{typeIIIEngine}',fieldLabel: 'Type III Engine'},
-	                {bind:'{waterTender}',fieldLabel: 'Water Tender'},
-	                {bind:'{dozers}',fieldLabel: 'Dozers'},
-	                {bind:'{handcrews}',fieldLabel: 'Handcrews'},
-	                {bind:'{comUnit}',fieldLabel: 'Com Unit'}
-	        ]
-	               
-	   },
-	   {
-	    	xtype: 'fieldset',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%'
-	        },
-	        items: [{bind:'{email}',vtype:'emaillist',xtype: 'textarea',fieldLabel: 'Email (comma separated)'},
-	                {bind:'{simplifiedEmail}',xtype: 'checkboxfield', boxLabel: 'Simplified Email',id: 'simplifiedEmail',checked:true },
-	                {bind:'{comments}',vtype:'extendedalphanum',xtype: 'textarea',fieldLabel: 'General Comments'},
-	                {bind:'{reportBy}',vtype:'simplealphanum',fieldLabel: 'Report By'}
-	        ]
-	   },
-	 ] ,
+    		xtype: 'fieldset',
+    		title: 'ROC Details',
+    	    defaultType: 'textfield',
+    	    defaults: {
+    	         anchor: '100%'
+    	    },
+    	    items: [
+	            {
+	    	        xtype: 'fieldset',
+	    	        title: 'Vegetaion Fire Incident Scope',
+	                defaultType: 'textfield',
+	                defaults: {
+	                anchor: '100%'
+	            },
+	            items: [{bind:'{scope}',vtype:'extendedalphanum',fieldLabel: 'Acreage*',allowBlank:false,cls:'roc-required'},
+                        {bind:'{spreadRate}',vtype:'extendedalphanum',fieldLabel: 'Rate of Spread*',allowBlank:false,cls:'roc-required',emptyText:'Critical, Moderate, Slow'},
+                        {bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type(s)*', allowBlank:false, cls: 'roc-required'},
+                        {bind:'{otherFuelType}',vtype:'extendedalphanum',fieldLabel: 'Other Fuel Type(s)*'},
+                        {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
+	                ]
+	            },
+                {
+                        xtype: 'fieldset',
+                        title: 'Weather',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%'
+                        },
+                        items: [{bind:'{temperature}',vtype:'extendednum',fieldLabel: 'Temperature*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{relHumidity}',vtype:'extendednum',fieldLabel: 'Relative Humidity*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{windSpeed}',vtype:'extendedalphanum',fieldLabel: 'Wind Speed  mph*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{windDirection}',vtype:'extendedalphanum',fieldLabel: 'Wind Direction*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{predictedWeather}',vtype:'extendedalphanum',fieldLabel: 'Predicted Weather Conditions*',allowBlank:false,cls:'roc-required'}
+                        ]
+
+                   },
+                {
+                        xtype: 'fieldset',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%',
+                             vtype:'simplealphanum'
+                        },
+                        items: [{bind:'{evacuations}',xtype: 'textarea',fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{structuresThreat}',xtype: 'textarea',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{infrastructuresThreat}',xtype: 'textarea',fieldLabel: 'Infrastructures Structures Threat*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{icpLocation}',xtype: 'textarea',fieldLabel: 'ICP Location'}
+                        ]
+                   },
+                {
+                        xtype: 'fieldset',
+                        title: 'Resources Committed',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%',
+                            vtype:'simplealphanum'
+                        },
+                        items: [{
+                                xtype: 'fieldset',
+                                title: 'Aircraft',
+                                defaultType: 'textfield',
+                                defaults: {
+                                    anchor: '100%'
+                                },
+                                items: [{bind:'{airAttack}',fieldLabel: 'Air Attack'},
+                                        {bind:'{airTankers}',fieldLabel: 'Air Tankers'},
+                                        {bind:'{helicopters}',fieldLabel: 'Helicopters'}
+                                ]
+
+                            },
+                                {bind:'{overhead}',fieldLabel: 'Overhead'},
+                                {bind:'{typeIEngine}',fieldLabel: 'Type I Engine'},
+                                {bind:'{typeIIEngine}',fieldLabel: 'Type II Engine'},
+                                {bind:'{typeIIIEngine}',fieldLabel: 'Type III Engine'},
+                                {bind:'{waterTender}',fieldLabel: 'Water Tender'},
+                                {bind:'{dozers}',fieldLabel: 'Dozers'},
+                                {bind:'{handcrews}',fieldLabel: 'Handcrews'},
+                                {bind:'{comUnit}',fieldLabel: 'Com Unit'}
+                        ]
+
+                   },
+                {
+                        xtype: 'fieldset',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%'
+                        },
+                        items: [{bind:'{email}',vtype:'emaillist',xtype: 'textarea',fieldLabel: 'Email (comma separated)'},
+                                {bind:'{simplifiedEmail}',xtype: 'checkboxfield', boxLabel: 'Simplified Email',id: 'simplifiedEmail',checked:true },
+                                {bind:'{comments}',vtype:'extendedalphanum',xtype: 'textarea',fieldLabel: 'General Comments'},
+                                {bind:'{reportBy}',vtype:'simplealphanum',fieldLabel: 'Report By'}
+                        ]
+                   },
+            ]
+        },
+    ],
+
 	 buttons: [
 	{
 		text: 'Submit',
