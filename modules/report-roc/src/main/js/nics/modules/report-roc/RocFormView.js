@@ -91,18 +91,16 @@ function(Core, RocFormController, RocFormModel ) {
 					},
 					{bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
 					{bind:'{state}',vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required',emptyText:'state name only'},
-					{bind:'{county}',vtype:'simplealphanum',fieldLabel: 'Initial County*',allowBlank:false,cls:'roc-required',emptyText:'country name only'},
+					{value:'{county}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', reference: 'initialCounty',
+					    queryMode: 'local', forceSelection: true, autoSelect: false, listeners: { focusleave: {fn: function() { this.validate(); }, delay: 100 }},
+					    store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+                                'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
+                                'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+                                'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
+                                'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba']
+					},
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
-//	    	 	        {bind:'{rocDisplayName}',vtype:'simplealphanum',fieldLabel: 'ROC Display Name*',allowBlank:false,cls:'roc-required'},
-//	    	 	        {bind:'{county}',vtype:'simplealphanum',fieldLabel: 'County*',allowBlank:false,cls:'roc-required',emptyText:'county name only'},
-//	    	 	        {bind: '{date}',xtype: 'datefield',fieldLabel: 'Date*',format: 'm/d/y',cls:'roc-required',allowBlank:false},
-//	    	 	        {bind: '{starttime}',xtype: 'timefield',fieldLabel: 'Start Time*',format: 'H:i',hideTrigger:true,allowBlank:false,cls:'roc-required',
-//	    	 	        	listeners: {beforequery : function() { return false;  }}},
-//	    	 	        {bind: '{location}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Location*',allowBlank:false,cls:'roc-required'},
-//	    	 	        {bind: '{jurisdiction}',vtype:'simplealphanum',fieldLabel: 'Jurisdiction*',allowBlank:false,cls:'roc-required',emptyText:'SRA,FRA,LRA'},
-//	    	 	        {bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
-//	    	 	        {bind: '{incidentCause}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Incident Cause'}
-	    	]
+			]
 	    },
 
 	    {
@@ -115,13 +113,35 @@ function(Core, RocFormController, RocFormModel ) {
     	    items: [
 	            {
 	    	        xtype: 'fieldset',
+	    	        title: 'Incident Info',
+	                defaultType: 'textfield',
+	                defaults: {
+	                anchor: '100%'
+	            },
+	            items: [{bind:'{county}',vtype:'extendedalphanum', fieldLabel: 'County', allowBlank:true},
+                        {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
+                        {value:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
+                            reference: 'dpa', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                            forceSelection: true, autoSelect: false, store: ['', 'State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
+                        {value:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership*',
+                            reference: 'sra', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                            forceSelection: true, autoSelect: false, store: ['', 'SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
+                        {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction*', allowBlank:false, cls:'roc-required'},
+                        {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date*', format: 'm/d/y',cls:'roc-required', allowBlank:false},
+                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time*', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
+	                ]
+	            },
+	            {
+	    	        xtype: 'fieldset',
 	    	        title: 'Vegetaion Fire Incident Scope',
 	                defaultType: 'textfield',
 	                defaults: {
 	                anchor: '100%'
 	            },
 	            items: [{bind:'{scope}',vtype:'extendedalphanum',fieldLabel: 'Acreage*',allowBlank:false,cls:'roc-required'},
-                        {bind:'{spreadRate}',vtype:'extendedalphanum',fieldLabel: 'Rate of Spread*',allowBlank:false,cls:'roc-required',emptyText:'Critical, Moderate, Slow'},
+                        {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread*',
+                            reference: 'spreadRate', queryMode: 'local', allowBlank:false,cls:'roc-required', editable: false,
+                            forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
                         {bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type(s)*', allowBlank:false, cls: 'roc-required'},
                         {bind:'{otherFuelType}',vtype:'extendedalphanum',fieldLabel: 'Other Fuel Type(s)*'},
                         {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
@@ -129,16 +149,15 @@ function(Core, RocFormController, RocFormModel ) {
 	            },
                 {
                         xtype: 'fieldset',
-                        title: 'Weather',
+                        title: 'Weather Information',
                         defaultType: 'textfield',
                         defaults: {
                              anchor: '100%'
                         },
-                        items: [{bind:'{temperature}',vtype:'extendednum',fieldLabel: 'Temperature*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{relHumidity}',vtype:'extendednum',fieldLabel: 'Relative Humidity*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{windSpeed}',vtype:'extendedalphanum',fieldLabel: 'Wind Speed  mph*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{windDirection}',vtype:'extendedalphanum',fieldLabel: 'Wind Direction*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{predictedWeather}',vtype:'extendedalphanum',fieldLabel: 'Predicted Weather Conditions*',allowBlank:false,cls:'roc-required'}
+                        items: [{bind:'{temperature}', vtype:'extendednum', fieldLabel: 'Temperature', allowBlank:false, cls:'roc-required'},
+                                {bind:'{relHumidity}', vtype:'extendednum', fieldLabel: 'Relative Humidity', allowBlank:false, cls:'roc-required'},
+                                {bind:'{windSpeed}', vtype:'extendedalphanum', fieldLabel: 'Wind Speed', allowBlank:false, cls:'roc-required'},
+                                {bind:'{windDirection}', xtype:'numberfield', fieldLabel: 'Wind Direction', allowBlank:false, cls:'roc-required', minValue: 0, maxValue: 360}
                         ]
 
                    },
