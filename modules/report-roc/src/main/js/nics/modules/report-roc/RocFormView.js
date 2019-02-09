@@ -69,35 +69,38 @@ function(Core, RocFormController, RocFormModel ) {
 									}
 								},
 								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
-									cls:'roc-required', readOnly: true}
+									cls:'roc-required', readOnly: true, reference: 'incidentId'}
 							]
 					},
 					{ xtype: 'button', text: 'Edit Incident', handler: 'onEditIncidentClick', maxWidth: 100},
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', defaults: {anchor: '100%'},
 						items: [
 							//{ text: 'Incident Location', xtype: 'label'},
-							{ bind: '{longitude}', reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220,
+							{ bind: {value: '{longitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true,
+							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220,
 								listeners: {
 									change: {fn: 'onLocationChange', delay: 100}
 								}
 							},
-							{ bind: '{latitude}', reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true, keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220, padding:'0 0 0 5',
+							{ bind:  {value: '{latitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true,
+							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220, padding:'0 0 0 5',
 								listeners: {
 									change: {fn: 'onLocationChange', delay: 100}
 								}
 							},
-							{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', width: 60, margin:'0 0 0 20'}
+							{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
+								width: 60, margin:'0 0 0 20'}
 						]
 					},
-					{bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
-					{bind:'{state}',vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required',emptyText:'state name only'},
-					{value:'{county}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', reference: 'initialCounty',
-					    queryMode: 'local', forceSelection: true, autoSelect: false, listeners: { focusleave: {fn: function() { this.validate(); }, delay: 100 }},
-					    store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
-                                'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
-                                'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
-                                'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
-                                'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba']
+					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
+					{bind: {value: '{state}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required'},
+					{xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', reference: 'initialCounty',
+						queryMode: 'local', forceSelection: true, autoSelect: false, listeners: { focusleave: {fn: function() { this.validate(); }, delay: 100 }},
+						bind: {value:'{initialCounty}', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+								'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
+								'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+								'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
+								'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], readOnly: '{readOnlyIncidentDetails}', editable: '{!readOnlyIncidentDetails}'}
 					},
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
 			]
@@ -163,15 +166,29 @@ function(Core, RocFormController, RocFormModel ) {
                    },
                 {
                         xtype: 'fieldset',
+                        title: 'Threats & Evacuations',
                         defaultType: 'textfield',
                         defaults: {
                              anchor: '100%',
                              vtype:'simplealphanum'
                         },
-                        items: [{bind:'{evacuations}',xtype: 'textarea',fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{structuresThreat}',xtype: 'textarea',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{infrastructuresThreat}',xtype: 'textarea',fieldLabel: 'Infrastructures Structures Threat*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{icpLocation}',xtype: 'textarea',fieldLabel: 'ICP Location'}
+                        items: [{bind: '{evacuationsStatus}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
+                                reference: 'evacuationsStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind:'{evacuations}',xtype: 'textarea',fieldLabel: 'Evacuations in progress for*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{structuresThreatStatus}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
+                                reference: 'structuresThreatStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind:'{structuresThreat}',xtype: 'textarea',fieldLabel: 'Structures Threat in progress for*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{infrastructuresThreatStatus}',xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
+                                reference: 'infrastructuresThreatStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                                                                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind:'{infrastructuresThreat}',xtype: 'textarea',fieldLabel: 'Infrastructure Threat in progress for*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{otherThreatsAndEvacuationsStatus}',xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
+                                reference: 'otherThreatsAndEvacuationsStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                                                                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind:'{otherThreatsAndEvacuations}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
+
                         ]
                    },
                 {

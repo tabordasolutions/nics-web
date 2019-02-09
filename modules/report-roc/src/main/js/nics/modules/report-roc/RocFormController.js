@@ -75,7 +75,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 			onIncidentSelect: function(cb, record, index) {
 				this.getViewModel().set('incidentId', record.data.incidentId);
-				this.view.lookupReference('locateButton').disable();
 				this.setErrorMessage(null);
 				this.getLocationBasedData();
 				this.getViewModel().notify();
@@ -98,8 +97,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.setErrorMessage('Selected incident has Finalized ROC, cannot submit another ROC');
 					} else {
 						//bind response data to form
-						this.getViewModel().set('latitude', response.data.latitude);
-						this.getViewModel().set('longitude', response.data.longitude);
+						this.view.lookupReference('latitude').setValue(response.data.latitude);
+						this.view.lookupReference('longitude').setValue(response.data.longitude);
 //						this.getViewModel().set('incidenttypes', response.data.incidentType);
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
@@ -114,16 +113,16 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 			bindLocationBasedData : function (data, reportType='NEW'){
 				this.getViewModel().set('state', data.state);
-					this.getViewModel().set('county', data.county);
+					this.view.lookupReference('initialCounty').setValue(data.county);
 					this.getViewModel().set('location', data.location);
-					this.getViewModel().set('sra', data.sra);
-					this.getViewModel().set('dpa', data.dpa);
+					this.view.lookupReference('sra').setValue(data.sra);
+					this.view.lookupReference('dpa').setValue(data.dpa);
 					this.getViewModel().set('jurisdiction', data.jurisdiction);//contract county comes in jurisdiction
 					if(reportType == 'NEW') {
-						this.getViewModel().set('data', data.temperature);
-						this.getViewModel().set('data', data.relHumidity);
-						this.getViewModel().set('data', data.windSpeed);
-						this.getViewModel().set('data', data.windDirection);
+						this.getViewModel().set('temperature', data.temperature);
+						this.getViewModel().set('relHumidity', data.relHumidity);
+						this.getViewModel().set('windSpeed', data.windSpeed);
+						this.getViewModel().set('windDirection', data.windDirection);
 					}
 			},
 
@@ -161,7 +160,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onLocationChange: function() {
-				if(this.lookupReference('latitude').getValue() && this.lookupReference('longitude').getValue()) {
+				if(!this.getViewModel().get('incidentId') && this.lookupReference('latitude').getValue() && this.lookupReference('longitude').getValue()) {
 					this.getLocationBasedData();
 				}
 			},

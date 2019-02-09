@@ -43,6 +43,9 @@ define(['ext','iweb/CoreModule'], function(Ext, Core) {
 				incidentNameReadOnly: this.incidentNameReadOnly,
 		    },
 		 formulas: {
+				readOnlyIncidentDetails: function(get) {
+					return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
+				},
 		    	 report: function(get){
 		    		 var report = {
 		    				reportType: get('reportType'),
