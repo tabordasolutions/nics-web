@@ -113,7 +113,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 			bindLocationBasedData : function (data, reportType='NEW'){
 				this.getViewModel().set('state', data.state);
-					this.view.lookupReference('initialCounty').setValue(data.county);
+					this.getViewModel().set('initialCounty', data.county);
 					this.getViewModel().set('location', data.location);
 					this.view.lookupReference('sra').setValue(data.sra);
 					this.view.lookupReference('dpa').setValue(data.dpa);
@@ -135,6 +135,11 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				if(!this.getViewModel().getData().incidentNameReadOnly) {
 					this.getViewModel().set('incidentId', '');
 					this.setErrorMessage(null);
+					this.getViewModel().set('longitude', '');
+					this.getViewModel().set('latitude', '');
+					this.getViewModel().set('state', '');
+					this.getViewModel().set('initialCounty', '');
+					this.getViewModel().set('incidentType', '');
 				}
 			},
 

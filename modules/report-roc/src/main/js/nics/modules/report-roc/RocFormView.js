@@ -62,7 +62,7 @@ function(Core, RocFormController, RocFormModel ) {
 							items:[
 								{bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'}, xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name*',
 									queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
-									allowBlank: false, cls:'roc-required', flex:2,
+									allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', flex:2,
 									listeners: {
 										select: 'onIncidentSelect',
 										change: 'onIncidentChange'
@@ -77,13 +77,13 @@ function(Core, RocFormController, RocFormModel ) {
 						items: [
 							//{ text: 'Incident Location', xtype: 'label'},
 							{ bind: {value: '{longitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true,
-							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220,
+							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', width: 220,
 								listeners: {
 									change: {fn: 'onLocationChange', delay: 100}
 								}
 							},
 							{ bind:  {value: '{latitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true,
-							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', width: 220, padding:'0 0 0 5',
+							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', 	readOnlyCls: 'roc-read-only', width: 220, padding:'0 0 0 5',
 								listeners: {
 									change: {fn: 'onLocationChange', delay: 100}
 								}
@@ -92,15 +92,18 @@ function(Core, RocFormController, RocFormModel ) {
 								width: 60, margin:'0 0 0 20'}
 						]
 					},
-					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
-					{bind: {value: '{state}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required'},
-					{xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', reference: 'initialCounty',
-						queryMode: 'local', forceSelection: true, autoSelect: false, listeners: { focusleave: {fn: function() { this.validate(); }, delay: 100 }},
-						bind: {value:'{initialCounty}', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
-								'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
-								'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
-								'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
-								'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], readOnly: '{readOnlyIncidentDetails}', editable: '{!readOnlyIncidentDetails}'}
+					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required',
+						readOnlyCls: 'roc-read-only'
+					},
+					{bind: {value: '{state}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required',
+						readOnlyCls: 'roc-read-only'
+					},
+					{xtype: 'combobox', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
+							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
+							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: {value: '{initialCounty}', readOnly: '{readOnlyIncidentDetails}'},
+							readOnlyCls: 'roc-read-only'
 					},
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
 			]

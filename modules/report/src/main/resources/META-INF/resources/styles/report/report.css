@@ -32,6 +32,9 @@ div.roc-required label, div.fmag-required label{
     font-weight:bold;
 }
 
+div.roc-read-only input {
+    background: #f3f2f2;
+}
 
 .fmag-fieldset .x-fieldset-header-text{
     font-weight:bold;
