@@ -43,10 +43,26 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			
 				this.mediator = Core.Mediator.getInstance();
 				this.endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
-				Core.EventManager.addListener("EmailROCReport", this.emailROC.bind(this));
+				this.emailROCBinding = this.emailROC.bind(this);
+				Core.EventManager.addListener("EmailROCReport", this.emailROCBinding);
 				this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
-				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.processLocationBasedDataForIncident.bind(this));
-				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedData.bind(this));
+				this.loadLocationBasedDataByIncidentBinding = this.processLocationBasedDataForIncident.bind(this);
+				this.processLocationBasedDataBinding = this.processLocationBasedData.bind(this);
+				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.loadLocationBasedDataByIncidentBinding);
+				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
+				this.prevLatitude = null;
+				this.prevLongitude = null;
+
+				if(this.view.incidentId) {
+					this.getLocationBasedData();
+				}
+			},
+
+			destroy: function() {
+				this.callParent(arguments);
+				Core.EventManager.removeListener("EmailROCReport", this.emailROCBinding);
+				Core.EventManager.removeListener("LoadLocationBasedDataByIncident", this.loadLocationBasedDataByIncidentBinding);
+				Core.EventManager.removeListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
 			},
 
 			clearForm: function () {
@@ -80,6 +96,12 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.getViewModel().notify();
 			},
 
+			requestLocationBasedData: function() {
+				if(this.getViewModel().get('incidentId')) {
+					this.getLocationBasedData();
+				}
+			},
+
 			getLocationBasedData: function() {
 				if(this.getViewModel().get('incidentId')) {
 					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/" + this.getViewModel().get('incidentId') + '/locationBasedData', 'LoadLocationBasedDataByIncident');
@@ -97,8 +119,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.setErrorMessage('Selected incident has Finalized ROC, cannot submit another ROC');
 					} else {
 						//bind response data to form
-						this.view.lookupReference('latitude').setValue(response.data.latitude);
-						this.view.lookupReference('longitude').setValue(response.data.longitude);
+						this.getViewModel().set('latitude', response.data.latitude);
+						this.getViewModel().set('longitude', response.data.longitude);
 //						this.getViewModel().set('incidenttypes', response.data.incidentType);
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
@@ -161,10 +183,14 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.lookupReference('longitude').setValue(coord[0]);
 				this.mixins.geoApp.removeLayer();
 				this.mixins.geoApp.resetInteractions();
-				this.getLocationBasedData();
 			},
 
 			onLocationChange: function() {
+				//if no change in lat/long since fetching last location based data
+				if(this.prevLatitude == this.getViewModel().get('latitude') && this.prevLongitude == this.getViewModel().get('longitude'))
+					return;
+				this.prevLatitude = this.getViewModel().get('latitude');
+				this.prevLongitude = this.getViewModel().get('longitude');
 				if(!this.getViewModel().get('incidentId') && this.lookupReference('latitude').getValue() && this.lookupReference('longitude').getValue()) {
 					this.getLocationBasedData();
 				}
