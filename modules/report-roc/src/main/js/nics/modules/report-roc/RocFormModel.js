@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['ext','iweb/CoreModule'], function(Ext, Core) {
+define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext, Core, UserProfile) {
 		return Ext.define('modules.report-roc.RocFormModel', {	 
 		 extend: 'Ext.app.ViewModel',
 	 	
@@ -37,10 +37,11 @@ define(['ext','iweb/CoreModule'], function(Ext, Core) {
 				incidentName: this.incidentName,
 				incidentId: this.incidentId,
 				formTypeId: this.formTypeId,
-				email: this.email,
+				email: UserProfile.getUsername(),
 				simplifiedEmail: this.simplifiedEmail,
 				activeIncidentsStore: this.activeIncidentsStore,
 				incidentNameReadOnly: this.incidentNameReadOnly,
+				incidentTypes: UserProfile.getIncidentTypes(),
 		    },
 		 formulas: {
 				readOnlyIncidentDetails: function(get) {

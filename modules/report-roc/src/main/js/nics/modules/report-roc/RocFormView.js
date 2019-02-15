@@ -69,7 +69,7 @@ function(Core, RocFormController, RocFormModel ) {
 									}
 								},
 								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
-									cls:'roc-required', readOnly: true, reference: 'incidentId'}
+									readOnly: true, reference: 'incidentId'}
 							]
 					},
 					{ xtype: 'button', text: 'Edit Incident', handler: 'onEditIncidentClick', maxWidth: 100},
@@ -92,9 +92,14 @@ function(Core, RocFormController, RocFormModel ) {
 								width: 60, margin:'0 0 0 20'}
 						]
 					},
-					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required',
-						readOnlyCls: 'roc-read-only'
+					{xtype: 'checkboxgroup', fieldLabel: 'Incident Type*', scrollable: true, height: 100,
+						items: [
+							{ boxLabel: 'Planned Event', name: 'incidenttype', inputValue: 1},
+						]
 					},
+//					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required',
+//						readOnlyCls: 'roc-read-only'
+//					},
 					{bind: {value: '{state}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required',
 						readOnlyCls: 'roc-read-only'
 					},
@@ -148,8 +153,21 @@ function(Core, RocFormController, RocFormModel ) {
                         {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread*',
                             reference: 'spreadRate', queryMode: 'local', allowBlank:false,cls:'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
-                        {bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type(s)*', allowBlank:false, cls: 'roc-required'},
-                        {bind:'{otherFuelType}',vtype:'extendedalphanum',fieldLabel: 'Other Fuel Type(s)*'},
+                        //{bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type(s)*', allowBlank:false, cls: 'roc-required'},
+                        {bind: '{fuelType}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                            items: [
+                                { boxLabel: 'Grass', name: 'fueltype', inputValue: 'Grass', uncheckedValue: ''},
+                                { boxLabel: 'Bush', name: 'fueltype', inputValue: 'Bush', uncheckedValue: ''},
+                                { boxLabel: 'Timber', name: 'fueltype', inputValue: 'Timber', uncheckedValue: ''},
+                                { boxLabel: 'Oak Woodland', name: 'fueltype', inputValue: 'Oak Woodland', uncheckedValue: ''},
+                                { boxLabel: 'Other', name: 'fueltype', inputValue: 'Other', uncheckedValue: '', reference: 'otherFuelTypeCheckBox'}
+                            ]
+                        },
+                        {bind: { value: '{otherFuelType}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
+                            validator: function(val) {
+                                return (!this.disabled && !val) ? "Other Fuel Type is required" : true;
+                            }
+                        },
                         {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
 	                ]
 	            },
@@ -258,7 +276,5 @@ function(Core, RocFormController, RocFormModel ) {
 		reference: 'cancelButton',
 		handler: 'cancelForm'
 	}]
-		 	
-	 	
 	});
 });
