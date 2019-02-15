@@ -52,10 +52,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
 				this.prevLatitude = null;
 				this.prevLongitude = null;
-
-				if(this.view.incidentId) {
-					this.getLocationBasedData();
-				}
 			},
 
 			destroy: function() {
@@ -154,7 +150,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onIncidentChange: function(cb, newValue, oldValue, eOpts) {
-				if(!this.getViewModel().getData().incidentNameReadOnly) {
+				if(this.getViewModel().get('incidentId')) {
 					this.getViewModel().set('incidentId', '');
 					this.setErrorMessage(null);
 					this.getViewModel().set('longitude', '');

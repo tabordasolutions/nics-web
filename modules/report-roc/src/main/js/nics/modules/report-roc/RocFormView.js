@@ -100,16 +100,7 @@ function(Core, RocFormController, RocFormModel ) {
 //					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required',
 //						readOnlyCls: 'roc-read-only'
 //					},
-					{bind: {value: '{state}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'State / Province / Region *',allowBlank:false,cls:'roc-required',
-						readOnlyCls: 'roc-read-only'
-					},
-					{xtype: 'combobox', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
-							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
-							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
-							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
-							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: {value: '{initialCounty}', readOnly: '{readOnlyIncidentDetails}'},
-							readOnlyCls: 'roc-read-only'
-					},
+					{ bind: '{state}', fieldLabel: 'State / Province / Region *', xtype: 'displayfield' },
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
 			]
 	    },
@@ -129,7 +120,14 @@ function(Core, RocFormController, RocFormModel ) {
 	                defaults: {
 	                anchor: '100%'
 	            },
-	            items: [{bind:'{county}',vtype:'extendedalphanum', fieldLabel: 'County', allowBlank:true},
+	            items: [
+	                    {xtype: 'combobox', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
+							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
+							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{initialCounty}'
+						},
+	                    {bind:'{county}',vtype:'extendedalphanum', fieldLabel: 'Additional Counties', allowBlank:true},
                         {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
                         {value:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
                             reference: 'dpa', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
@@ -150,8 +148,8 @@ function(Core, RocFormController, RocFormModel ) {
 	                anchor: '100%'
 	            },
 	            items: [{bind:'{scope}',vtype:'extendedalphanum',fieldLabel: 'Acreage*',allowBlank:false,cls:'roc-required'},
-                        {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread*',
-                            reference: 'spreadRate', queryMode: 'local', allowBlank:false,cls:'roc-required', editable: false,
+                        {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
+                            reference: 'spreadRate', queryMode: 'local', editable: false,
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
                         //{bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type(s)*', allowBlank:false, cls: 'roc-required'},
                         {bind: '{fuelType}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
@@ -166,7 +164,7 @@ function(Core, RocFormController, RocFormModel ) {
                         {bind: { value: '{otherFuelType}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
                             validator: function(val) {
                                 return (!this.disabled && !val) ? "Other Fuel Type is required" : true;
-                            }
+                            }, cls: 'roc-required'
                         },
                         {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
 	                ]
@@ -193,67 +191,50 @@ function(Core, RocFormController, RocFormModel ) {
                              anchor: '100%',
                              vtype:'simplealphanum'
                         },
-                        items: [{bind: '{evacuationsStatus}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
-                                reference: 'evacuationsStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                        items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
+                                reference: 'evacuations', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{evacuations}',xtype: 'textarea',fieldLabel: 'Evacuations in progress for*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{structuresThreatStatus}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
-                                reference: 'structuresThreatStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                {bind:'{evacuationsInProgressFor}',xtype: 'textarea',fieldLabel: 'Evacuations in progress for*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
+                                reference: 'structuresThreat', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{structuresThreat}',xtype: 'textarea',fieldLabel: 'Structures Threat in progress for*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{infrastructuresThreatStatus}',xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
-                                reference: 'infrastructuresThreatStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                {bind:'{structuresThreatInProgressFor}',xtype: 'textarea',fieldLabel: 'Structures Threat in progress for*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{infrastructuresThreat}',xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
+                                reference: 'infrastructuresThreat', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{infrastructuresThreat}',xtype: 'textarea',fieldLabel: 'Infrastructure Threat in progress for*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{otherThreatsAndEvacuationsStatus}',xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
-                                reference: 'otherThreatsAndEvacuationsStatus', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                {bind:'{infrastructuresThreatInProgressFor}',xtype: 'textarea',fieldLabel: 'Infrastructure Threat in progress for*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{otherThreatsAndEvacuations}',xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
+                                reference: 'otherThreatsAndEvacuations', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{otherThreatsAndEvacuations}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{otherThreatsAndEvacuationsInProgressFor}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
 
                         ]
                    },
                 {
                         xtype: 'fieldset',
-                        title: 'Resources Committed',
+                        title: 'CAL FIRE Resource Commitment',
                         defaultType: 'textfield',
                         defaults: {
                              anchor: '100%',
                             vtype:'simplealphanum'
                         },
-                        items: [{
-                                xtype: 'fieldset',
-                                title: 'Aircraft',
-                                defaultType: 'textfield',
-                                defaults: {
-                                    anchor: '100%'
-                                },
-                                items: [{bind:'{airAttack}',fieldLabel: 'Air Attack'},
-                                        {bind:'{airTankers}',fieldLabel: 'Air Tankers'},
-                                        {bind:'{helicopters}',fieldLabel: 'Helicopters'}
-                                ]
-
-                            },
-                                {bind:'{overhead}',fieldLabel: 'Overhead'},
-                                {bind:'{typeIEngine}',fieldLabel: 'Type I Engine'},
-                                {bind:'{typeIIEngine}',fieldLabel: 'Type II Engine'},
-                                {bind:'{typeIIIEngine}',fieldLabel: 'Type III Engine'},
-                                {bind:'{waterTender}',fieldLabel: 'Water Tender'},
-                                {bind:'{dozers}',fieldLabel: 'Dozers'},
-                                {bind:'{handcrews}',fieldLabel: 'Handcrews'},
-                                {bind:'{comUnit}',fieldLabel: 'Com Unit'}
+                        items: [
+                        {bind:'{calfireIncident}',xtype: 'combobox',fieldLabel: 'CAL FIRE Incident',
+                         reference: 'calFireIncident', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                         store: ['', 'Yes', 'No']},
+                        {bind:'{resourcesAssigned}',xtype: 'textarea',fieldLabel: 'Resources Assigned'},
                         ]
 
                    },
                 {
                         xtype: 'fieldset',
+                        title: 'Email',
                         defaultType: 'textfield',
                         defaults: {
                              anchor: '100%'
                         },
-                        items: [{bind:'{email}',vtype:'emaillist',xtype: 'textarea',fieldLabel: 'Email (comma separated)'},
-                                {bind:'{simplifiedEmail}',xtype: 'checkboxfield', boxLabel: 'Simplified Email',id: 'simplifiedEmail',checked:true },
-                                {bind:'{comments}',vtype:'extendedalphanum',xtype: 'textarea',fieldLabel: 'General Comments'},
-                                {bind:'{reportBy}',vtype:'simplealphanum',fieldLabel: 'Report By'}
+                        items: [
+                            {bind:'{email}',xtype: 'displayfield',fieldLabel: 'Recipient Email'}
                         ]
                    },
             ]
