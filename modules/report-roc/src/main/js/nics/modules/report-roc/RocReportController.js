@@ -155,7 +155,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				email: this.emailList,
 				simplifiedEmail: true,
 				incidentNameReadOnly: this.incidentNameReadOnly,
-				activeIncidentsStore: this.activeIncidentsStore
+				activeIncidentsStore: this.activeIncidentsStore,
 			});
 			rocReportContainer.removeAll();
 			rocReportContainer.add(rocForm);
@@ -168,7 +168,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					reportBy:  username,
 		 			email:this.emailList,
 					incidentNameReadOnly: this.incidentNameReadOnly,
-					activeIncidentsStore: this.activeIncidentsStore
+					activeIncidentsStore: this.activeIncidentsStore,
+					incidentTypes: UserProfile.getIncidentTypes,
 			};
 			rocForm.viewModel.set(initialData);
 			this.lookupReference('createButton').disable();

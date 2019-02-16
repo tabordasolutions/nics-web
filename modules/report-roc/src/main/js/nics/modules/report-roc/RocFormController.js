@@ -52,6 +52,16 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
 				this.prevLatitude = null;
 				this.prevLongitude = null;
+				this.createIncidentTypeCheckboxes();
+			},
+
+			createIncidentTypeCheckboxes: function() {
+				var incidentTypes = UserProfile.getIncidentTypes();
+				var incidentTypeCheckboxes = [];
+				var checkboxGroup = this.view.lookupReference('incidentTypesRef');
+				for(var i = 0; i<incidentTypes.length; i++) {
+					checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeId});
+				}
 			},
 
 			destroy: function() {

@@ -92,10 +92,9 @@ function(Core, RocFormController, RocFormModel ) {
 								width: 60, margin:'0 0 0 20'}
 						]
 					},
-					{xtype: 'checkboxgroup', fieldLabel: 'Incident Type*', scrollable: true, height: 100,
-						items: [
-							{ boxLabel: 'Planned Event', name: 'incidenttype', inputValue: 1},
-						]
+					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
+						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [],
+//						listeners: {beforerender: 'afterRender'}
 					},
 //					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required',
 //						readOnlyCls: 'roc-read-only'
