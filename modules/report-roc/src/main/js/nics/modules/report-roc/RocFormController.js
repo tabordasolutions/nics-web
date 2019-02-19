@@ -30,9 +30,7 @@
 define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView','./RocFormModel'],
 
 	function(ol, Core, MapModule, UserProfile, RocReportView, RocFormView , RocFormModel ){
-	
-		
-	
+
 		Ext.define('modules.report-roc.RocFormController', {
 			extend : 'Ext.app.ViewController',
 			
@@ -53,6 +51,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.prevLatitude = null;
 				this.prevLongitude = null;
 				this.createIncidentTypeCheckboxes();
+				this.requestLocationBasedDataForIncident(this.view.incidentId);
 			},
 
 			createIncidentTypeCheckboxes: function() {
@@ -78,43 +77,40 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 		    	});
 		    },
 
-			    setFormReadOnly: function () {
-			    	this.view.getForm().getFields().each (function (field) {
-			    		field.setReadOnly(true);
-			    	});
-			    	this.view.lookupReference('submitButton').hide();
-			    	this.view.lookupReference('cancelButton').hide();
-			    	this.view.lookupReference('resetButton').hide();
-			    },
-			    enableForm: function () {
-			    	this.view.getForm().getFields().each (function (field) {
-			    		field.setReadOnly(false);
-			    	});
-			    	this.view.lookupReference('submitButton').show();
-			    	this.view.lookupReference('cancelButton').show();
-			    	this.view.lookupReference('resetButton').show();
-			    },
+			setFormReadOnly: function () {
+				this.view.getForm().getFields().each (function (field) {
+					field.setReadOnly(true);
+				});
+				this.view.lookupReference('submitButton').hide();
+				this.view.lookupReference('cancelButton').hide();
+				this.view.lookupReference('resetButton').hide();
+			},
+
+			enableForm: function () {
+				this.view.getForm().getFields().each (function (field) {
+					field.setReadOnly(false);
+				});
+				this.view.lookupReference('submitButton').show();
+				this.view.lookupReference('cancelButton').show();
+				this.view.lookupReference('resetButton').show();
+			},
 
 			onIncidentSelect: function(cb, record, index) {
 				this.getViewModel().set('incidentId', record.data.incidentId);
 				this.setErrorMessage(null);
-				this.getLocationBasedData();
+				this.requestLocationBasedDataForIncident(record.data.incidentId);
 				this.getViewModel().notify();
 			},
 
 			requestLocationBasedData: function() {
-				if(this.getViewModel().get('incidentId')) {
-					this.getLocationBasedData();
-				}
+				var requestPathWithParams = "/reports/1/locationBasedData?longitude=" + this.lookupReference('longitude').getValue() + "&latitude=" +
+				this.lookupReference('latitude').getValue();
+				this.mediator.sendRequestMessage(this.endpoint + requestPathWithParams, 'LoadLocationBasedData' );
 			},
 
-			getLocationBasedData: function() {
-				if(this.getViewModel().get('incidentId')) {
-					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/" + this.getViewModel().get('incidentId') + '/locationBasedData', 'LoadLocationBasedDataByIncident');
-				} else {
-					var requestPathWithParams = "/reports/1/locationBasedData?longitude=" + this.lookupReference('longitude').getValue() + "&latitude=" +
-						this.lookupReference('latitude').getValue();
-					this.mediator.sendRequestMessage(this.endpoint + requestPathWithParams, 'LoadLocationBasedData' );
+			requestLocationBasedDataForIncident: function(incidentId) {
+				if(incidentId) {
+					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/" + incidentId + '/locationBasedData', 'LoadLocationBasedDataByIncident');
 				}
 			},
 
@@ -127,7 +123,10 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						//bind response data to form
 						this.getViewModel().set('latitude', response.data.latitude);
 						this.getViewModel().set('longitude', response.data.longitude);
-//						this.getViewModel().set('incidenttypes', response.data.incidentType);
+						if(response.data.incidentTypes) {
+							var incidentTypeIds = response.data.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
+							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeIds});
+						}
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
 				}
@@ -171,10 +170,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				}
 			},
 
-			onEditIncidentClick : function(button) {
-				button.setMaxWidth(100);
-			},
-
 			onLocateToggle: function(locateButton, state) {
 				this.setErrorMessage('');
 				this.mixins.geoApp.onLocateToggle(locateButton, state);
@@ -198,7 +193,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.prevLatitude = this.getViewModel().get('latitude');
 				this.prevLongitude = this.getViewModel().get('longitude');
 				if(!this.getViewModel().get('incidentId') && this.lookupReference('latitude').getValue() && this.lookupReference('longitude').getValue()) {
-					this.getLocationBasedData();
+					this.requestLocationBasedData();
 				}
 			},
 

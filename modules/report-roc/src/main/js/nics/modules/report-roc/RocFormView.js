@@ -72,7 +72,6 @@ function(Core, RocFormController, RocFormModel ) {
 									readOnly: true, reference: 'incidentId'}
 							]
 					},
-					{ xtype: 'button', text: 'Edit Incident', handler: 'onEditIncidentClick', maxWidth: 100},
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', defaults: {anchor: '100%'},
 						items: [
 							//{ text: 'Incident Location', xtype: 'label'},
