@@ -47,6 +47,18 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 				readOnlyIncidentDetails: function(get) {
 					return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
 				},
+				disableEvacuationsInProgress: function(get) {
+					var evacuations = get('evacuations') ;
+					return (typeof evacuations == "string") ? evacuations === 'No' : true;
+				},
+				disableStructuresThreatInProgress: function(get) {
+					var structuresThreat = get('structuresThreat') ;
+					return (typeof structuresThreat == "string") ? structuresThreat === 'No' : true;
+				},
+				disableInfrastructuresThreatInProgress: function(get) {
+					var infrastructuresThreat = get('infrastructuresThreat') ;
+					return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
+				},
 		    	 report: function(get){
 		    		 var report = {
 		    				reportType: get('reportType'),
@@ -71,11 +83,11 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		    				evacuations: get('evacuations'),
 		    				evacuationsInProgressFor: get('evacuationsInProgressFor'),
 		    				structuresThreat: get('structuresThreat'),
-		    				structuresThreatInProgressFor: get('structuresThreatInProgressFor'),
+		    				structuresThreatInProgress: get('structuresThreatInProgressFor'),
 		    				infrastructuresThreat: get('infrastructuresThreat'),
-		    				infrastructuresThreatInProgressFor: get('infrastructuresThreatInProgressFor'),
+		    				infrastructuresThreatInProgress: get('infrastructuresThreatInProgressFor'),
 		    				otherThreatsAndEvacuations: get('otherThreatsAndEvacuations'),
-		    				otherThreatsAndEvacuationsInProgressFor: get('otherThreatsAndEvacuationsInProgressFor'),
+		    				otherThreatsAndEvacuationsInProgress: get('otherThreatsAndEvacuationsInProgressFor'),
 		    				calfireIncident: get('calfireIncident'),
 		    				resourcesAssigned: get('resourcesAssigned'),
 		    				email: get('email'),

@@ -74,7 +74,6 @@ function(Core, RocFormController, RocFormModel ) {
 					},
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', defaults: {anchor: '100%'},
 						items: [
-							//{ text: 'Incident Location', xtype: 'label'},
 							{ bind: {value: '{longitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true,
 							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', width: 220,
 								listeners: {
@@ -93,11 +92,7 @@ function(Core, RocFormController, RocFormModel ) {
 					},
 					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
 						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [],
-//						listeners: {beforerender: 'afterRender'}
 					},
-//					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'},vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required',
-//						readOnlyCls: 'roc-read-only'
-//					},
 					{ bind: '{state}', fieldLabel: 'State / Province / Region *', xtype: 'displayfield' },
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
 			]
@@ -149,7 +144,6 @@ function(Core, RocFormController, RocFormModel ) {
                         {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
                             reference: 'spreadRate', queryMode: 'local', editable: false,
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
-                        //{bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type(s)*', allowBlank:false, cls: 'roc-required'},
                         {bind: '{fuelType}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
                                 { boxLabel: 'Grass', name: 'fueltype', inputValue: 'Grass', uncheckedValue: ''},
@@ -174,10 +168,10 @@ function(Core, RocFormController, RocFormModel ) {
                         defaults: {
                              anchor: '100%'
                         },
-                        items: [{bind:'{temperature}', vtype:'extendednum', fieldLabel: 'Temperature', allowBlank:false, cls:'roc-required'},
-                                {bind:'{relHumidity}', vtype:'extendednum', fieldLabel: 'Relative Humidity', allowBlank:false, cls:'roc-required'},
-                                {bind:'{windSpeed}', vtype:'extendedalphanum', fieldLabel: 'Wind Speed', allowBlank:false, cls:'roc-required'},
-                                {bind:'{windDirection}', xtype:'numberfield', fieldLabel: 'Wind Direction', allowBlank:false, cls:'roc-required', minValue: 0, maxValue: 360}
+                        items: [{bind:'{temperature}', vtype:'extendednum', fieldLabel: 'Temperature'},
+                                {bind:'{relHumidity}', vtype:'extendednum', fieldLabel: 'Relative Humidity'},
+                                {bind:'{windSpeed}', vtype:'extendedalphanum', fieldLabel: 'Wind Speed'},
+                                {bind:'{windDirection}', xtype:'numberfield', fieldLabel: 'Wind Direction', minValue: 0, maxValue: 360}
                         ]
 
                    },
@@ -190,21 +184,36 @@ function(Core, RocFormController, RocFormModel ) {
                              vtype:'simplealphanum'
                         },
                         items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
-                                reference: 'evacuations', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{evacuationsInProgressFor}',xtype: 'textarea',fieldLabel: 'Evacuations in progress for*',allowBlank:false,cls:'roc-required'},
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['Yes', 'No', 'Mitigated'] },
+                                {bind:{value: '{evacuationsInProgress}', disabled: '{disableEvacuationsInProgress}'},
+                                    disabled: true, xtype: 'textarea',fieldLabel: 'Evacuations in progress for*', cls:'roc-required',
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "This is a required field" : true;
+                                    }
+                                },
                                 {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
-                                reference: 'structuresThreat', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{structuresThreatInProgressFor}',xtype: 'textarea',fieldLabel: 'Structures Threat in progress for*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{infrastructuresThreat}',xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
-                                reference: 'infrastructuresThreat', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                {bind: {value: '{structuresThreatInProgress}', disabled: '{disableStructuresThreatInProgress}'},
+                                    disabled: true, xtype: 'textarea',fieldLabel: 'Structures Threat in progress for*', cls:'roc-required',
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "This is a required field" : true;
+                                    }
+                                },
+                                {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{infrastructuresThreatInProgressFor}',xtype: 'textarea',fieldLabel: 'Infrastructure Threat in progress for*',allowBlank:false,cls:'roc-required'},
-                                {bind:'{otherThreatsAndEvacuations}',xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
+                                {bind: {value: '{infrastructuresThreatInProgress}', disabled: '{disableInfrastructuresThreatInProgress}'},
+                                    disabled: true, xtype: 'textarea',fieldLabel: 'Infrastructure Threat in progress for*',allowBlank:false,cls:'roc-required',
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "This is a required field" : true;
+                                    }
+                                },
+                                {bind:'{otherThreatsAndEvacuations}', xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
                                 reference: 'otherThreatsAndEvacuations', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{otherThreatsAndEvacuationsInProgressFor}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
+                                {bind:'{otherThreatsAndEvacuationsInProgress}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
 
                         ]
                    },
