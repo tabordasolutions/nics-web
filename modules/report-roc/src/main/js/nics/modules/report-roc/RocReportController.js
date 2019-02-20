@@ -163,7 +163,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
 					reportType: 'NEW',
 					date: new Date(),
-					starttime: new Date(),
 					formTypeId:this.formTypeId,
 					reportBy:  username,
 		 			email:this.emailList,

@@ -120,7 +120,7 @@ function(Core, RocFormController, RocFormModel ) {
 							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
 							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{initialCounty}'
 						},
-	                    {bind:'{county}',vtype:'extendedalphanum', fieldLabel: 'Additional Counties', allowBlank:true},
+	                    {bind:'{county}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
                         {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
                         {value:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
                             reference: 'dpa', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
@@ -229,7 +229,22 @@ function(Core, RocFormController, RocFormModel ) {
                         {bind:'{calfireIncident}',xtype: 'combobox',fieldLabel: 'CAL FIRE Incident',
                          reference: 'calFireIncident', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                          store: ['', 'Yes', 'No']},
-                        {bind:'{resourcesAssigned}',xtype: 'textarea',fieldLabel: 'Resources Assigned'},
+                        {bind: '{resourcesAssigned}', xtype: 'checkboxgroup', fieldLabel: 'Resources Assigned', vertical: true, columns: 1,
+                                                    items: [
+                                                        { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources'},
+                                                        { boxLabel: 'CAL FIRE Air Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air Resources Assigned'},
+                                                        { boxLabel: 'CAL FIRE Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Ground Resources Assigned'},
+                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Assigned'},
+                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Augmented', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Augmented'},
+                                                        { boxLabel: 'CAL FIRE Agency Rep ordered', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep ordered'},
+                                                        { boxLabel: 'CAL FIRE Agency Rep assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep assigned'},
+                                                        { boxLabel: 'Significant augmentation of resources', name: 'resourcesAssigned', inputValue: 'Significant augmentation of resources'},
+                                                        { boxLabel: 'Very Large Air Tanker (VLAT) on order', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) on order'},
+                                                        { boxLabel: 'Very Large Air Tanker (VLAT) assigned', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) assigned'},
+                                                        { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety'},
+                                                        { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned'}
+                                                    ]
+                                                }
                         ]
 
                    },
