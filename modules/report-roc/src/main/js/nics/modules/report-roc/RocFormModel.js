@@ -59,6 +59,12 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 					var infrastructuresThreat = get('infrastructuresThreat') ;
 					return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
 				},
+				updateReport: function(get) {
+					return get('reportType') == 'UPDATE';
+				},
+				finalReport: function(get) {
+					return get('reportType') == 'FINAL';
+				},
 		    	 report: function(get){
 		    		 var report = {
 		    				reportType: get('reportType'),

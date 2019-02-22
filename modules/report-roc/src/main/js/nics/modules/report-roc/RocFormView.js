@@ -48,7 +48,7 @@ function(Core, RocFormController, RocFormModel ) {
 		referenceHolder: true,
 	    items:[
 	    {bind:'{errorMessage}', xtype:'displayfield', reference: 'errorLabel', xtype: 'label', hidden: true,
-        	    	 			style: {color: 'red'}, padding: '0 0 0 5', border: true},
+        		 			style: {color: 'red'}, padding: '0 0 0 5', border: true},
 	    { 
 	    	 xtype: 'fieldset',
 	         title: 'Incident Info',
@@ -186,12 +186,14 @@ function(Core, RocFormController, RocFormModel ) {
                         items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: ['Yes', 'No', 'Mitigated'] },
-                                {bind:{value: '{evacuationsInProgress}', disabled: '{disableEvacuationsInProgress}'},
+                                {bind:{value: '{evacuationsInProgress}', disabled: '{disableEvacuationsInProgress}'}, //xtype: 'combobox',
                                     disabled: true, xtype: 'textarea',fieldLabel: 'Evacuations in progress for*', cls:'roc-required',
                                     validator: function(val) {
                                         return (!this.disabled && !val) ? "This is a required field" : true;
-                                    }
+                                    }//, store: ['TEst 1', 'TEst 2', 'Test 3']
                                 },
+                                { xtype: 'button', text: 'Add', handler: 'addEvacuationsInProgressField', bind: {disabled: '{disableEvacuationsInProgress}'},
+                                								width: 60, margin:'0 0 0 20'},
                                 {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
@@ -231,20 +233,22 @@ function(Core, RocFormController, RocFormModel ) {
                          store: ['', 'Yes', 'No']},
                         {bind: '{resourcesAssigned}', xtype: 'checkboxgroup', fieldLabel: 'Resources Assigned', vertical: true, columns: 1,
                                                     items: [
-                                                        { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources'},
-                                                        { boxLabel: 'CAL FIRE Air Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air Resources Assigned'},
-                                                        { boxLabel: 'CAL FIRE Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Ground Resources Assigned'},
-                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Assigned'},
-                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Augmented', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Augmented'},
-                                                        { boxLabel: 'CAL FIRE Agency Rep ordered', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep ordered'},
-                                                        { boxLabel: 'CAL FIRE Agency Rep assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep assigned'},
-                                                        { boxLabel: 'Significant augmentation of resources', name: 'resourcesAssigned', inputValue: 'Significant augmentation of resources'},
-                                                        { boxLabel: 'Very Large Air Tanker (VLAT) on order', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) on order'},
-                                                        { boxLabel: 'Very Large Air Tanker (VLAT) assigned', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) assigned'},
-                                                        { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety'},
-                                                        { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned'}
+                                                        { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Air Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Augmented', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Augmented', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Agency Rep ordered', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep ordered', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Agency Rep assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Significant augmentation of resources', name: 'resourcesAssigned', inputValue: 'Significant augmentation of resources', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Very Large Air Tanker (VLAT) on order', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) on order', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Very Large Air Tanker (VLAT) assigned', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Continued commitment of CAL FIRE air and ground resources', name: 'resourcesAssigned', inputValue: 'Continued commitment of CAL FIRE air and ground resources', bind: {hidden: '{!updateReport}'}},
+                                                        { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }}
                                                     ]
-                                                }
+                        }
                         ]
 
                    },
