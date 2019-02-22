@@ -221,7 +221,7 @@ function(Core, RocFormController, RocFormModel ) {
                    },
                 {
                         xtype: 'fieldset',
-                        title: 'CAL FIRE Resource Commitment',
+                        title: 'Resource Commitment',
                         defaultType: 'textfield',
                         defaults: {
                              anchor: '100%',
