@@ -42,8 +42,23 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 				activeIncidentsStore: this.activeIncidentsStore,
 				incidentNameReadOnly: this.incidentNameReadOnly,
 				incidentTypes: UserProfile.getIncidentTypes(),
-		    },
-		 formulas: {
+		},
+		coordinateToDecimalDegrees: function(coordinate) {
+			var coordinateMod = coordinate;
+			var negateVal = 1;
+			if (coordinateMod < 0) {
+				coordinateMod *= -1;
+				negateVal = -1;
+			}
+			var degrees = Math.floor(coordinateMod);
+			var minutes = 60 * (coordinateMod - degrees);
+			return {'degrees': negateVal*degrees, 'minutes': minutes};
+		},
+		decimalDegreesToCoordinate: function(degrees, minutes) {
+			var coordinate = parseInt(degrees, 10);
+			return (coordinate < 0) ? coordinate - (minutes/60) : coordinate + (minutes/60);
+		},
+		formulas: {
 				readOnlyIncidentDetails: function(get) {
 					return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
 				},
@@ -64,6 +79,34 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 				},
 				finalReport: function(get) {
 					return get('reportType') == 'FINAL';
+				},
+				latitude: {
+					get: function(get) {
+						return this.decimalDegreesToCoordinate(get('latDegrees'), get('latMinutes'));
+					},
+
+					set: function(value) {
+						var latDegreesMinutes = this.coordinateToDecimalDegrees(value);
+						this.set({
+							latDegrees: latDegreesMinutes.degrees,
+							latMinutes: latDegreesMinutes.minutes
+						});
+
+					}
+				},
+				longitude: {
+					get: function(get) {
+						return this.decimalDegreesToCoordinate(get('longDegrees'), get('longMinutes'));
+					},
+
+					set: function(value) {
+						var longDegreesMinutes = this.coordinateToDecimalDegrees(value);
+						this.set({
+							longDegrees: longDegreesMinutes.degrees,
+							longMinutes: longDegreesMinutes.minutes
+						});
+
+					}
 				},
 		    	 report: function(get){
 		    		 var report = {

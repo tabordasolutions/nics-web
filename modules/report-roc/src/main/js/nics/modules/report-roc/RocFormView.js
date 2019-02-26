@@ -68,30 +68,32 @@ function(Core, RocFormController, RocFormModel ) {
 										change: 'onIncidentChange'
 									}
 								},
-								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number*', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
+								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
 									readOnly: true, reference: 'incidentId'}
 							]
 					},
-					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', defaults: {anchor: '100%'},
-						items: [
-							{ bind: {value: '{longitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'longitude', xtype: 'numberfield', fieldLabel: 'Longitude*', hideTrigger: true,
-							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', width: 220,
-								listeners: {
-									change: {fn: 'onLocationChange', delay: 100}
-								}
-							},
-							{ bind:  {value: '{latitude}', readOnly: '{readOnlyIncidentDetails}'}, reference: 'latitude', xtype: 'numberfield', fieldLabel: 'Latitude*', hideTrigger: true,
-							  keyNavEnabled: false, mouseWheelEnabled: false, decimalPrecision: 14, allowBlank: false, cls:'roc-required', 	readOnlyCls: 'roc-read-only', width: 220, padding:'0 0 0 5',
-								listeners: {
-									change: {fn: 'onLocationChange', delay: 100}
-								}
-							},
-							{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
-								width: 60, margin:'0 0 0 20'}
+					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
+					items: [
+						{bind: {value: '{latDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latDegreesRef', flex: 1, allowBlank: false, minValue: -89, maxValue: 89, allowDecimals: false,
+							fieldLabel: 'Latitude*', cls: 'roc-required'},
+						{xtype: 'displayfield', value: '°', width: 10},
+						{bind: {value: '{latMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999},
+						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
+						{bind: '{latitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'}
+						]
+					},
+					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'longitudeGroupRef',
+					items: [
+						{bind: {value: '{longDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longDegreesRef', flex: 1, allowBlank: false, minValue: -179, maxValue: 179, allowDecimals: false,
+							fieldLabel: 'Longitude*', cls: 'roc-required'},
+						{xtype: 'displayfield', value: '°', width: 10},
+						{bind: {value: '{longMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999},
+						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
+						{bind: '{longitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'}
 						]
 					},
 					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
-						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [],
+						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required'
 					},
 					{ bind: '{state}', fieldLabel: 'State / Province / Region *', xtype: 'displayfield' },
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
@@ -192,10 +194,8 @@ function(Core, RocFormController, RocFormModel ) {
                                     disabled: true, xtype: 'textarea',fieldLabel: 'Evacuations in progress for*', cls:'roc-required',
                                     validator: function(val) {
                                         return (!this.disabled && !val) ? "This is a required field" : true;
-                                    }//, store: ['TEst 1', 'TEst 2', 'Test 3']
+                                    }
                                 },
-                                { xtype: 'button', text: 'Add', handler: 'addEvacuationsInProgressField', bind: {disabled: '{disableEvacuationsInProgress}'},
-                                								width: 60, margin:'0 0 0 20'},
                                 {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
