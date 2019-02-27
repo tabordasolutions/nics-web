@@ -59,7 +59,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				var incidentTypeCheckboxes = [];
 				var checkboxGroup = this.view.lookupReference('incidentTypesRef');
 				for(var i = 0; i<incidentTypes.length; i++) {
-					checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeId});
+					checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeId, cls: 'roc-no-style'});
 				}
 			},
 
@@ -159,7 +159,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onIncidentChange: function(cb, newValue, oldValue, eOpts) {
-				if(this.getViewModel().get('incidentId')) {
+				if(this.getViewModel().get('incidentId') && !this.getViewModel().get('incidentNameReadOnly')) {
 					this.getViewModel().set('incidentId', '');
 					this.setErrorMessage(null);
 					this.getViewModel().set('longitude', '');

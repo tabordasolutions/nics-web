@@ -32,6 +32,11 @@ div.roc-required label, div.fmag-required label{
     font-weight:bold;
 }
 
+div.roc-no-style label {
+    color: black;
+    font-weight: normal;
+}
+
 div.roc-read-only input {
     background: #f3f2f2;
 }

@@ -93,7 +93,10 @@ function(Core, RocFormController, RocFormModel ) {
 						]
 					},
 					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
-						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required'
+						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
+						validator: function(val) {
+							return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
+						}
 					},
 					{ bind: '{state}', fieldLabel: 'State / Province / Region *', xtype: 'displayfield' },
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
@@ -148,11 +151,11 @@ function(Core, RocFormController, RocFormModel ) {
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
                         {bind: '{fuelType}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
-                                { boxLabel: 'Grass', name: 'fueltype', inputValue: 'Grass', uncheckedValue: ''},
-                                { boxLabel: 'Bush', name: 'fueltype', inputValue: 'Bush', uncheckedValue: ''},
-                                { boxLabel: 'Timber', name: 'fueltype', inputValue: 'Timber', uncheckedValue: ''},
-                                { boxLabel: 'Oak Woodland', name: 'fueltype', inputValue: 'Oak Woodland', uncheckedValue: ''},
-                                { boxLabel: 'Other', name: 'fueltype', inputValue: 'Other', uncheckedValue: '', reference: 'otherFuelTypeCheckBox'},
+                                { boxLabel: 'Grass', name: 'fueltype', inputValue: 'Grass', cls: 'roc-no-style'},
+                                { boxLabel: 'Bush', name: 'fueltype', inputValue: 'Bush', cls: 'roc-no-style'},
+                                { boxLabel: 'Timber', name: 'fueltype', inputValue: 'Timber', cls: 'roc-no-style'},
+                                { boxLabel: 'Oak Woodland', name: 'fueltype', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
+                                { boxLabel: 'Other', name: 'fueltype', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
                             ]
                         },
                         {bind: { value: '{otherFuelType}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
