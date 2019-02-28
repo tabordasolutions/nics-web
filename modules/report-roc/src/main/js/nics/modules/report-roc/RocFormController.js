@@ -121,6 +121,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.setErrorMessage('Selected incident has Finalized ROC, cannot submit another ROC');
 					} else {
 						//bind response data to form
+						this.getViewModel().set('reportType', response.data.reportType);
 						this.getViewModel().set('latitude', response.data.latitude);
 						this.getViewModel().set('longitude', response.data.longitude);
 						if(response.data.incidentTypes) {
@@ -140,7 +141,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 			bindLocationBasedData : function (data, reportType='NEW'){
 				this.getViewModel().set('state', data.state);
-					this.getViewModel().set('initialCounty', data.county);
+					this.getViewModel().set('county', data.county);
 					this.getViewModel().set('location', data.location);
 					this.view.lookupReference('sra').setValue(data.sra);
 					this.view.lookupReference('dpa').setValue(data.dpa);
@@ -165,7 +166,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.getViewModel().set('longitude', '');
 					this.getViewModel().set('latitude', '');
 					this.getViewModel().set('state', '');
-					this.getViewModel().set('initialCounty', '');
+					this.getViewModel().set('county', '');
 					this.getViewModel().set('incidentType', '');
 				}
 			},
@@ -249,7 +250,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					if(typeof(data.incidentCause) != "undefined" && data.incidentCause != "")emailMessage += "<li><strong>Cause:</strong> " + data.incidentCause + "</li>";
 					emailMessage += "<li><strong>Acres/Size/Area involved:</strong> " + data.scope + "</li>";
 					emailMessage += "<li><strong>Rate of Spread:</strong> " + data.spreadRate + "</li>";
-					if(typeof(data.fuelType) != "undefined" && data.fuelType != "")emailMessage += "<li><strong>Fuel Type</strong> " + data.fuelType + "</li>";
+					if(typeof(data.fuelTypes) != "undefined" && data.fuelTypes != "")emailMessage += "<li><strong>Fuel Type</strong> " + data.fuelTypes + "</li>";
 					if(typeof(data.potential) != "undefined" && data.potential != "")emailMessage += "<li><strong>Potential:</strong> " + data.potential + "</li>";
 					emailMessage += "<li><strong> % contained:</strong> " + data.percentContained + "</li>";
 					if(typeof(data.estimatedContainment) != "undefined" && data.estimatedContainment != "")emailMessage += "<li><strong>Estimated Containment:</strong> " + data.estimatedContainment + "</li>";

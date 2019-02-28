@@ -58,6 +58,42 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 			var coordinate = parseInt(degrees, 10);
 			return (coordinate < 0) ? coordinate - (minutes/60) : coordinate + (minutes/60);
 		},
+		getReport: function(){
+			 return {
+					reportType: this.get('reportType'),
+					county: this.get('county'),
+					additionalAffectedCounties: this.get('additionalAffectedCounties'),
+					county: this.get('county'),
+					date: this.get('date'),
+					starttime: this.get('starttime'),
+					location: this.get('location'),
+					dpa: this.get('dpa'),
+					sra: this.get('sra'),
+					jurisdiction: this.get('jurisdiction'),
+					incidentType: this.get('incidentType'),
+					scope: this.get('scope'),
+					spreadRate: this.get('spreadRate'),
+					fuelTypes: this.get('fuelTypeCheckBoxGroup').fuelType,
+					otherFuelTypes: this.get('otherFuelTypes'),
+					percentContained: this.get('percentContained'),
+					temperature: this.get('temperature'),
+					relHumidity: this.get('relHumidity'),
+					windSpeed: this.get('windSpeed'),
+					windDirection: this.get('windDirection'),
+					evacuations: this.get('evacuations'),
+					evacuationsInProgressFor: this.get('evacuationsInProgressFor'),
+					structuresThreat: this.get('structuresThreat'),
+					structuresThreatInProgress: this.get('structuresThreatInProgressFor'),
+					infrastructuresThreat: this.get('infrastructuresThreat'),
+					infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgressFor'),
+					otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
+					otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgressFor'),
+					calfireIncident: this.get('calfireIncident'),
+					resourcesAssigned: this.get('resourcesAssigned'),
+					email: this.get('email'),
+					simplifiedEmail: this.get('simplifiedEmail')
+			};
+		},
 		formulas: {
 				readOnlyIncidentDetails: function(get) {
 					return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
@@ -108,45 +144,17 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
 					}
 				},
-		    	 report: function(get){
-		    		 var report = {
-		    				reportType: get('reportType'),
-		    				initialCounty: get('initialCounty'),
-		    				county: get('county'),
-		    				date: get('date'),
-		    				starttime: get('starttime'),
-		    				location: get('location'),
-		    				dpa: get('dpa'),
-		    				sra: get('sra'),
-		    				jurisdiction: get('jurisdiction'),
-		    				incidentType: get('incidentType'),
-		    				scope: get('scope'),
-		    				spreadRate: get('spreadRate'),
-		    				fuelType: get('fuelType').fueltype,
-		    				otherFuelType: get('otherFuelType'),
-		    				percentContained: get('percentContained'),
-		    				temperature: get('temperature'),
-		    				relHumidity: get('relHumidity'),
-		    				windSpeed: get('windSpeed'),
-		    				windDirection: get('windDirection'),
-		    				evacuations: get('evacuations'),
-		    				evacuationsInProgressFor: get('evacuationsInProgressFor'),
-		    				structuresThreat: get('structuresThreat'),
-		    				structuresThreatInProgress: get('structuresThreatInProgressFor'),
-		    				infrastructuresThreat: get('infrastructuresThreat'),
-		    				infrastructuresThreatInProgress: get('infrastructuresThreatInProgressFor'),
-		    				otherThreatsAndEvacuations: get('otherThreatsAndEvacuations'),
-		    				otherThreatsAndEvacuationsInProgress: get('otherThreatsAndEvacuationsInProgressFor'),
-		    				calfireIncident: get('calfireIncident'),
-		    				resourcesAssigned: get('resourcesAssigned'),
-		    				email: get('email'),
-		    				simplifiedEmail: get('simplifiedEmail')
-		    		 
-			    	
-		    		};
-		    		 
-		    		return report;
-		    	}
+				fuelTypes: {
+					get: function(get) {
+						get('fuelTypeCheckBoxGroup').fuelType;
+					},
+
+					set: function(value) {
+						this.set({
+							fuelTypeCheckBoxGroup: {'fuelType': value}
+						});
+					}
+				}
 		 }
 	 });
 });

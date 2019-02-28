@@ -98,7 +98,7 @@ function(Core, RocFormController, RocFormModel ) {
 							return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
 						}
 					},
-					{ bind: '{state}', fieldLabel: 'State / Province / Region *', xtype: 'displayfield' },
+					{ bind: '{state}', fieldLabel: 'State / Province / Region', xtype: 'displayfield' },
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
 			]
 	    },
@@ -123,16 +123,16 @@ function(Core, RocFormController, RocFormModel ) {
 							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
 							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
 							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
-							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{initialCounty}'
+							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
 						},
-	                    {bind:'{county}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
+	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
                         {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
-                        {value:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
+                        {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
                             reference: 'dpa', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
-                            forceSelection: true, autoSelect: false, store: ['', 'State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
-                        {value:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership*',
+                            forceSelection: true, autoSelect: false, store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
+                        {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership*',
                             reference: 'sra', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
-                            forceSelection: true, autoSelect: false, store: ['', 'SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
+                            forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
                         {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction*', allowBlank:false, cls:'roc-required'},
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date*', format: 'm/d/y',cls:'roc-required', allowBlank:false},
                         {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time*', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
@@ -149,16 +149,16 @@ function(Core, RocFormController, RocFormModel ) {
                         {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
                             reference: 'spreadRate', queryMode: 'local', editable: false,
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
-                        {bind: '{fuelType}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                        {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
-                                { boxLabel: 'Grass', name: 'fueltype', inputValue: 'Grass', cls: 'roc-no-style'},
-                                { boxLabel: 'Bush', name: 'fueltype', inputValue: 'Bush', cls: 'roc-no-style'},
-                                { boxLabel: 'Timber', name: 'fueltype', inputValue: 'Timber', cls: 'roc-no-style'},
-                                { boxLabel: 'Oak Woodland', name: 'fueltype', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
-                                { boxLabel: 'Other', name: 'fueltype', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
+                                { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
+                                { boxLabel: 'Bush', name: 'fuelType', inputValue: 'Bush', cls: 'roc-no-style'},
+                                { boxLabel: 'Timber', name: 'fuelType', inputValue: 'Timber', cls: 'roc-no-style'},
+                                { boxLabel: 'Oak Woodland', name: 'fuelType', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
+                                { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
                             ]
                         },
-                        {bind: { value: '{otherFuelType}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
+                        {bind: { value: '{otherFuelTypes}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
                             validator: function(val) {
                                 return (!this.disabled && !val) ? "Other Fuel Type is required" : true;
                             }, listeners: { disable: function() {
@@ -235,7 +235,7 @@ function(Core, RocFormController, RocFormModel ) {
                         items: [
                         {bind:'{calfireIncident}',xtype: 'combobox',fieldLabel: 'CAL FIRE Incident',
                          reference: 'calFireIncident', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                         store: ['', 'Yes', 'No']},
+                         store: ['Yes', 'No']},
                         {bind: '{resourcesAssigned}', xtype: 'checkboxgroup', fieldLabel: 'Resources Assigned', vertical: true, columns: 1,
                                                     items: [
                                                         { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources', bind: {hidden: '{finalReport}'}},
@@ -275,7 +275,7 @@ function(Core, RocFormController, RocFormModel ) {
                         items: [
                             {bind:'{email}',xtype: 'displayfield',fieldLabel: 'Recipient Email'}
                         ]
-                   },
+                },
             ]
         },
     ],
