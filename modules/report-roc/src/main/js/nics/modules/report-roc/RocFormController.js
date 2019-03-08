@@ -406,13 +406,18 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					Core.EventManager.fireEvent(this.newTopic);
 				} else { // submitting new incident & ROC
 					var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
-					var incidentTypes = formView.get('incidentTypes');
-					if(!(incidentTypes instanceof Array)) {
-						incidentTypes = [incidentTypes];
+					var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
+					var incidentTypesArray = [];
+					if(incidentTypesFromUI instanceof Array) {
+						for(var i=0; i<incidentTypesFromUI.length;i++) {
+							incidentTypesArray[i] = {incidenttypeid: incidentTypesFromUI[i]};
+						}
+					} else {
+						incidentTypesArray[0] = {incidenttypeid: incidentTypesFromUI};
 					}
 					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
-						'workspaceid': UserProfile.getWorkspaceId(), 'incidentTypes': incidentTypes};
+						'workspaceid': UserProfile.getWorkspaceId(), 'incidentIncidenttypes': incidentTypesArray};
 					form.incidentName = incidentName;
 					var url = Ext.String.format('{0}/reports/{1}/IncidentAndROC',
 						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
