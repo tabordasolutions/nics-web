@@ -41,7 +41,9 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 				simplifiedEmail: this.simplifiedEmail,
 				activeIncidentsStore: this.activeIncidentsStore,
 				incidentNameReadOnly: this.incidentNameReadOnly,
-				incidentTypes: UserProfile.getIncidentTypes(),
+				incidentTypes: this.incidentTypes,
+				latitude : this.incidentLatitude,
+				longitude: this.incidentLongitude,
 		},
 		coordinateToDecimalDegrees: function(coordinate) {
 			var coordinateMod = coordinate;
@@ -70,7 +72,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 					dpa: this.get('dpa'),
 					sra: this.get('sra'),
 					jurisdiction: this.get('jurisdiction'),
-					incidentType: this.get('incidentType'),
+					incidentTypes: this.get('incidentTypes'),
 					scope: this.get('scope'),
 					spreadRate: this.get('spreadRate'),
 					fuelTypes: this.get('fuelTypeCheckBoxGroup').fuelType,
@@ -81,17 +83,20 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 					windSpeed: this.get('windSpeed'),
 					windDirection: this.get('windDirection'),
 					evacuations: this.get('evacuations'),
-					evacuationsInProgressFor: this.get('evacuationsInProgressFor'),
+					evacuationsInProgress: this.get('evacuationsInProgress'),
 					structuresThreat: this.get('structuresThreat'),
-					structuresThreatInProgress: this.get('structuresThreatInProgressFor'),
+					structuresThreatInProgress: this.get('structuresThreatInProgress'),
 					infrastructuresThreat: this.get('infrastructuresThreat'),
-					infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgressFor'),
+					infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
 					otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
-					otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgressFor'),
+					otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
 					calfireIncident: this.get('calfireIncident'),
 					resourcesAssigned: this.get('resourcesAssigned'),
 					email: this.get('email'),
-					simplifiedEmail: this.get('simplifiedEmail')
+					simplifiedEmail: this.get('simplifiedEmail'),
+					latitudeAtROCSubmission: this.get('latitude'),
+					longitudeAtROCSubmission: this.get('longitude'),
+					weatherDataAvailable: this.get('weatherDataAvailable')
 			};
 		},
 		formulas: {

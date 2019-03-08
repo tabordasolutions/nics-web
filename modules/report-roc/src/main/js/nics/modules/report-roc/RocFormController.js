@@ -46,12 +46,18 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
 				this.loadLocationBasedDataByIncidentBinding = this.processLocationBasedDataForIncident.bind(this);
 				this.processLocationBasedDataBinding = this.processLocationBasedData.bind(this);
+				this.processWeatherDataBinding = this.processWeatherData.bind(this);
+				this.processPostIncidentAndROCResponseBinding = this.processPostIncidentAndROCResponse.bind(this);
 				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.loadLocationBasedDataByIncidentBinding);
 				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
+				Core.EventManager.addListener("LoadWeatherData", this.processWeatherDataBinding);
+				Core.EventManager.addListener("iweb.NICS.incident.newIncident.report.ROC.#", this.processPostIncidentAndROCResponseBinding);
 				this.prevLatitude = null;
 				this.prevLongitude = null;
 				this.createIncidentTypeCheckboxes();
-				this.requestLocationBasedDataForIncident(this.view.incidentId);
+				if(this.view.editROC && this.view.reportType == 'NEW') {
+					this.requestLocationBasedDataForIncident(this.view.incidentId);
+				}
 			},
 
 			createIncidentTypeCheckboxes: function() {
@@ -68,6 +74,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				Core.EventManager.removeListener("EmailROCReport", this.emailROCBinding);
 				Core.EventManager.removeListener("LoadLocationBasedDataByIncident", this.loadLocationBasedDataByIncidentBinding);
 				Core.EventManager.removeListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
+				Core.EventManager.removeListener("LoadWeatherData", this.processWeatherDataBinding);
+				Core.EventManager.removeListener("iweb.NICS.incident.newIncident.report.ROC.#", this.processPostIncidentAndROCResponseBinding);
 			},
 
 			clearForm: function () {
@@ -103,8 +111,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			requestLocationBasedData: function() {
-				var requestPathWithParams = "/reports/1/locationBasedData?longitude=" + this.lookupReference('longitude').getValue() + "&latitude=" +
-				this.lookupReference('latitude').getValue();
+				var requestPathWithParams = "/reports/1/locationBasedData?longitude=" + this.getViewModel().get('longitude') + "&latitude=" +
+				this.getViewModel().get('latitude');
 				this.mediator.sendRequestMessage(this.endpoint + requestPathWithParams, 'LoadLocationBasedData' );
 			},
 
@@ -112,6 +120,26 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				if(incidentId) {
 					this.mediator.sendRequestMessage(this.endpoint + "/reports/1/" + incidentId + '/locationBasedData', 'LoadLocationBasedDataByIncident');
 				}
+			},
+
+			requestLocationBasedDataOnEditRequest: function() {
+				if(!this.view.editROC) {
+					return;
+				}
+				var currLatitude = this.getViewModel().get('latitude');
+				var currLongitude = this.getViewModel().get('longitude');
+				var latitudeAtROCSubmission = this.getViewModel().get('latitudeAtROCSubmission');
+				var longitudeAtROCSubmission = this.getViewModel().get('longitudeAtROCSubmission');
+				if(currLatitude != latitudeAtROCSubmission || currLongitude != longitudeAtROCSubmission) {
+					this.requestLocationBasedData();
+				} else {
+					this.requestWeatherData();
+				}
+			},
+
+			requestWeatherData: function() {
+				var uriWithParams = "/locationBasedData/weather?longitude=" + this.getViewModel().get('longitude') + "&latitude=" + this.getViewModel().get('latitude');
+				this.mediator.sendRequestMessage(this.endpoint + uriWithParams, 'LoadWeatherData' );
 			},
 
 			processLocationBasedDataForIncident: function(e, response) {
@@ -128,10 +156,10 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 							var incidentTypeIds = response.data.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
 							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeIds});
 						}
+						this.getViewModel().set('additionalAffectedCounties', response.data.additionalAffectedCounties);
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
-				}
-				if(response.status == 400){
+				} else if(response.status == 400){
 					this.setErrorMessage(response.validationErrors);
 				} else if(response.status == 500) {
 					this.setErrorMessage(response.message);
@@ -139,19 +167,36 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.getViewModel().notify();
 			},
 
-			bindLocationBasedData : function (data, reportType='NEW'){
-				this.getViewModel().set('state', data.state);
+			bindLocationBasedData : function (data){
+					this.getViewModel().set('state', data.state);
 					this.getViewModel().set('county', data.county);
 					this.getViewModel().set('location', data.location);
-					this.view.lookupReference('sra').setValue(data.sra);
-					this.view.lookupReference('dpa').setValue(data.dpa);
+					this.getViewModel().set('sra', data.sra);
+					this.getViewModel().set('dpa', data.dpa);
 					this.getViewModel().set('jurisdiction', data.jurisdiction);//contract county comes in jurisdiction
-					if(reportType == 'NEW') {
-						this.getViewModel().set('temperature', data.temperature);
-						this.getViewModel().set('relHumidity', data.relHumidity);
-						this.getViewModel().set('windSpeed', data.windSpeed);
-						this.getViewModel().set('windDirection', data.windDirection);
+					this.getViewModel().set('temperature', data.temperature);
+					this.getViewModel().set('relHumidity', data.relHumidity);
+					this.getViewModel().set('windSpeed', data.windSpeed);
+					this.getViewModel().set('windDirection', data.windDirection);
+			},
+
+			processWeatherData: function(e, response) {
+				if(response.status ==  200) {
+					if(response.message == 'OK') {
+						this.getViewModel().set('temperature', response.weatherData.temperature);
+						this.getViewModel().set('relHumidity', response.weatherData.relHumidity);
+						this.getViewModel().set('windSpeed', response.weatherData.windSpeed);
+						this.getViewModel().set('windDirection', response.weatherData.windDirection);
+						this.getViewModel().set('weatherDataAvailable', true);
+					} else {
+						this.getViewModel().set('weatherDataAvailable', false);
 					}
+				} else if(response.status == 400){
+					this.setErrorMessage(response.validationErrors);
+				} else if(response.status == 500) {
+					this.setErrorMessage(response.message);
+					this.getViewModel().set('weatherDataAvailable', false);
+				}
 			},
 
 			setErrorMessage: function(message) {
@@ -167,6 +212,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.getViewModel().set('latitude', '');
 					this.getViewModel().set('state', '');
 					this.getViewModel().set('county', '');
+					this.getViewModel().set('additionalAffectedCounties', '');
 					this.getViewModel().set('incidentType', '');
 				}
 			},
@@ -181,8 +227,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				var view = MapModule.getMap().getView();
 				var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
 				var coord = clone.getCoordinates();
-				this.lookupReference('latitude').setValue(coord[1]);
-				this.lookupReference('longitude').setValue(coord[0]);
+				this.getViewModel().set('latitude', coord[1]);
+				this.getViewModel().set('longitude', coord[0]);
 				this.mixins.geoApp.removeLayer();
 				this.mixins.geoApp.resetInteractions();
 			},
@@ -193,7 +239,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					return;
 				this.prevLatitude = this.getViewModel().get('latitude');
 				this.prevLongitude = this.getViewModel().get('longitude');
-				if(!this.getViewModel().get('incidentId') && this.lookupReference('latitude').getValue() && this.lookupReference('longitude').getValue()) {
+				if(!this.getViewModel().get('incidentId') && this.getViewModel().get('latitude') && this.getViewModel().get('longitude')) {
 					this.requestLocationBasedData();
 				}
 			},
@@ -235,7 +281,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				else { 
 					
 					try {
-					emailMessage = "<html><body><h2>Report on Conditions - " + data.incidentType ;
+					emailMessage = "<html><body><h2>Report on Conditions - " + data.incidentTypes ;
 					emailMessage += "<br/><br/>Incident Name/Number: " + data.incidentName + "/" + data.incidentId ;
 					emailMessage += "<br/>Start Date/Time: " + this.formatDate(data.date) + " @ "  + this.formatTime(data.starttime);
 					emailMessage += "<br/> Location: " + data.location + "</h2>";
@@ -246,7 +292,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					emailMessage += "<li><strong>Date:</strong> " + this.formatDate(data.date) + "</li>";
 					emailMessage += "<li><strong>Time:</strong> " + this.formatTime(data.starttime) + "</li>";
 					emailMessage += "<li><strong>Jurisdiction:</strong> " + data.jurisdiction + "</li>";
-					emailMessage += "<li><strong>Type of Incident:</strong> " + data.incidentType + "</li>";
+					emailMessage += "<li><strong>Type of Incident:</strong> " + data.incidentTypes + "</li>";
 					if(typeof(data.incidentCause) != "undefined" && data.incidentCause != "")emailMessage += "<li><strong>Cause:</strong> " + data.incidentCause + "</li>";
 					emailMessage += "<li><strong>Acres/Size/Area involved:</strong> " + data.scope + "</li>";
 					emailMessage += "<li><strong>Rate of Spread:</strong> " + data.spreadRate + "</li>";
@@ -297,7 +343,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			    }
 			  else if (reportType == 'email'){
 				  	emailMessage += "<p style='font-size:.8em;'>This e-mail was sent automatically by the Situation Awareness &amp; Collaboration Tool (SCOUT).Do not reply.</p></html></body >";
-				    var subject  = "Report on Conditions  - " + data.rocDisplayName + "," + data.incidentType + "," + data.county + "," + data.reportType;
+				    var subject  = "Report on Conditions  - " + data.rocDisplayName + "," + data.incidentTypes + "," + data.county + "," + data.reportType;
 				    var emailResponse = {emailList: data.email, subject: subject, emailBody: emailMessage};
 			    	Core.EventManager.fireEvent("EmailROCReport",emailResponse);
 
@@ -311,17 +357,16 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		var form = {};
 	    		var message = {};
 	    		var report= {};
-	    		
-	    		
+
 	    		var time = Core.Util.formatDateToString(new Date());
-	    		 
+
 	    		message.datecreated = time;
 	    		
 	    		var formView = this.view.viewModel;
-	    		 		
+
 	    		if (typeof(formView.data.simplifiedEmail) == "undefined" )  {formView.data.simplifiedEmail = true;}
-    	
-	    		if (formView.get('report') === null){
+
+	    		if (formView.getReport() === null){
 	    			//create the report from the data
 	    		   for (item in formView.data){
 	    			   //Don't capture the buttons, or the incident name and id in the report
@@ -334,7 +379,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		   
 	    		}else {
 	    			//report has already been created
-	    			message.report = formView.get('report');
+	    			message.report = formView.getReport();
 	    		
 	    		}
 	    		
@@ -346,28 +391,66 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		form.usersessionid = UserProfile.getUserSessionId();
 	    		form.distributed = false;
 	    		form.message = JSON.stringify(message);
-	    		
-				var url = Ext.String.format('{0}/reports/{1}/{2}', 
+
+	    		if(form.incidentId) {  //submitting ROC on existing incident
+					var url = Ext.String.format('{0}/reports/{1}/{2}',
 						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 						formView.data.incidentId, 'ROC');
-	    		
-				
-				var topic = Ext.String.format("iweb.NICS.incident.{0}.report.{1}.#", formView.data.incidentId, 'ROC');
-				
-				this.mediator.sendPostMessage(url, topic, form);
-				this.setFormReadOnly();
-				this.newTopic = Ext.String.format(
+
+					var topic = Ext.String.format("iweb.NICS.incident.{0}.report.{1}.#", formView.data.incidentId, 'ROC');
+
+					this.mediator.sendPostMessage(url, topic, form);
+					this.newTopic = Ext.String.format(
 						"iweb.NICS.incident.{0}.report.{1}.new", form.incidentid,
 						'ROC');
-				Core.EventManager.fireEvent(this.newTopic);
+					Core.EventManager.fireEvent(this.newTopic);
+				} else { // submitting new incident & ROC
+					var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
+					var incidentTypes = formView.get('incidentTypes');
+					if(!(incidentTypes instanceof Array)) {
+						incidentTypes = [incidentTypes];
+					}
+					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'usersessionid': UserProfile.getUserSessionId(),
+						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
+						'workspaceid': UserProfile.getWorkspaceId(), 'incidentTypes': incidentTypes};
+					form.incidentName = incidentName;
+					var url = Ext.String.format('{0}/reports/{1}/IncidentAndROC',
+						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
+						UserProfile.getOrgId());
+
+					var topic = Ext.String.format("iweb.NICS.incident.newIncident.report.{1}.#", 'ROC');
+					this.mediator.sendPostMessage(url, topic, form);
+				}
+				this.setFormReadOnly();
 				//Build  email message
-	    		//Add incident Name and Id to pass to email/print report
-	    		message.report.incidentId = formView.data.incidentId;
-	    		message.report.incidentName = formView.data.incidentName;
-	    		this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
-			
-				
-	    	},
+				//Add incident Name and Id to pass to email/print report
+				message.report.incidentId = formView.data.incidentId;
+				message.report.incidentName = formView.data.incidentName;
+				this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
+			},
+
+			processPostIncidentAndROCResponse: function(e, response) {
+				if(response.status == 200) {
+					//display successful response message
+					this.getViewModel().set('successMessage', "Incident & ROC submission has been successful.");
+				} else if(response.status == 401) {
+					// decide what to do
+
+				} else if(response.status == 400) {
+					//display validation errors - which never happens easily as form is submitted only after validation
+					this.setErrorMessage(response.validationErrors);
+				} else if(response.status == 500) {
+					if(response.message.contains("Incident name already exists")) {
+						//display error message
+						this.setErrorMessage("Incident name already exists. Please select another incident name.");
+					} else {
+						//display error saying "Failed to persist ROC" or "Incident persisted  but failed to persist ROC"
+						this.setErrorMessage(response.message);
+					}
+				}
+
+			},
+
 	    	emailROC: function(e, response){
 	    		//Now send the email 
 

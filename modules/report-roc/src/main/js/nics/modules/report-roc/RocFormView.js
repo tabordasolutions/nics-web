@@ -49,6 +49,8 @@ function(Core, RocFormController, RocFormModel ) {
 	    items:[
 	    {bind:'{errorMessage}', xtype:'displayfield', reference: 'errorLabel', xtype: 'label', hidden: true,
         		 			style: {color: 'red'}, padding: '0 0 0 5', border: true},
+		{bind:'{successMessage}', xtype:'displayfield', reference: 'successLabel', xtype: 'label', hidden: true,
+ 			style: {color: 'green'}, padding: '0 0 0 5', border: true},
 	    { 
 	    	 xtype: 'fieldset',
 	         title: 'Incident Info',
@@ -75,24 +77,28 @@ function(Core, RocFormController, RocFormModel ) {
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
 					items: [
 						{bind: {value: '{latDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latDegreesRef', flex: 1, allowBlank: false, minValue: -89, maxValue: 89, allowDecimals: false,
-							fieldLabel: 'Latitude*', cls: 'roc-required'},
+							fieldLabel: 'Latitude*', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
 						{xtype: 'displayfield', value: '°', width: 10},
-						{bind: {value: '{latMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999},
+						{bind: {value: '{latMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
+						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
 						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
-						{bind: '{latitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'}
+						{bind: '{latitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'},
 						]
 					},
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'longitudeGroupRef',
 					items: [
 						{bind: {value: '{longDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longDegreesRef', flex: 1, allowBlank: false, minValue: -179, maxValue: 179, allowDecimals: false,
-							fieldLabel: 'Longitude*', cls: 'roc-required'},
+							fieldLabel: 'Longitude*', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
 						{xtype: 'displayfield', value: '°', width: 10},
-						{bind: {value: '{longMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999},
+						{bind: {value: '{longMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
+						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
 						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
 						{bind: '{longitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'}
 						]
 					},
-					{bind: {value: '{incidentType}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
+					{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
+						width: 60, margin:'0 0 0 20'},
+					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
 						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
 						validator: function(val) {
 							return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
@@ -128,10 +134,10 @@ function(Core, RocFormController, RocFormModel ) {
 	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
                         {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
                         {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
-                            reference: 'dpa', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                            queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
                         {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership*',
-                            reference: 'sra', queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                            queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
                         {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction*', allowBlank:false, cls:'roc-required'},
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date*', format: 'm/d/y',cls:'roc-required', allowBlank:false},
@@ -145,9 +151,9 @@ function(Core, RocFormController, RocFormModel ) {
 	                defaults: {
 	                anchor: '100%'
 	            },
-	            items: [{bind:'{scope}',vtype:'extendedalphanum',fieldLabel: 'Acreage*',allowBlank:false,cls:'roc-required'},
+	            items: [{bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage*', allowBlank:false, cls:'roc-required'},
                         {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
-                            reference: 'spreadRate', queryMode: 'local', editable: false,
+                            queryMode: 'local', editable: false, value: null,
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
                         {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
@@ -218,7 +224,7 @@ function(Core, RocFormController, RocFormModel ) {
                                     }
                                 },
                                 {bind:'{otherThreatsAndEvacuations}', xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
-                                reference: 'otherThreatsAndEvacuations', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                                                                                 store: ['', 'Yes', 'No', 'Mitigated']},
                                 {bind:'{otherThreatsAndEvacuationsInProgress}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
 
@@ -234,7 +240,7 @@ function(Core, RocFormController, RocFormModel ) {
                         },
                         items: [
                         {bind:'{calfireIncident}',xtype: 'combobox',fieldLabel: 'CAL FIRE Incident',
-                         reference: 'calFireIncident', queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                         queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                          store: ['Yes', 'No']},
                         {bind: '{resourcesAssigned}', xtype: 'checkboxgroup', fieldLabel: 'Resources Assigned', vertical: true, columns: 1,
                                                     items: [

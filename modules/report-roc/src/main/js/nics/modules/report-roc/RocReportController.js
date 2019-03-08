@@ -47,6 +47,9 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.incidentNameReadOnly = false;
 			this.incidentId = null;
 			this.incidentName = null;
+			this.incidentTypes = null;
+			this.incidentLatitude = null;
+			this.incidentLongitude = null;
 
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
@@ -88,6 +91,9 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 		onJoinIncident: function(e, incident) {
 			this.incidentName = incident.name;
 			this.incidentId = incident.id;
+			this.incidentTypes = incident.incidentTypes;
+			this.incidentLatitude = incident.latitude;
+			this.incidentLongitude = incident.longitude;
 			this.emailList = UserProfile.getUsername();
 
 			this.getView().enable();
@@ -133,6 +139,9 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 
 			this.incidentId = null;
 			this.incidentName = null;
+			this.incidentTypes = null
+			this.incidentLatitude = null;
+			this.incidentLongitude = null;
 			this.emailList = UserProfile.getUsername();
 			this.incidentNameReadOnly = false;
 		},
@@ -148,28 +157,25 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 	onAddROC: function(e) {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
-			var rocForm = Ext.create('modules.report-roc.RocFormView',{
+			var initialData= {
+				formTypeId:this.formTypeId,
+				reportType: 'NEW',
 				incidentId: this.incidentId,
-				incidentName: this.incidentName,
-				formTypeId: this.formTypeId,
-				email: this.emailList,
+				incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
+				incidentTypes: this.incidentTypes,
+				latitude : this.incidentLatitude,
+				longitude: this.incidentLongitude,
+				reportBy:  username,
+		 		email:this.emailList,
 				simplifiedEmail: true,
 				incidentNameReadOnly: this.incidentNameReadOnly,
 				activeIncidentsStore: this.activeIncidentsStore,
-			});
+				date: new Date(),
+				editROC: true
+			};
+			var rocForm = Ext.create('modules.report-roc.RocFormView', initialData);
 			rocReportContainer.removeAll();
 			rocReportContainer.add(rocForm);
-			var initialData= {incidentId: this.incidentId,
-					incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
-					reportType: 'NEW',
-					date: new Date(),
-					formTypeId:this.formTypeId,
-					reportBy:  username,
-		 			email:this.emailList,
-					incidentNameReadOnly: this.incidentNameReadOnly,
-					activeIncidentsStore: this.activeIncidentsStore,
-					incidentTypes: UserProfile.getIncidentTypes,
-			};
 			rocForm.viewModel.set(initialData);
 			this.lookupReference('createButton').disable();
 			
@@ -202,7 +208,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				var rocForm = Ext.create('modules.report-roc.RocFormView',{
 					incidentId: this.incidentId,
 					incidentName: this.incidentName,
-					formTypeId: this.formTypeId
+					formTypeId: this.formTypeId,
+					editROC: !displayOnly
 				});
 				 //rocReportContainer.show();
 		         rocReportContainer.add(rocForm);				//Pull data from the report, and add in the incidentName and Id
@@ -211,30 +218,30 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.incidentName = record.data.incidentName;
 			    formData.report.formTypeId = this.formTypeId;
 			    formData.report.incidentNameReadOnly = this.incidentNameReadOnly;
+			    formData.report.latitude = this.incidentLatitude;
+			    formData.report.longitude = this.incidentLongitude;
+			    formData.report.incidentTypes = this.incidentTypes;
+			    formData.report.editROC = !displayOnly;
 				   
 			    //Convert date and starttime back to date objects so they will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
 				formData.report.starttime = new Date(formData.report.starttime);
-				
-				
+
 				if (displayOnly){
 					rocForm.controller.setFormReadOnly();
-				}
-				else {
+				} else {
 					if(status == 'UPDATE' || status == 'FINAL' )
 					//this is an updated or finalized form, change report name to the current status
-					 formData.report.reportType =status;
+					formData.report.reportType = status;
 					this.lookupReference('finalButton').disable();
 					this.lookupReference('printButton').disable();
 				}
 				rocForm.viewModel.set(formData.report);
+				rocForm.viewModel.notify();
+				rocForm.controller.requestLocationBasedDataOnEditRequest();
 			}
-			
-			
 		},
-		
 
-		
 		onReportAdded: function() {	
 			this.lookupReference('createButton').disable();
 			this.lookupReference('updateButton').enable();
@@ -242,9 +249,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.lookupReference('printButton').enable();
 			this.mediator.sendRequestMessage(Core.Config.getProperty(UserProfile.REST_ENDPOINT) +
 					"/reports/" + this.incidentId + '/ROC', "LoadROCReports");
-			
 		},
-		
+
 		onLoadReports: function(e, response) {
 			var newReports = [];
 			var isFinal = false;
@@ -288,7 +294,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				}
 			}
 		},
-		
+
 		buildReportData: function(report){
 			var message = JSON.parse(report.message);
 			var reportTitle  = message.datecreated;

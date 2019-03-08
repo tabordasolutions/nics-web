@@ -141,7 +141,8 @@ define(['iweb/CoreModule',
 				}
 				
 				var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
-				var incident = { name: menuItem.text, id: menuItem.incidentId, topic: topic };
+				var incident = { name: menuItem.text, id: menuItem.incidentId, incidentTypes: menuItem.incidentTypes,
+								 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
 			
 				if(!this.model.isOpen(incident)){
 					this.mediator.subscribe(topic);
@@ -158,16 +159,7 @@ define(['iweb/CoreModule',
 			},
 			
 			onJoinArchivedIncident: function(evt, incident){
-				//For now leave the incident that you are in to join a new one
-				if(this.model.getCurrentIncident().id != -1){
-					Core.EventManager.fireEvent("nics.incident.close");
-				}
-				
-				this.model.setCurrentIncident(incident);
-				
-				this.getView().setIncidentLabel(incident.name, incident.id);
-				
-				Core.EventManager.fireEvent("nics.incident.join", incident);
+				this.onMIVJoinIncident(evt, incident.name);
 			},
 
 			onMIVJoinIncident: function(e, incidentName){
