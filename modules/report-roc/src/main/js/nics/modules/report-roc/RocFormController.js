@@ -392,7 +392,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		form.distributed = false;
 	    		form.message = JSON.stringify(message);
 
-	    		if(form.incidentId) {  //submitting ROC on existing incident
+	    		if(form.incidentid) {  //submitting ROC on existing incident
 					var url = Ext.String.format('{0}/reports/{1}/{2}',
 						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 						formView.data.incidentId, 'ROC');
@@ -418,7 +418,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
 						'workspaceid': UserProfile.getWorkspaceId(), 'incidentIncidenttypes': incidentTypesArray};
-					form.incidentName = incidentName;
+					form.incidentname = incidentName;
 					var url = Ext.String.format('{0}/reports/{1}/IncidentAndROC',
 						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 						UserProfile.getOrgId());
@@ -440,20 +440,14 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.getViewModel().set('successMessage', "Incident & ROC submission has been successful.");
 				} else if(response.status == 401) {
 					// decide what to do
-
+					//logout ??
 				} else if(response.status == 400) {
 					//display validation errors - which never happens easily as form is submitted only after validation
 					this.setErrorMessage(response.validationErrors);
 				} else if(response.status == 500) {
-					if(response.message.contains("Incident name already exists")) {
-						//display error message
-						this.setErrorMessage("Incident name already exists. Please select another incident name.");
-					} else {
-						//display error saying "Failed to persist ROC" or "Incident persisted  but failed to persist ROC"
-						this.setErrorMessage(response.message);
-					}
+					//display error saying "Failed to persist ROC" or "Incident persisted  but failed to persist ROC"
+					this.setErrorMessage(response.message);
 				}
-
 			},
 
 	    	emailROC: function(e, response){
