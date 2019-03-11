@@ -275,7 +275,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					combo.getStore().loadRawData(newReports, true);
 					var latestForm = combo.getStore().getAt(0).data.formId;
 					combo.setValue(latestForm);
-					//this.displayCurrentRecord(true, 'select');
+					this.displayCurrentRecord(true, 'select');
 					if (isFinal){
 						this.lookupReference('updateButton').disable();
 						this.lookupReference('finalButton').disable();
