@@ -550,7 +550,8 @@ define(['iweb/CoreModule',
 						incidentName: data.incidents[i].incidentname,
 						incidentId: data.incidents[i].incidentid,
 						lat: data.incidents[i].lat,
-						lon: data.incidents[i].lon
+						lon: data.incidents[i].lon,
+						incidentTypes: data.incidents[i].incidentIncidenttypes.map(function(item) {return item.incidenttypeid;})
 					});
 					collabRooms[data.incidents[i].incidentName] = data.incidents[i].collabrooms;
 				}
