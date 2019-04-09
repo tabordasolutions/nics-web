@@ -40,11 +40,11 @@ function(Core, RocFormController, RocFormModel ) {
 		    },
 	 	buttonAlign: 'center',
 	 	autoHeight: true,
-	 	defaults: { padding:'5'},
+	 	defaults: { padding:'7'},
 		reference: "rocReportForm",
         title: 'ROC Report',
         defaultType: 'textfield',
-        bodyPadding: 10,
+        bodyPadding: 12,
 		referenceHolder: true,
 	    items:[
 	    {bind:'{errorMessage}', xtype:'displayfield', reference: 'errorLabel', xtype: 'label', hidden: true,
@@ -199,34 +199,77 @@ function(Core, RocFormController, RocFormModel ) {
                         items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: ['Yes', 'No', 'Mitigated'] },
-                                {bind:{value: '{evacuationsInProgress}', disabled: '{disableEvacuationsInProgress}'}, //xtype: 'combobox',
-                                    disabled: true, xtype: 'textarea',fieldLabel: 'Evacuations in progress for*', cls:'roc-required',
+                                {bind: {value: '{evacuationsInProgress}',  disabled: '{disableEvacuationsInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Evacuations in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                    items: [
+                                        { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evaculation orders remain in place', name: 'evacuations', inputValue: 'Evaculation orders remain in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
+                                        
+                                    ],
                                     validator: function(val) {
                                         return (!this.disabled && !val) ? "This is a required field" : true;
                                     }
+                                },
+                                {bind: { value: '{otherEvacuations}', disabled: '{!evacuationsRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Evacuation field is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
                                 },
                                 {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind: {value: '{structuresThreatInProgress}', disabled: '{disableStructuresThreatInProgress}'},
-                                    disabled: true, xtype: 'textarea',fieldLabel: 'Structures Threat in progress for*', cls:'roc-required',
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind: {value: '{structuresThreatInProgress}',  disabled: '{disableStructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Structures Threat in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                    items: [
+                                        { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
+                                        { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued trear to structures', cls: 'roc-no-style'},
+                                        { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                        { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
+                                        { boxLabel: 'Other', name: 'structuresThreat', inputValue: 'Other', reference: 'structureThreatRef', cls: 'roc-no-style'},
+                                    ],
                                     validator: function(val) {
                                         return (!this.disabled && !val) ? "This is a required field" : true;
                                     }
+                                },
+                                {bind: { value: '{otherStructuresThreat}', disabled: '{!structureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Structure Threat is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
                                 },
                                 {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                                                                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind: {value: '{infrastructuresThreatInProgress}', disabled: '{disableInfrastructuresThreatInProgress}'},
-                                    disabled: true, xtype: 'textarea',fieldLabel: 'Infrastructure Threat in progress for*',allowBlank:false,cls:'roc-required',
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind: {value: '{infrastructuresThreatInProgress}',  disabled: '{disableInfrastructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Infrastructure Threat in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                    items: [
+                                        { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                        { boxLabel: 'Incpections are unders way to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to indetify damage', cls: 'roc-no-style'},
+                                        { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
+                                        { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
+                                        { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
+                                    ],
                                     validator: function(val) {
                                         return (!this.disabled && !val) ? "This is a required field" : true;
                                     }
                                 },
-                                {bind:'{otherThreatsAndEvacuations}', xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
+                                {bind: { value: '{otherInfrastructuresThreat}', disabled: '{!infrastructureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Other Infrastructure Threat is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
+                                }
+                                /*{bind:'{otherThreatsAndEvacuations}', xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                                                                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{otherThreatsAndEvacuationsInProgress}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind:'{otherThreatsAndEvacuationsInProgress}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},*/
 
                         ]
                    },

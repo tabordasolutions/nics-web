@@ -345,7 +345,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				  	emailMessage += "<p style='font-size:.8em;'>This e-mail was sent automatically by the Situation Awareness &amp; Collaboration Tool (SCOUT).Do not reply.</p></html></body >";
 				    var subject  = "Report on Conditions  - " + data.rocDisplayName + "," + data.incidentTypes + "," + data.county + "," + data.reportType;
 				    var emailResponse = {emailList: data.email, subject: subject, emailBody: emailMessage};
-			    	Core.EventManager.fireEvent("EmailROCReport",emailResponse);
+			    	// Core.EventManager.fireEvent("EmailROCReport",emailResponse);
 
 				 
 			    } 
@@ -358,9 +358,11 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		var message = {};
 	    		var report= {};
 
-	    		var time = Core.Util.formatDateToString(new Date());
-
-	    		message.datecreated = time;
+				var time = Core.Util.formatDateToString(new Date());
+				// var format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+				
+				// message.dateCreated = this.ISODateString(new Date());
+				message.datecreated = time;
 	    		
 	    		var formView = this.view.viewModel;
 
@@ -431,7 +433,17 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				//Add incident Name and Id to pass to email/print report
 				message.report.incidentId = formView.data.incidentId;
 				message.report.incidentName = formView.data.incidentName;
-				this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
+				form.email = this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
+			},
+			ISODateString: function(d){
+				function pad(n){return n<10 ? '0'+n : n}
+				return d.getUTCFullYear()+'-'
+					+ pad(d.getUTCMonth()+1)+'-'
+					+ pad(d.getUTCDate())+'T'
+					+ pad(d.getUTCHours())+':'
+					+ pad(d.getUTCMinutes())+':'
+					+ pad(d.getUTCSeconds())+'Z'
+				
 			},
 
 			processPostIncidentAndROCResponse: function(e, response) {
