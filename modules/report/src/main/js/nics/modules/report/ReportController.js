@@ -138,7 +138,9 @@ define(['iweb/CoreModule',
 				// Disables individual tabs
 				var dmg = this.getView().down();
 				for(var i = 0; i < dmg.items.items.length; i++){
-					dmg.items.items[i].disable();
+					if(dmg.items.items[i].title != 'ROC') {
+						dmg.items.items[i].disable();
+					}
 				}
 				//remove print frame
 				this.destroyPrintFrame();

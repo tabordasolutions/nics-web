@@ -84,7 +84,6 @@ define(['iweb/CoreModule',
 			},
 
 			populateModel: function(e, userProfile){
-
 			
 				//Handler for new incidents
 				var topic = Ext.String.format("iweb.NICS.ws.{0}.newIncident", UserProfile.getWorkspaceId());
@@ -118,16 +117,13 @@ define(['iweb/CoreModule',
 				}*/
 				var orgData = response.organizations;
 				this.model.setAllOrgPrefixes(orgData);
-				
-				
 			},
 			onUpdateIncident: function(e, response){
 				this.getView().closeCreateWindow();
 				this.getView().updateIncidentName(this.updateIncidentId,this.getView().getIncidentName());
-				
+				Core.EventManager.fireEvent("nics.active.incidents.update", this.updateIncidentId, this.getView().getIncidentName());
 			},
-			
-			
+
 			onLoadIncidents: function(e, incidents){
 				var incidentData = this.parseIncidents(incidents);
 				this.model.setIncidents(incidentData.incidents);
@@ -135,6 +131,7 @@ define(['iweb/CoreModule',
 				this.model.setIncidentTypes(UserProfile.getIncidentTypes()); //Should probably take this out of UserProfile
 		
 				this.getView().setData(this.model, UserProfile);
+				Core.EventManager.fireEvent("nics.active.incidents.ready", this.model.getIncidents());
 			},
 
 			onJoinIncident: function(menuItem){
@@ -144,7 +141,8 @@ define(['iweb/CoreModule',
 				}
 				
 				var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
-				var incident = { name: menuItem.text, id: menuItem.incidentId, topic: topic };
+				var incident = { name: menuItem.text, id: menuItem.incidentId, incidentTypes: menuItem.incidentTypes,
+								 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
 			
 				if(!this.model.isOpen(incident)){
 					this.mediator.subscribe(topic);
@@ -161,16 +159,7 @@ define(['iweb/CoreModule',
 			},
 			
 			onJoinArchivedIncident: function(evt, incident){
-				//For now leave the incident that you are in to join a new one
-				if(this.model.getCurrentIncident().id != -1){
-					Core.EventManager.fireEvent("nics.incident.close");
-				}
-				
-				this.model.setCurrentIncident(incident);
-				
-				this.getView().setIncidentLabel(incident.name, incident.id);
-				
-				Core.EventManager.fireEvent("nics.incident.join", incident);
+				this.onMIVJoinIncident(evt, incident.name);
 			},
 
 			onMIVJoinIncident: function(e, incidentName){
@@ -217,7 +206,6 @@ define(['iweb/CoreModule',
 						
 				
 				this.getView().addParentIncident([[ incident.incidentname, incident.incidentid]]);
-						
 			},
 			
 			onRemoveIncident: function(e, incidentId){
@@ -562,13 +550,13 @@ define(['iweb/CoreModule',
 						incidentName: data.incidents[i].incidentname,
 						incidentId: data.incidents[i].incidentid,
 						lat: data.incidents[i].lat,
-						lon: data.incidents[i].lon
+						lon: data.incidents[i].lon,
+						incidentTypes: data.incidents[i].incidentIncidenttypes.map(function(item) {return item.incidenttypeid;})
 					});
 					collabRooms[data.incidents[i].incidentName] = data.incidents[i].collabrooms;
 				}
 		
 				return { incidents: incidents, collabRooms: collabRooms };
 			},
-			
 	});
 });

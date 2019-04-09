@@ -142,8 +142,8 @@ require([
 	            //Load Modules
 				WhiteboardModule.load();
 	            IncidentModule.load();
-				ReportModule.load();
 	            CollabRoomModule.load(CollabRoomModule.getDefaultRoomPresets());
+				ReportModule.load();
 	            DrawMenuModule.load();
 	            GeocodeModule.load();
 	            AccountModule.load();

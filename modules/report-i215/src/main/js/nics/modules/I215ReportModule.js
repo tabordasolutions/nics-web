@@ -40,9 +40,9 @@ define([
 		var I215ReportModule = function(){};
 		
 		I215ReportModule.prototype.load = function(){
-			
-			var I215ReportView = Ext.create('modules.report-i215.I215ReportView');
 
+			var I215ReportView = Ext.create('modules.report-i215.I215ReportView');
+			I215ReportView.setDisabled(true);
 		};
 		
 		return new I215ReportModule();

@@ -40,133 +40,295 @@ function(Core, RocFormController, RocFormModel ) {
 		    },
 	 	buttonAlign: 'center',
 	 	autoHeight: true,
-	 	defaults: { padding:'5'},
+	 	defaults: { padding:'7'},
 		reference: "rocReportForm",
         title: 'ROC Report',
         defaultType: 'textfield',
-        bodyPadding: 10,
+        bodyPadding: 12,
 		referenceHolder: true,
 	    items:[
+	    {bind:'{errorMessage}', xtype:'displayfield', reference: 'errorLabel', xtype: 'label', hidden: true,
+        		 			style: {color: 'red'}, padding: '0 0 0 5', border: true},
+		{bind:'{successMessage}', xtype:'displayfield', reference: 'successLabel', xtype: 'label', hidden: true,
+ 			style: {color: 'green'}, padding: '0 0 0 5', border: true},
 	    { 
 	    	 xtype: 'fieldset',
 	         title: 'Incident Info',
 	         defaultType: 'textfield',
 	         defaults: {
 	             anchor: '100%'
-	             
 	         },
 	    	 items:[  {bind:'{reportType}',fieldLabel: 'Report Type',xtype:'displayfield'},
-	    	 	      
+	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
 	    	         { xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
-	    	          items:[ {bind: '{incidentName}',vtype:'simplealphanum',fieldLabel: 'Incident Name*', flex:2,allowBlank:false,cls:'roc-required'},
-	    	        	      {bind: '{incidentId}',vtype:'alphanum',fieldLabel: 'Incident Number*',padding:'0 0 0 5', flex:1,labelWidth:125,labelAlign:"left",allowBlank:false,cls:'roc-required'}
-	    	           ]
-	    	         },
-	    	            {xtype: 'hiddenfield',bind:'{formTypeId}' },
-	    	 	        
-	    	 	        {bind:'{rocDisplayName}',vtype:'simplealphanum',fieldLabel: 'ROC Display Name*',allowBlank:false,cls:'roc-required'},
-	    	 	        {bind:'{county}',vtype:'simplealphanum',fieldLabel: 'County*',allowBlank:false,cls:'roc-required',emptyText:'county name only'},
-	    	 	        {bind: '{date}',xtype: 'datefield',fieldLabel: 'Date*',format: 'm/d/y',cls:'roc-required',allowBlank:false},
-	    	 	        {bind: '{starttime}',xtype: 'timefield',fieldLabel: 'Start Time*',format: 'H:i',hideTrigger:true,allowBlank:false,cls:'roc-required',
-	    	 	        	listeners: {beforequery : function() { return false;  }}},
-	    	 	        {bind: '{location}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Location*',allowBlank:false,cls:'roc-required'},
-	    	 	        {bind: '{jurisdiction}',vtype:'simplealphanum',fieldLabel: 'Jurisdiction*',allowBlank:false,cls:'roc-required',emptyText:'SRA,FRA,LRA'},
-	    	 	        {bind: '{incidentType}',vtype:'simplealphanum',fieldLabel: 'Type of Incident*',allowBlank:false,cls:'roc-required'},
-	    	 	        {bind: '{incidentCause}',xtype: 'textarea',vtype:'extendedalphanum',fieldLabel: 'Incident Cause'} 
-	    	]
+							items:[
+								{bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'}, xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name*',
+									queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
+									allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', flex:2,
+									listeners: {
+										select: 'onIncidentSelect',
+										change: 'onIncidentChange'
+									}
+								},
+								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
+									readOnly: true, reference: 'incidentId'}
+							]
+					},
+					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
+					items: [
+						{bind: {value: '{latDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latDegreesRef', flex: 1, allowBlank: false, minValue: -89, maxValue: 89, allowDecimals: false,
+							fieldLabel: 'Latitude*', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
+						{xtype: 'displayfield', value: '°', width: 10},
+						{bind: {value: '{latMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
+						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
+						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
+						{bind: '{latitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'},
+						]
+					},
+					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'longitudeGroupRef',
+					items: [
+						{bind: {value: '{longDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longDegreesRef', flex: 1, allowBlank: false, minValue: -179, maxValue: 179, allowDecimals: false,
+							fieldLabel: 'Longitude*', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
+						{xtype: 'displayfield', value: '°', width: 10},
+						{bind: {value: '{longMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
+						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
+						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
+						{bind: '{longitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'}
+						]
+					},
+					{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
+						width: 60, margin:'0 0 0 20'},
+					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
+						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
+						validator: function(val) {
+							return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
+						}
+					},
+					{ bind: '{state}', fieldLabel: 'State / Province / Region', xtype: 'displayfield' },
+					{xtype: 'hiddenfield',bind:'{formTypeId}' },
+			]
 	    },
-	    
+
 	    {
-	    	xtype: 'fieldset',
-	    	title: 'Incident Scope',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%'
-	        },
-	        items: [{bind:'{scope}',vtype:'extendedalphanum',fieldLabel: 'Size/scope of Incident*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{spreadRate}',vtype:'extendedalphanum',fieldLabel: 'Rate of Spread*',allowBlank:false,cls:'roc-required',emptyText:'Critical, Moderate, Slow'},
-	                {bind:'{fuelType}',vtype:'extendedalphanum',fieldLabel: 'Fuel Type'},
-	                {bind:'{potential}',vtype:'extendedalphanum',fieldLabel: 'Potential'},
-	                {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{estimatedContainment}',vtype:'extendedalphanum',fieldLabel: 'Estimated Containment'},
-		            {bind:'{estimatedControl}',vtype:'extendedalphanum',fieldLabel: 'Estimated Control'}
-	                
-	        ]
-	   },
-	   {
-	    	xtype: 'fieldset',
-	    	title: 'Weather',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%'
-	        },
-	        items: [{bind:'{temperature}',vtype:'extendednum',fieldLabel: 'Temperature*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{relHumidity}',vtype:'extendednum',fieldLabel: 'Relative Humidity*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{windSpeed}',vtype:'extendedalphanum',fieldLabel: 'Wind Speed  mph*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{windDirection}',vtype:'extendedalphanum',fieldLabel: 'Wind Direction*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{predictedWeather}',vtype:'extendedalphanum',fieldLabel: 'Predicted Weather Conditions*',allowBlank:false,cls:'roc-required'}
-	        ]
-	                
-	   },
-	   {
-	    	xtype: 'fieldset',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%',
-	             vtype:'simplealphanum'
-	        },
-	        items: [{bind:'{evacuations}',xtype: 'textarea',fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{structuresThreat}',xtype: 'textarea',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{infrastructuresThreat}',xtype: 'textarea',fieldLabel: 'Infrastructures Structures Threat*',allowBlank:false,cls:'roc-required'},
-	                {bind:'{icpLocation}',xtype: 'textarea',fieldLabel: 'ICP Location'}
-	        ]
-	   },
-	  
-	   {
-	    	xtype: 'fieldset',
-	    	title: 'Resources Committed',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%',
-     	        vtype:'simplealphanum'
-	        },
-	        items: [{
-	        	    xtype: 'fieldset',
-	        	    title: 'Aircraft',
-	        	    defaultType: 'textfield',
-	        	    defaults: {
-	        	        anchor: '100%'
-	        	    },
-	        	    items: [{bind:'{airAttack}',fieldLabel: 'Air Attack'},
-	        	            {bind:'{airTankers}',fieldLabel: 'Air Tankers'},
-	        	            {bind:'{helicopters}',fieldLabel: 'Helicopters'}
-	        	    ]
-	        	               
-	        	},
-	        		{bind:'{overhead}',fieldLabel: 'Overhead'},
-	                {bind:'{typeIEngine}',fieldLabel: 'Type I Engine'},
-	                {bind:'{typeIIEngine}',fieldLabel: 'Type II Engine'},
-	                {bind:'{typeIIIEngine}',fieldLabel: 'Type III Engine'},
-	                {bind:'{waterTender}',fieldLabel: 'Water Tender'},
-	                {bind:'{dozers}',fieldLabel: 'Dozers'},
-	                {bind:'{handcrews}',fieldLabel: 'Handcrews'},
-	                {bind:'{comUnit}',fieldLabel: 'Com Unit'}
-	        ]
-	               
-	   },
-	   {
-	    	xtype: 'fieldset',
-	        defaultType: 'textfield',
-	        defaults: {
-	             anchor: '100%'
-	        },
-	        items: [{bind:'{email}',vtype:'emaillist',xtype: 'textarea',fieldLabel: 'Email (comma separated)'},
-	                {bind:'{simplifiedEmail}',xtype: 'checkboxfield', boxLabel: 'Simplified Email',id: 'simplifiedEmail',checked:true },
-	                {bind:'{comments}',vtype:'extendedalphanum',xtype: 'textarea',fieldLabel: 'General Comments'},
-	                {bind:'{reportBy}',vtype:'simplealphanum',fieldLabel: 'Report By'}
-	        ]
-	   },
-	 ] ,
+    		xtype: 'fieldset',
+    		title: 'ROC Details',
+    	    defaultType: 'textfield',
+    	    defaults: {
+    	         anchor: '100%'
+    	    },
+    	    items: [
+	            {
+	    	        xtype: 'fieldset',
+	    	        title: 'Incident Info',
+	                defaultType: 'textfield',
+	                defaults: {
+	                anchor: '100%'
+	            },
+	            items: [
+	                    {xtype: 'combobox', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
+							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
+							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
+						},
+	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
+                        {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
+                        {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
+                            queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                            forceSelection: true, autoSelect: false, store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
+                        {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership*',
+                            queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                            forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
+                        {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction*', allowBlank:false, cls:'roc-required'},
+                        {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date*', format: 'm/d/y',cls:'roc-required', allowBlank:false},
+                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time*', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
+	                ]
+	            },
+	            {
+	    	        xtype: 'fieldset',
+	    	        title: 'Vegetaion Fire Incident Scope',
+	                defaultType: 'textfield',
+	                defaults: {
+	                anchor: '100%'
+	            },
+	            items: [{bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage*', allowBlank:false, cls:'roc-required'},
+                        {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
+                            queryMode: 'local', editable: false, value: null,
+                            forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
+                        {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                            items: [
+                                { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
+                                { boxLabel: 'Bush', name: 'fuelType', inputValue: 'Bush', cls: 'roc-no-style'},
+                                { boxLabel: 'Timber', name: 'fuelType', inputValue: 'Timber', cls: 'roc-no-style'},
+                                { boxLabel: 'Oak Woodland', name: 'fuelType', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
+                                { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
+                            ]
+                        },
+                        {bind: { value: '{otherFuelTypes}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
+                            validator: function(val) {
+                                return (!this.disabled && !val) ? "Other Fuel Type is required" : true;
+                            }, listeners: { disable: function() {
+                                this.reset();
+                            }}, cls: 'roc-required'
+                        },
+                        {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
+	                ]
+	            },
+                {
+                        xtype: 'fieldset',
+                        title: 'Weather Information',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%'
+                        },
+                        items: [{bind:'{temperature}', vtype:'extendednum', fieldLabel: 'Temperature'},
+                                {bind:'{relHumidity}', vtype:'extendednum', fieldLabel: 'Relative Humidity'},
+                                {bind:'{windSpeed}', vtype:'extendedalphanum', fieldLabel: 'Wind Speed'},
+                                {bind:'{windDirection}', xtype:'numberfield', fieldLabel: 'Wind Direction', minValue: 0, maxValue: 360}
+                        ]
+
+                   },
+                {
+                        xtype: 'fieldset',
+                        title: 'Threats & Evacuations',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%',
+                             vtype:'simplealphanum'
+                        },
+                        items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['Yes', 'No', 'Mitigated'] },
+                                {bind: {value: '{evacuationsInProgress}',  disabled: '{disableEvacuationsInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Evacuations in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                    items: [
+                                        { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evaculation orders remain in place', name: 'evacuations', inputValue: 'Evaculation orders remain in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
+                                        
+                                    ],
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "This is a required field" : true;
+                                    }
+                                },
+                                {bind: { value: '{otherEvacuations}', disabled: '{!evacuationsRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Evacuation field is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
+                                },
+                                {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind: {value: '{structuresThreatInProgress}',  disabled: '{disableStructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Structures Threat in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                    items: [
+                                        { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
+                                        { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued trear to structures', cls: 'roc-no-style'},
+                                        { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                        { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
+                                        { boxLabel: 'Other', name: 'structuresThreat', inputValue: 'Other', reference: 'structureThreatRef', cls: 'roc-no-style'},
+                                    ],
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "This is a required field" : true;
+                                    }
+                                },
+                                {bind: { value: '{otherStructuresThreat}', disabled: '{!structureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Structure Threat is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
+                                },
+                                {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind: {value: '{infrastructuresThreatInProgress}',  disabled: '{disableInfrastructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Infrastructure Threat in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                    items: [
+                                        { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                        { boxLabel: 'Incpections are unders way to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to indetify damage', cls: 'roc-no-style'},
+                                        { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
+                                        { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
+                                        { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
+                                    ],
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "This is a required field" : true;
+                                    }
+                                },
+                                {bind: { value: '{otherInfrastructuresThreat}', disabled: '{!infrastructureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Other Infrastructure Threat is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
+                                }
+                                /*{bind:'{otherThreatsAndEvacuations}', xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['', 'Yes', 'No', 'Mitigated']},
+                                {bind:'{otherThreatsAndEvacuationsInProgress}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},*/
+
+                        ]
+                   },
+                {
+                        xtype: 'fieldset',
+                        title: 'Resource Commitment',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%',
+                            vtype:'simplealphanum'
+                        },
+                        items: [
+                        {bind:'{calfireIncident}',xtype: 'combobox',fieldLabel: 'CAL FIRE Incident',
+                         queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                         store: ['Yes', 'No']},
+                        {bind: '{resourcesAssigned}', xtype: 'checkboxgroup', fieldLabel: 'Resources Assigned', vertical: true, columns: 1,
+                                                    items: [
+                                                        { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Air Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Air and Ground Resources Augmented', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Augmented', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Agency Rep ordered', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep ordered', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'CAL FIRE Agency Rep assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Significant augmentation of resources', name: 'resourcesAssigned', inputValue: 'Significant augmentation of resources', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Very Large Air Tanker (VLAT) on order', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) on order', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Very Large Air Tanker (VLAT) assigned', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned', bind: {hidden: '{finalReport}'}},
+                                                        { boxLabel: 'Continued commitment of CAL FIRE air and ground resources', name: 'resourcesAssigned', inputValue: 'Continued commitment of CAL FIRE air and ground resources', bind: {hidden: '{!updateReport}'}},
+                                                        { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }},
+                                                        { boxLabel: 'Other', name: 'other', inputValue: 'Other', reference: 'otherResourcesAssignedCheckboxRef'}
+                                                    ]
+                        },
+                        {bind: { value: '{otherResourcesAssigned}', disabled: '{!otherResourcesAssignedCheckboxRef.checked}' }, fieldLabel: 'Other Resources Assigned*', vtype:'extendedalphanum',
+                                                    validator: function(val) {
+                                                        return (!this.disabled && !val) ? "Other Resources Assigned is required" : true;
+                                                    }, listeners: { disable: function() {
+                                                       this.reset();
+                                                    }}, cls: 'roc-required'
+                                                },
+                        ]
+
+                   },
+                {
+                        xtype: 'fieldset',
+                        title: 'Email',
+                        defaultType: 'textfield',
+                        defaults: {
+                             anchor: '100%'
+                        },
+                        items: [
+                            {bind:'{email}',xtype: 'displayfield',fieldLabel: 'Recipient Email'}
+                        ]
+                },
+            ]
+        },
+    ],
+
 	 buttons: [
 	{
 		text: 'Submit',
@@ -183,7 +345,5 @@ function(Core, RocFormController, RocFormModel ) {
 		reference: 'cancelButton',
 		handler: 'cancelForm'
 	}]
-		 	
-	 	
 	});
 });

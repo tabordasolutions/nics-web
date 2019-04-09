@@ -36,17 +36,21 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 	Ext.define('modules.report-roc.RocReportController', {
 		extend : 'Ext.app.ViewController',
 		alias : 'controller.rocreportcontroller',
-		
-		
+
 		init : function(args) {
-		
 			this.mediator = Core.Mediator.getInstance();
 			this.lookupReference('createButton').enable();
 			this.lookupReference('updateButton').disable();
 			this.lookupReference('finalButton').disable();
 			this.lookupReference('printButton').disable();
-		
-			
+			this.emailList = UserProfile.getUsername();
+			this.incidentNameReadOnly = false;
+			this.incidentId = null;
+			this.incidentName = null;
+			this.incidentTypes = null;
+			this.incidentLatitude = null;
+			this.incidentLongitude = null;
+
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
 					topic, this, function(evt, response){
@@ -73,16 +77,30 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			Core.EventManager.fireEvent("nics.report.add", {title: "ROC", component: this.getView()});
 			Core.EventManager.addListener("LoadOrgAdminList", this.loadOrgAdminList.bind(this));
 			Core.EventManager.addListener("LoadOrgDistList", this.loadOrgDistList.bind(this));
+			Core.EventManager.addListener("nics.active.incidents.ready", this.loadActiveIncidents.bind(this));
+			Core.EventManager.addListener("nics.active.incidents.update", this.updateActiveIncident.bind(this));
+			var topic = Ext.String.format("iweb.NICS.ws.{0}.newIncident", UserProfile.getWorkspaceId());
+			this.mediator.subscribe(topic);
+			Core.EventManager.addListener(topic, this.addActiveIncident.bind(this));
+			var removeTopic = Ext.String.format("iweb.NICS.ws.{0}.removeIncident", UserProfile.getWorkspaceId());
+			this.mediator.subscribe(topic);
+			Core.EventManager.addListener(removeTopic, this.removeActiveIncident.bind(this));
+
 		},
-	
+
 		onJoinIncident: function(e, incident) {
 			this.incidentName = incident.name;
 			this.incidentId = incident.id;
-			this.emailList ="";
-			
-			this.getView().enable();				
-			
+			this.incidentTypes = incident.incidentTypes;
+			this.incidentLatitude = incident.latitude;
+			this.incidentLongitude = incident.longitude;
+			this.emailList = UserProfile.getUsername();
+
+			this.getView().enable();
+
 			var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+
+			this.clearReportsInView();
 			//Load reports
 			this.mediator.sendRequestMessage(endpoint +
 					"/reports/" + this.incidentId + '/ROC', "LoadROCReports");
@@ -90,20 +108,20 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			var url = Ext.String.format("{0}/orgs/{1}/adminlist/{2}",endpoint, UserProfile.getWorkspaceId(), UserProfile.getOrgId());
 			this.mediator.sendRequestMessage(url, "LoadOrgAdminList");
 			var url = Ext.String.format("{0}/orgs/{1}/org/{2}",endpoint, UserProfile.getWorkspaceId(), UserProfile.getOrgName());
-			
+
 			this.mediator.sendRequestMessage(url, "LoadOrgDistList");
-			
+
 			//Subscribe to New ROC report message on the bus
 			this.newTopic = Ext.String.format(
 					"iweb.NICS.incident.{0}.report.{1}.new", this.incidentId,
 					'ROC');
 			this.mediator.subscribe(this.newTopic);
 			
-			this.newHandler = this.onReportAdded.bind(this)
+			this.newHandler = this.onReportAdded.bind(this);
 			Core.EventManager.addListener(this.newTopic, this.newHandler);
-			
-			
+			this.incidentNameReadOnly = true;
 		},
+
 		onCloseIncident: function(e, incidentId) {
 			this.mediator.unsubscribe(this.newTopic);
 			
@@ -111,46 +129,54 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			Core.EventManager.removeListener("LoadOrgAdminList", this.loadOrgAdminList);
 			Core.EventManager.removeListener("LoadOrgDistList", this.loadOrgDistList);
 			Core.EventManager.removeListener("PrintROCReport", this.onReportReady);
-			
-			
-			
+
+			this.clearReportsInView();
+
+			this.lookupReference('createButton').enable();
+			this.lookupReference('updateButton').disable();
+			this.lookupReference('finalButton').disable();
+			this.lookupReference('printButton').disable();
+
+			this.incidentId = null;
+			this.incidentName = null;
+			this.incidentTypes = null
+			this.incidentLatitude = null;
+			this.incidentLongitude = null;
+			this.emailList = UserProfile.getUsername();
+			this.incidentNameReadOnly = false;
+		},
+
+		clearReportsInView: function() {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			rocReportContainer.removeAll();
-			
 			var rocList = this.lookupReference('rocList');
 			rocList.clearValue();
 			rocList.getStore().removeAll()
-			this.getView().disable();
-			
-			this.incidentId = null;
-			this.incidentName = null;
-			this.emailList = null;
-			
 		},
-		
+
 	onAddROC: function(e) {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
-            var rocForm = Ext.create('modules.report-roc.RocFormView',{
-            	incidentId: this.incidentId,
-				incidentName: this.incidentName,
-				formTypeId: this.formTypeId,
-				email: this.emailList,
-				simplifiedEmail: true
-				
-			
-			});
-            rocReportContainer.removeAll();
-            rocReportContainer.add(rocForm);
-        	var initialData= {incidentId: this.incidentId, 
-        			incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
-        			reportType: 'NEW',
-        			date: new Date(),
-        			starttime: new Date(),
-        			formTypeId:this.formTypeId,
-        			reportBy:  username,
-        			email:this.emailList};
-			rocForm.viewModel.set(initialData);	
+			var initialData= {
+				formTypeId:this.formTypeId,
+				reportType: 'NEW',
+				incidentId: this.incidentId,
+				incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
+				incidentTypes: this.incidentTypes,
+				latitude : this.incidentLatitude,
+				longitude: this.incidentLongitude,
+				reportBy:  username,
+		 		email:this.emailList,
+				simplifiedEmail: true,
+				incidentNameReadOnly: this.incidentNameReadOnly,
+				activeIncidentsStore: this.activeIncidentsStore,
+				date: new Date(),
+				editROC: true
+			};
+			var rocForm = Ext.create('modules.report-roc.RocFormView', initialData);
+			rocReportContainer.removeAll();
+			rocReportContainer.add(rocForm);
+			rocForm.viewModel.set(initialData);
 			this.lookupReference('createButton').disable();
 			
 		},
@@ -182,10 +208,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				var rocForm = Ext.create('modules.report-roc.RocFormView',{
 					incidentId: this.incidentId,
 					incidentName: this.incidentName,
-					formTypeId: this.formTypeId
-				
-					
-					
+					formTypeId: this.formTypeId,
+					editROC: !displayOnly
 				});
 				 //rocReportContainer.show();
 		         rocReportContainer.add(rocForm);				//Pull data from the report, and add in the incidentName and Id
@@ -193,30 +217,31 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.incidentId = record.data.incidentId;
 			    formData.report.incidentName = record.data.incidentName;
 			    formData.report.formTypeId = this.formTypeId;
+			    formData.report.incidentNameReadOnly = this.incidentNameReadOnly;
+			    formData.report.latitude = this.incidentLatitude;
+			    formData.report.longitude = this.incidentLongitude;
+			    formData.report.incidentTypes = this.incidentTypes;
+			    formData.report.editROC = !displayOnly;
 				   
 			    //Convert date and starttime back to date objects so they will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
 				formData.report.starttime = new Date(formData.report.starttime);
-				
-				
+
 				if (displayOnly){
 					rocForm.controller.setFormReadOnly();
-				}
-				else {
+				} else {
 					if(status == 'UPDATE' || status == 'FINAL' )
 					//this is an updated or finalized form, change report name to the current status
-					 formData.report.reportType =status;
+					formData.report.reportType = status;
 					this.lookupReference('finalButton').disable();
 					this.lookupReference('printButton').disable();
 				}
 				rocForm.viewModel.set(formData.report);
+				rocForm.viewModel.notify();
+				rocForm.controller.requestLocationBasedDataOnEditRequest();
 			}
-			
-			
 		},
-		
 
-		
 		onReportAdded: function() {	
 			this.lookupReference('createButton').disable();
 			this.lookupReference('updateButton').enable();
@@ -224,9 +249,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.lookupReference('printButton').enable();
 			this.mediator.sendRequestMessage(Core.Config.getProperty(UserProfile.REST_ENDPOINT) +
 					"/reports/" + this.incidentId + '/ROC', "LoadROCReports");
-			
 		},
-		
+
 		onLoadReports: function(e, response) {
 			var newReports = [];
 			var isFinal = false;
@@ -251,7 +275,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					combo.getStore().loadRawData(newReports, true);
 					var latestForm = combo.getStore().getAt(0).data.formId;
 					combo.setValue(latestForm);
-					//this.displayCurrentRecord(true, 'select');
+					this.displayCurrentRecord(true, 'select');
 					if (isFinal){
 						this.lookupReference('updateButton').disable();
 						this.lookupReference('finalButton').disable();
@@ -270,7 +294,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				}
 			}
 		},
-		
+
 		buildReportData: function(report){
 			var message = JSON.parse(report.message);
 			var reportTitle  = message.datecreated;
@@ -372,6 +396,23 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 		
 			}
 			
+	},
+	loadActiveIncidents: function(e, incidents) {
+		this.activeIncidentsStore = Ext.create('Ext.data.Store', {
+			fields: ['incidentName', 'incidentId'],
+			data: incidents
+		});
+	},
+	addActiveIncident: function(e, incident) {
+		this.activeIncidentsStore.insert(0, incident);
+	},
+	updateActiveIncident: function(e, incidentId, incidentNameNew) {
+		var updatedIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
+		updatedIncidentRecord.set("incidentName", incidentNameNew);
+	},
+	removeActiveIncident: function(e, incidentId) {
+		var removeIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
+		this.activeIncidentsStore.remove(removeIncidentRecord);
 	}
 	});
 });

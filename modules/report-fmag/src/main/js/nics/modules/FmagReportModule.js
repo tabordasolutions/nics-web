@@ -42,7 +42,7 @@ define([
 		FmagReportModule.prototype.load = function(){
 			
 			var fmagReportView = Ext.create('modules.report-fmag.FmagReportView');
-
+			fmagReportView.setDisabled(true);
 		};
 		
 		return new FmagReportModule();

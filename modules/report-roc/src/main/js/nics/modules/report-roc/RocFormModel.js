@@ -27,70 +27,139 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['ext','iweb/CoreModule'], function(Ext, Core) {
+define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext, Core, UserProfile) {
 		return Ext.define('modules.report-roc.RocFormModel', {	 
 		 extend: 'Ext.app.ViewModel',
 	 	
 		 alias: 'viewmodel.roc', // connects to viewModel
 	 	
 		 data: {
-		    	incidentId: this.incidentId,
-		    	incidentName: this.incidentName,
-		    	formTypeId: this.formTypeId
-				
-				
-		    	
-		    	
-		    },
-		 formulas: {
-		    	 report: function(get){
-		    		 var report = {
-		    				reportType: get('reportType'),
-		    				rocDisplayName: get('rocDisplayName'),
-		    				county: get('county'),
-		    				date: get('date'),
-		    				starttime: get('starttime'),
-		    				location: get('location'),
-		    				jurisdiction: get('jurisdiction'),
-		    				incidentType: get('incidentType'),
-		    				incidentCause: get('incidentCause'),
-		    				scope: get('scope'),
-		    				spreadRate: get('spreadRate'),
-		    				fuelType: get('fuelType'),
-		    				potential: get('potential'),
-		    				percentContained: get('percentContained'),
-		    				estimatedContainment: get('estimatedContainment'),
-		    				estimatedControl: get('estimatedControl'),		    				
-		    				temperature: get('temperature'),
-		    				relHumidity: get('relHumidity'),
-		    				windSpeed: get('windSpeed'),
-		    				windDirection: get('windDirection'),
-		    				predictedWeather: get('predictedWeather'),
-		    				evacuations: get('evacuations'),
-		    				structuresThreat: get('structuresThreat'),
-		    				infrastructuresThreat: get('infrastructuresThreat'),
-		    				icpLocation: get('icpLocation'),
-		    				airAttack: get('airAttack'),
-		    				airTankers: get('airTankers'),
-		    				helicopters: get('helicopters'),
-		    				overhead: get('overhead'),
-		    				typeIEngine: get('typeIEngine'),
-		    				typeIIEngine: get('typeIIEngine'),
-		    				typeIIIEngine: get('typeIIIEngine'),
-		    				waterTender: get('waterTender'),
-		    				dozers: get('dozers'),
-		    				handcrews: get('handcrews'),
-		    				comUnit: get('comUnit'),
-		    				email: get('email'),
-		    				simplifiedEmail: get('simplifiedEmail'),
-		    				comments: get('comments'),
-		    				reportBy: get('reportBy')
-		    		 
-			    	
-		    		};
-		    		 
-		    		return report;
-		    	}
+				incidentName: this.incidentName,
+				incidentId: this.incidentId,
+				formTypeId: this.formTypeId,
+				email: UserProfile.getUsername(),
+				simplifiedEmail: this.simplifiedEmail,
+				activeIncidentsStore: this.activeIncidentsStore,
+				incidentNameReadOnly: this.incidentNameReadOnly,
+				incidentTypes: this.incidentTypes,
+				latitude : this.incidentLatitude,
+				longitude: this.incidentLongitude,
+		},
+		coordinateToDecimalDegrees: function(coordinate) {
+			var coordinateMod = coordinate;
+			var negateVal = 1;
+			if (coordinateMod < 0) {
+				coordinateMod *= -1;
+				negateVal = -1;
+			}
+			var degrees = Math.floor(coordinateMod);
+			var minutes = 60 * (coordinateMod - degrees);
+			return {'degrees': negateVal*degrees, 'minutes': minutes};
+		},
+		decimalDegreesToCoordinate: function(degrees, minutes) {
+			var coordinate = parseInt(degrees, 10);
+			return (coordinate < 0) ? coordinate - (minutes/60) : coordinate + (minutes/60);
+		},
+		getReport: function(){
+			 return {
+					reportType: this.get('reportType'),
+					county: this.get('county'),
+					additionalAffectedCounties: this.get('additionalAffectedCounties'),
+					county: this.get('county'),
+					date: this.get('date'),
+					starttime: this.get('starttime'),
+					location: this.get('location'),
+					dpa: this.get('dpa'),
+					sra: this.get('sra'),
+					jurisdiction: this.get('jurisdiction'),
+					incidentTypes: this.get('incidentTypes'),
+					scope: this.get('scope'),
+					spreadRate: this.get('spreadRate'),
+					fuelTypes: this.get('fuelTypeCheckBoxGroup').fuelType,
+					otherFuelTypes: this.get('otherFuelTypes'),
+					percentContained: this.get('percentContained'),
+					temperature: this.get('temperature'),
+					relHumidity: this.get('relHumidity'),
+					windSpeed: this.get('windSpeed'),
+					windDirection: this.get('windDirection'),
+					evacuations: this.get('evacuations'),
+					evacuationsInProgress: this.get('evacuationsInProgress'),
+					structuresThreat: this.get('structuresThreat'),
+					structuresThreatInProgress: this.get('structuresThreatInProgress'),
+					infrastructuresThreat: this.get('infrastructuresThreat'),
+					infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
+					otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
+					otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
+					calfireIncident: this.get('calfireIncident'),
+					resourcesAssigned: this.get('resourcesAssigned'),
+					email: this.get('email'),
+					simplifiedEmail: this.get('simplifiedEmail'),
+					latitudeAtROCSubmission: this.get('latitude'),
+					longitudeAtROCSubmission: this.get('longitude'),
+					weatherDataAvailable: this.get('weatherDataAvailable')
+			};
+		},
+		formulas: {
+				readOnlyIncidentDetails: function(get) {
+					return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
+				},
+				disableEvacuationsInProgress: function(get) {
+					var evacuations = get('evacuations') ;
+					return (typeof evacuations == "string") ? evacuations === 'No' : true;
+				},
+				disableStructuresThreatInProgress: function(get) {
+					var structuresThreat = get('structuresThreat') ;
+					return (typeof structuresThreat == "string") ? structuresThreat === 'No' : true;
+				},
+				disableInfrastructuresThreatInProgress: function(get) {
+					var infrastructuresThreat = get('infrastructuresThreat') ;
+					return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
+				},
+				updateReport: function(get) {
+					return get('reportType') == 'UPDATE';
+				},
+				finalReport: function(get) {
+					return get('reportType') == 'FINAL';
+				},
+				latitude: {
+					get: function(get) {
+						return this.decimalDegreesToCoordinate(get('latDegrees'), get('latMinutes'));
+					},
+
+					set: function(value) {
+						var latDegreesMinutes = this.coordinateToDecimalDegrees(value);
+						this.set({
+							latDegrees: latDegreesMinutes.degrees,
+							latMinutes: latDegreesMinutes.minutes
+						});
+
+					}
+				},
+				longitude: {
+					get: function(get) {
+						return this.decimalDegreesToCoordinate(get('longDegrees'), get('longMinutes'));
+					},
+
+					set: function(value) {
+						var longDegreesMinutes = this.coordinateToDecimalDegrees(value);
+						this.set({
+							longDegrees: longDegreesMinutes.degrees,
+							longMinutes: longDegreesMinutes.minutes
+						});
+
+					}
+				},
+				fuelTypes: {
+					get: function(get) {
+						get('fuelTypeCheckBoxGroup').fuelType;
+					},
+
+					set: function(value) {
+						this.set({
+							fuelTypeCheckBoxGroup: {'fuelType': value}
+						});
+					}
+				}
 		 }
 	 });
 });
