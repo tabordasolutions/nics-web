@@ -40,13 +40,13 @@
         <version>2018.1.5</version>
         <relativePath>..</relativePath>
     </parent>
-  
+
   <artifactId>roc-report-module</artifactId>
   <packaging>jar</packaging>
   <name>NICS ROC Report Module</name>
-  
+
   <dependencies>
-  
+
     <!-- test dependencies -->
     <dependency>
       <groupId>junit</groupId>
@@ -54,7 +54,8 @@
     </dependency>
   </dependencies>
 
-    <build>
+<!-- Luis - Resolved merge conflicts, need to verify that this should have been removed -->
+<!--    <build>
         <plugins>
             <plugin>
                 <groupId>com.github.bringking</groupId>
@@ -72,6 +73,6 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
-  
+    </build>-->
+
 </project>
