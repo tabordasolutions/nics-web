@@ -55,7 +55,7 @@
   </dependencies>
 
 <!-- Luis - Resolved merge conflicts, need to verify that this should have been removed -->
-<!--    <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>com.github.bringking</groupId>
@@ -73,6 +73,6 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>-->
+    </build>
 
 </project>
