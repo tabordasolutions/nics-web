@@ -184,7 +184,7 @@ function(Core, RocFormController, RocFormModel ) {
                         items: [{bind:'{temperature}', vtype:'extendednum', fieldLabel: 'Temperature'},
                                 {bind:'{relHumidity}', vtype:'extendednum', fieldLabel: 'Relative Humidity'},
                                 {bind:'{windSpeed}', vtype:'extendedalphanum', fieldLabel: 'Wind Speed'},
-                                {bind:'{windDirection}', xtype:'extendedalphanum', fieldLabel: 'Wind Direction'}
+                                {bind:'{windDirection}', vtype:'extendedalphanum', fieldLabel: 'Wind Direction'}
                         ]
 
                    },
