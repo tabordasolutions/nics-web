@@ -154,17 +154,14 @@ define(['ext', 'iweb/CoreModule', 'ol', './MultiIncidentViewModel', 'nics/module
 
 		},
         processIncidentData: function(incidentData, incidentorgsdata) {
-
-            if(incidentData != null && incidentData.incidents != null && incidentorgsdata != null && incidentorgsdata.data){
+            if(incidentData != null && incidentData.incidents != null && incidentData.incidents.length > 0 && incidentorgsdata != null && incidentorgsdata.data){
                 //Create a lookup map
                 var IncidentOrgsLookup = {};
                 incidentorgsdata.data.forEach(function(incidentOrg) {
                     IncidentOrgsLookup[incidentOrg.incidentid] = incidentOrg;
                 })
                 this.IncidentOrgsLookup = IncidentOrgsLookup;
-                var storeData = {
-
-                };
+                var storeData = {};
 
                 //fix the incident data
                 for(var i=0;i<incidentData.incidents.length;i++) {
