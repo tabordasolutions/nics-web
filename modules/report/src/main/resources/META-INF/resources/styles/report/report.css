@@ -28,8 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 div.roc-required label, div.fmag-required label{
-    color:#11aa00;
     font-weight:bold;
+}
+
+div.roc-required label span:after {
+    content: "*";
+    color: red;
 }
 
 div.roc-no-style label {

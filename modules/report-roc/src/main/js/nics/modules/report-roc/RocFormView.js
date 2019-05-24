@@ -60,24 +60,30 @@ function(Core, RocFormController, RocFormModel ) {
 	         },
 	    	 items:[  {bind:'{reportType}',fieldLabel: 'Report Type',xtype:'displayfield'},
 	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
-	    	         { xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
-							items:[
-								{bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'}, xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name*',
-									queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
+                      {xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
+                        items:[
+						    {bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'},
+                                    xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name',
+							    	queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
 									allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', flex:2,
 									listeners: {
 										select: 'onIncidentSelect',
 										change: 'onIncidentChange'
 									}
-								},
-								{bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number', padding:'0 0 0 5', flex:1, labelAlign:"left", width: 100,
-									readOnly: true, reference: 'incidentId'}
-							]
-					},
+							}
+                        ]
+                      },
+                      {
+                         xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield',
+                         items: [
+                             {bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number', flex:1, labelAlign:"left", width: 100, reference: 'incidentId'}
+                         ]
+                      },
+
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
 					items: [
 						{bind: {value: '{latDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latDegreesRef', flex: 1, allowBlank: false, minValue: -89, maxValue: 89, allowDecimals: false,
-							fieldLabel: 'Latitude*', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
+							fieldLabel: 'Latitude', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
 						{xtype: 'displayfield', value: '°', width: 10},
 						{bind: {value: '{latMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
 						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
@@ -88,7 +94,7 @@ function(Core, RocFormController, RocFormModel ) {
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'longitudeGroupRef',
 					items: [
 						{bind: {value: '{longDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longDegreesRef', flex: 1, allowBlank: false, minValue: -179, maxValue: 179, allowDecimals: false,
-							fieldLabel: 'Longitude*', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
+							fieldLabel: 'Longitude', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
 						{xtype: 'displayfield', value: '°', width: 10},
 						{bind: {value: '{longMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
 						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
@@ -98,7 +104,7 @@ function(Core, RocFormController, RocFormModel ) {
 					},
 					{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
 						width: 60, margin:'0 0 0 20'},
-					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type*',
+					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type',
 						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
 						validator: function(val) {
 							return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
@@ -125,23 +131,23 @@ function(Core, RocFormController, RocFormModel ) {
 	                anchor: '100%'
 	            },
 	            items: [
-	                    {xtype: 'combobox', fieldLabel: 'Initial County*', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+	                    {xtype: 'combobox', fieldLabel: 'Initial County', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
 							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
 							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
 							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
 							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
 						},
 	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
-                        {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location*', allowBlank:false, cls:'roc-required'},
-                        {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA*',
+                        {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location', allowBlank:false, cls:'roc-required'},
+                        {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA',
                             queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
-                        {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership*',
+                        {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership',
                             queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
-                        {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction*', allowBlank:false, cls:'roc-required'},
-                        {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date*', format: 'm/d/y',cls:'roc-required', allowBlank:false},
-                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time*', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
+                        {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction', allowBlank:false, cls:'roc-required'},
+                        {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
+                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
 	                ]
 	            },
 	            {
@@ -151,11 +157,11 @@ function(Core, RocFormController, RocFormModel ) {
 	                defaults: {
 	                anchor: '100%'
 	            },
-	            items: [{bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage*', allowBlank:false, cls:'roc-required'},
+	            items: [{bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage', allowBlank:false, cls:'roc-required'},
                         {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
                             queryMode: 'local', editable: false, value: null,
                             forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
-                        {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                        {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
                                 { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
                                 { boxLabel: 'Bush', name: 'fuelType', inputValue: 'Bush', cls: 'roc-no-style'},
@@ -164,14 +170,14 @@ function(Core, RocFormController, RocFormModel ) {
                                 { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
                             ]
                         },
-                        {bind: { value: '{otherFuelTypes}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)*', vtype:'extendedalphanum',
+                        {bind: { value: '{otherFuelTypes}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)', vtype:'extendedalphanum',
                             validator: function(val) {
                                 return (!this.disabled && !val) ? "Other Fuel Type is required" : true;
                             }, listeners: { disable: function() {
                                 this.reset();
                             }}, cls: 'roc-required'
                         },
-                        {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained*',allowBlank:false,cls:'roc-required'},
+                        {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained',allowBlank:false,cls:'roc-required'},
 	                ]
 	            },
                 {
@@ -196,10 +202,10 @@ function(Core, RocFormController, RocFormModel ) {
                              anchor: '100%',
                              vtype:'simplealphanum'
                         },
-                        items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations*',allowBlank:false,cls:'roc-required',
+                        items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: ['Yes', 'No', 'Mitigated'] },
-                                {bind: {value: '{evacuationsInProgress}',  disabled: '{disableEvacuationsInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Evacuations in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                {bind: {value: '{evacuationsInProgress}',  disabled: '{disableEvacuationsInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Evacuations in progress for', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                                     items: [
                                         { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
@@ -220,10 +226,10 @@ function(Core, RocFormController, RocFormModel ) {
                                                        this.reset();
                                                     }}, cls: 'roc-required'
                                 },
-                                {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat*',allowBlank:false,cls:'roc-required',
+                                {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind: {value: '{structuresThreatInProgress}',  disabled: '{disableStructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Structures Threat in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                {bind: {value: '{structuresThreatInProgress}',  disabled: '{disableStructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Structures Threat in progress for', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                                     items: [
                                         { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
                                         { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued trear to structures', cls: 'roc-no-style'},
@@ -243,10 +249,10 @@ function(Core, RocFormController, RocFormModel ) {
                                                        this.reset();
                                                     }}, cls: 'roc-required'
                                 },
-                                {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat*',allowBlank:false,cls:'roc-required',
+                                {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat',allowBlank:false,cls:'roc-required',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind: {value: '{infrastructuresThreatInProgress}',  disabled: '{disableInfrastructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Infrastructure Threat in progress for*', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                                {bind: {value: '{infrastructuresThreatInProgress}',  disabled: '{disableInfrastructuresThreatInProgress}'}, disabled: true, xtype: 'checkboxgroup', fieldLabel: 'Infrastructure Threat in progress for', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                                     items: [
                                         { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
@@ -304,7 +310,7 @@ function(Core, RocFormController, RocFormModel ) {
                                                         { boxLabel: 'Other', name: 'other', inputValue: 'Other', reference: 'otherResourcesAssignedCheckboxRef'}
                                                     ]
                         },
-                        {bind: { value: '{otherResourcesAssigned}', disabled: '{!otherResourcesAssignedCheckboxRef.checked}' }, fieldLabel: 'Other Resources Assigned*', vtype:'extendedalphanum',
+                        {bind: { value: '{otherResourcesAssigned}', disabled: '{!otherResourcesAssignedCheckboxRef.checked}' }, fieldLabel: 'Other Resources Assigned', vtype:'extendedalphanum',
                                                     validator: function(val) {
                                                         return (!this.disabled && !val) ? "Other Resources Assigned is required" : true;
                                                     }, listeners: { disable: function() {
