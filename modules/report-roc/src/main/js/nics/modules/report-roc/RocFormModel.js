@@ -36,6 +36,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		 data: {
 				incidentName: this.incidentName,
 				incidentId: this.incidentId,
+			 	incidentNumber: this.incidentNumber,
 				formTypeId: this.formTypeId,
 				email: UserProfile.getUsername(),
 				simplifiedEmail: this.simplifiedEmail,
