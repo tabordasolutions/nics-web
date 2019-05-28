@@ -76,7 +76,7 @@ function(Core, RocFormController, RocFormModel ) {
                       {
                          xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield',
                          items: [
-                             {bind: '{incidentId}', vtype:'alphanum', fieldLabel: 'Incident Number', flex:1, labelAlign:"left", width: 100, reference: 'incidentId'}
+                             {bind: '{incidentNumber}', vtype:'extendedalphanum', fieldLabel: 'Incident Number', flex:1, labelAlign:"left", width: 100, reference: 'incidentNumber'}
                          ]
                       },
 
