@@ -40,6 +40,7 @@ define(["iweb/CoreModule"], function(Core){
 				workspaceid: model.getWorkspaceId(), 
 				description: model.getDescription(), //validate
 				incidentname: model.getIncidentName(), //validate
+				incidentnumber: model.getIncidentNumber(),
 				lat: 0,
 				lon: 0,
 				created: Core.Util.getUTCTimestamp(),

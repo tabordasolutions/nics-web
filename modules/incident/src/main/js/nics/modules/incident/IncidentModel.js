@@ -43,6 +43,7 @@ define([], function() {
 	IncidentModel.prototype.workspaceId = -1;
 	IncidentModel.prototype.description = "";
 	IncidentModel.prototype.incidentName = "";
+	IncidentModel.prototype.incidentNumber = "";
 	IncidentModel.prototype.lat = -1;
 	IncidentModel.prototype.lon = -1;
 	IncidentModel.prototype.incidentTypeIds = [];
@@ -259,6 +260,14 @@ define([], function() {
 	
 	IncidentModel.prototype.getIncidentName = function(){
 		return this.incidentName;
+	};
+
+	IncidentModel.prototype.setIncidentNumber = function(incidentNumber){
+		this.incidentNumber = incidentNumber;
+	};
+
+	IncidentModel.prototype.getIncidentNumber = function(){
+		return this.incidentNumber;
 	};
 	
 	IncidentModel.prototype.setIncidentTypeIds = function(ids){

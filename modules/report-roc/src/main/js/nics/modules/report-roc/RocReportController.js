@@ -47,6 +47,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.incidentNameReadOnly = false;
 			this.incidentId = null;
 			this.incidentName = null;
+			this.incidentNumber = null;
 			this.incidentTypes = null;
 			this.incidentLatitude = null;
 			this.incidentLongitude = null;
@@ -90,6 +91,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 
 		onJoinIncident: function(e, incident) {
 			this.incidentName = incident.name;
+			this.incidentNumber = incident.incidentNumber;
 			this.incidentId = incident.id;
 			this.incidentTypes = incident.incidentTypes;
 			this.incidentLatitude = incident.latitude;
@@ -139,7 +141,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 
 			this.incidentId = null;
 			this.incidentName = null;
-			this.incidentTypes = null
+			this.incidentNumber = null;
+			this.incidentTypes = null;
 			this.incidentLatitude = null;
 			this.incidentLongitude = null;
 			this.emailList = UserProfile.getUsername();
@@ -162,6 +165,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				reportType: 'NEW',
 				incidentId: this.incidentId,
 				incidentName: this.incidentName, //incidentType is not coming back.  Need to figure out how to get it
+				incidentNumber: this.incidentNumber,
 				incidentTypes: this.incidentTypes,
 				latitude : this.incidentLatitude,
 				longitude: this.incidentLongitude,
@@ -216,6 +220,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				var formData = (JSON.parse(record.data.message));
 			    formData.report.incidentId = record.data.incidentId;
 			    formData.report.incidentName = record.data.incidentName;
+			    formData.report.incidentNumber = record.data.incidentNumber;
 			    formData.report.formTypeId = this.formTypeId;
 			    formData.report.incidentNameReadOnly = this.incidentNameReadOnly;
 			    formData.report.latitude = this.incidentLatitude;
@@ -306,6 +311,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				formId: report.formId,
 				incidentId: this.incidentId,
 				incidentName: this.incidentName,
+				incidentNumber: this.incidentNumber,
 				name: reportTitle,
 				message: report.message,
 				status: reportType,

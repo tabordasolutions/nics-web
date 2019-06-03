@@ -385,16 +385,16 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		
 	    		}
 	    		
-	    	
-	    		//Populate form properties
-	    		form.incidentid = formView.data.incidentId;
-	    		form.incidentname = formView.data.incidentName;
-	    		form.formtypeid = formView.data.formTypeId; //this is always a ROC 
-	    		form.usersessionid = UserProfile.getUserSessionId();
-	    		form.distributed = false;
-	    		form.message = JSON.stringify(message);
+				//Populate form properties
+				form.incidentid = formView.data.incidentId;
+				form.incidentname = formView.data.incidentName;
+				form.incidentnumber = formView.data.incidentNumber;
+				form.formtypeid = formView.data.formTypeId; //this is always a ROC
+				form.usersessionid = UserProfile.getUserSessionId();
+				form.distributed = false;
+				form.message = JSON.stringify(message);
 
-	    		if(form.incidentid) {  //submitting ROC on existing incident
+				if(form.incidentid) {  //submitting ROC on existing incident
 					var url = Ext.String.format('{0}/reports/{1}/{2}',
 						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 						formView.data.incidentId, 'ROC');
@@ -408,6 +408,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					Core.EventManager.fireEvent(this.newTopic);
 				} else { // submitting new incident & ROC
 					var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
+					var incidentNumber = formView.get('incidentNumber');
 					var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
 					var incidentTypesArray = [];
 					if(incidentTypesFromUI instanceof Array) {
@@ -417,10 +418,12 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					} else {
 						incidentTypesArray[0] = {incidenttypeid: incidentTypesFromUI};
 					}
-					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'usersessionid': UserProfile.getUserSessionId(),
+					
+					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'incidentnumber': incidentNumber, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
 						'workspaceid': UserProfile.getWorkspaceId(), 'incidentIncidenttypes': incidentTypesArray};
 					form.incidentname = incidentName;
+					form.incidentnumber = incidentNumber;
 					var url = Ext.String.format('{0}/reports/{1}/IncidentAndROC',
 						Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 						UserProfile.getOrgId());
@@ -434,6 +437,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				message.report.incidentId = formView.data.incidentId;
 				message.report.incidentName = formView.data.incidentName;
 				form.email = this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
+
 			},
 			ISODateString: function(d){
 				function pad(n){return n<10 ? '0'+n : n}
