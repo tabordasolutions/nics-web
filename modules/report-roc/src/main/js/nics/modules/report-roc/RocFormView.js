@@ -210,7 +210,7 @@ function(Core, RocFormController, RocFormModel ) {
                                         { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
                                         { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
-                                        { boxLabel: 'Evaculation orders remain in place', name: 'evacuations', inputValue: 'Evaculation orders remain in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
                                         
