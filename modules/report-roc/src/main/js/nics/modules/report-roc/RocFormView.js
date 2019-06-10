@@ -256,7 +256,7 @@ function(Core, RocFormController, RocFormModel ) {
                                     items: [
                                         { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
-                                        { boxLabel: 'Incpections are unders way to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to indetify damage', cls: 'roc-no-style'},
+                                        { boxLabel: 'Inspections are underway to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
                                         { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
                                         { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
                                         { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
