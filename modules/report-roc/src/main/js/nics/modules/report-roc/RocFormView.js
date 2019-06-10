@@ -147,7 +147,7 @@ function(Core, RocFormController, RocFormModel ) {
                             forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
                         {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction', allowBlank:false, cls:'roc-required'},
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
-                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
+                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time', format: 'Hi', hideTrigger:true, allowBlank:false, cls:'roc-required'}
 	                ]
 	            },
 	            {
@@ -210,7 +210,7 @@ function(Core, RocFormController, RocFormModel ) {
                                         { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
                                         { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
-                                        { boxLabel: 'Evaculation orders remain in place', name: 'evacuations', inputValue: 'Evaculation orders remain in place', cls: 'roc-no-style'},
+                                        { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
                                         
@@ -256,7 +256,7 @@ function(Core, RocFormController, RocFormModel ) {
                                     items: [
                                         { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
                                         { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
-                                        { boxLabel: 'Incpections are unders way to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to indetify damage', cls: 'roc-no-style'},
+                                        { boxLabel: 'Inspections are underway to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
                                         { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
                                         { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
                                         { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
