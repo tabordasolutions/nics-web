@@ -147,7 +147,7 @@ function(Core, RocFormController, RocFormModel ) {
                             forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
                         {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction', allowBlank:false, cls:'roc-required'},
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
-                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time', format: 'H:i', hideTrigger:true, allowBlank:false, cls:'roc-required'}
+                        {bind: '{starttime}', xtype: 'timefield', fieldLabel: 'Start Time', format: 'Hi', hideTrigger:true, allowBlank:false, cls:'roc-required'}
 	                ]
 	            },
 	            {
