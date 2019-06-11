@@ -157,10 +157,27 @@ function(Core, RocFormController, RocFormModel ) {
 	                defaults: {
 	                anchor: '100%'
 	            },
-	            items: [{bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage', allowBlank:false, cls:'roc-required'},
-                        {value:'{spreadRate}', xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Rate of Spread',
-                            queryMode: 'local', editable: false, value: null,
-                            forceSelection: true, autoSelect: false, store: ['', 'Low', 'Moderate', 'Dangerous', 'Critical']},
+	            items: [
+	                    {
+	                        bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage', allowBlank:false, cls:'roc-required'
+	                    },
+                        {
+                            bind: '{spreadRate}',
+                            xtype: 'combobox',
+                            fieldLabel: 'Rate of Spread',
+                            queryMode: 'local',
+                            forceSelection: true,
+                            autoSelect: false,
+                            editable: false,
+                            store: [
+                                '',
+                                'Low rate of spread',
+                                'Moderate rate of spread',
+                                'Dangerous rate of spread',
+                                'Critical rate of spread',
+                                'Forward spread has been stopped'
+                            ]
+                        },
                         {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
                                 { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
