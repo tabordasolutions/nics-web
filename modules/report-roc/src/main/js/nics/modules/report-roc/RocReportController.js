@@ -199,9 +199,12 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 		displayCurrentRecord: function(displayOnly, status){
 			var combo  = this.lookupReference('rocList');
 			var currentFormId=combo.getValue();
-			var record = combo.findRecordByValue(currentFormId);
+			
+			 var record = combo.findRecordByValue(currentFormId); 
+			
 			
 			if(record){
+		
 				var rocReportContainer = this.view.lookupReference('rocReport');
 				//Clear away any previous report
 				rocReportContainer.removeAll();
@@ -212,23 +215,19 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					formTypeId: this.formTypeId,
 					editROC: !displayOnly
 				});
-
-				//rocReportContainer.show();
-		        rocReportContainer.add(rocForm);				//Pull data from the report, and add in the incidentName and Id
+				 //rocReportContainer.show();
+		         rocReportContainer.add(rocForm);				//Pull data from the report, and add in the incidentName and Id
 				var formData = (JSON.parse(record.data.message));
 			    formData.report.incidentId = record.data.incidentId;
 			    formData.report.incidentName = record.data.incidentName;
-			    formData.report.incidentNumber = this.incidentNumber;
+			    formData.report.incidentNumber = record.data.incidentNumber;
 			    formData.report.formTypeId = this.formTypeId;
 			    formData.report.incidentNameReadOnly = this.incidentNameReadOnly;
 			    formData.report.latitude = this.incidentLatitude;
 			    formData.report.longitude = this.incidentLongitude;
-
-                if(this.incidentTypes) {
-                    this.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
-                }
-
+			    formData.report.incidentTypes = this.incidentTypes;
 			    formData.report.editROC = !displayOnly;
+				   
 			    //Convert date and starttime back to date objects so they will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
 				formData.report.starttime = new Date(formData.report.starttime);
