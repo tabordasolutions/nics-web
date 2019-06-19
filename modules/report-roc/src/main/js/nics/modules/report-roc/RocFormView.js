@@ -138,7 +138,7 @@ function(Core, RocFormController, RocFormModel ) {
 							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
 						},
 	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
-                        {bind:'{location}',vtype:'extendedalphanum', fieldLabel: 'Location', allowBlank:false, cls:'roc-required'},
+                        {bind:'{location}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Location', allowBlank:false, cls:'roc-required'},
                         {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA',
                             queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
