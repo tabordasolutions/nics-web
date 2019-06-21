@@ -129,11 +129,25 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
 					set: function(value) {
 						var latDegreesMinutes = this.coordinateToDecimalDegrees(value);
-						this.set({
-							latDegrees: latDegreesMinutes.degrees,
-							latMinutes: latDegreesMinutes.minutes
-						});
+						var latDegreesMinutesSplitArray = 0;
 
+						this.set({
+                            latDegrees: 0,
+                            latDecimal: 0,
+                            latMinutes: 0
+                        });
+
+                        if(!isNaN(latDegreesMinutes.minutes)) {
+                            latDegreesMinutesSplitArray = latDegreesMinutes.minutes.toString().split(".");
+
+                            this.set({
+                                latDegrees: latDegreesMinutes.degrees,
+                                latMinutes: latDegreesMinutes.minutes,
+
+                                latDecimal: latDegreesMinutesSplitArray[0],
+                                latMinutesDisplay: ((typeof latDegreesMinutesSplitArray[1] === 'undefined') ? 0 : latDegreesMinutesSplitArray[1].substring(0,4))
+                            });
+                        }
 					}
 				},
 				longitude: {
@@ -143,11 +157,27 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
 					set: function(value) {
 						var longDegreesMinutes = this.coordinateToDecimalDegrees(value);
-						this.set({
-							longDegrees: longDegreesMinutes.degrees,
-							longMinutes: longDegreesMinutes.minutes
-						});
+                        var longDegreesMinutesSplitArray = 0;
 
+                        this.set({
+                            longDegrees: 0,
+                            longDecimal: 0,
+                            longMinutes: 0
+                        });
+
+                        if(!isNaN(longDegreesMinutes.minutes)) {
+                            longDegreesMinutesSplitArray = longDegreesMinutes.minutes.toString().split(".");
+
+                            this.set({
+                                longDegrees: longDegreesMinutes.degrees,
+                                longMinutes: longDegreesMinutes.minutes,
+
+                                longDecimal: longDegreesMinutesSplitArray[0],
+
+                                longMinutesDisplay: ((typeof longDegreesMinutesSplitArray[1] === 'undefined') ? 0 : longDegreesMinutesSplitArray[1].substring(0,4))
+
+                            });
+                        }
 					}
 				},
 				fuelTypes: {
