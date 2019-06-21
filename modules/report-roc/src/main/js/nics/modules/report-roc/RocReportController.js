@@ -224,7 +224,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.latitude = this.incidentLatitude;
 			    formData.report.longitude = this.incidentLongitude;
 
-                if(this.incidentTypes) {
+                if(this.incidentTypes != null) {
                     this.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
                 }
 
@@ -242,9 +242,12 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					this.lookupReference('finalButton').disable();
 					this.lookupReference('printButton').disable();
 				}
-				rocForm.viewModel.set(formData.report);
-				rocForm.viewModel.notify();
-				rocForm.controller.requestLocationBasedDataOnEditRequest();
+
+				if(formData.report != null) {
+                    rocForm.viewModel.set(formData.report);
+                    rocForm.viewModel.notify();
+                    rocForm.controller.requestLocationBasedDataOnEditRequest();
+				}
 			}
 		},
 

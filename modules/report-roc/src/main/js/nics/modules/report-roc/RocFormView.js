@@ -81,25 +81,189 @@ function(Core, RocFormController, RocFormModel ) {
                       },
 
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
-					items: [
-						{bind: {value: '{latDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latDegreesRef', flex: 1, allowBlank: false, minValue: -89, maxValue: 89, allowDecimals: false,
-							fieldLabel: 'Latitude', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
-						{xtype: 'displayfield', value: '°', width: 10},
-						{bind: {value: '{latMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'latMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
-						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
-						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
-						{bind: '{latitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'},
+					    items: [
+                            {
+                                bind: {
+                                    value: '{latDegrees}',
+                                    readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'numberfield',
+                                reference: 'latDegreesRef',
+                                flex: 1,
+                                allowBlank: false,
+                                minValue: -89,
+                                maxValue: 89,
+                                allowDecimals: false,
+                                fieldLabel: 'Latitude',
+                                cls: 'roc-required',
+                                listeners: { change: {fn: 'onLocationChange', delay: 1000} }
+                            },
+						    {
+						        xtype: 'displayfield',
+						        value: '°',
+						        width: 10,
+						        fieldStyle  : "text-align:center"
+                            },
+                            {
+                                bind: {
+                                    value: '{latDecimal}',
+                                    readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'numberfield',
+                                reference: 'latDecimalRef',
+                                flex: 1,
+                                allowBlank: false,
+                                allowDecimals: false,
+                                minValue:0,
+                                maxValue: 59,
+                                listeners: {
+                                    change: {fn: 'onLocationChange', delay: 100}
+                                }
+                            },
+						    {
+						        xtype: 'displayfield',
+						        value: '.',
+						        width: 10,
+						        fieldStyle  : "text-align:center"
+                            },
+
+                            /* Original field.  Make it hidden. */
+						    {
+                                bind: {
+                                    value: '{latMinutes}',
+                                    readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'hiddenfield',
+                                reference: 'latMinutesRef',
+                                flex: 1,
+                                allowBlank: false,
+                                allowDecimals: false,
+                                minValue:0,
+                                maxValue: 9999,
+                                listeners: {
+                                    change: {fn: 'onLocationChange', delay: 100}
+                                }
+                            },
+
+                            /* New field.  Make it display purpose. */
+                            {
+                                bind: {
+                                    value: '{latMinutesDisplay}',
+                                    readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'numberfield',
+                                reference: 'latMinutesDisplayRef',
+                                flex: 1,
+                                allowBlank: false,
+                                allowDecimals: false,
+                                minValue:0,
+                                maxValue: 9999,
+                                listeners: {
+                                    change: {fn: 'onLocationChange', delay: 100}
+                                }
+                            },
+                            {
+                                xtype: 'displayfield',
+                                value: '\'',
+                                width: 10,
+                                padding:'0 0 0 5'
+                            }
 						]
 					},
-					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'longitudeGroupRef',
-					items: [
-						{bind: {value: '{longDegrees}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longDegreesRef', flex: 1, allowBlank: false, minValue: -179, maxValue: 179, allowDecimals: false,
-							fieldLabel: 'Longitude', cls: 'roc-required', listeners: { change: {fn: 'onLocationChange', delay: 1000} } },
-						{xtype: 'displayfield', value: '°', width: 10},
-						{bind: {value: '{longMinutes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'numberfield', reference: 'longMinutesRef', flex: 1, allowBlank: false, minValue:0, maxValue: 59.9999,
-						listeners: { change: {fn: 'onLocationChange', delay: 100} } },
-						{xtype: 'displayfield', value: '\'', width: 10, padding:'0 0 0 5'},
-						{bind: '{longitude}', xtype: 'displayfield', flex: 1, padding:'0 0 0 5'}
+					{
+					    xtype: 'fieldcontainer',
+					    layout: 'hbox',
+					    defaultType: 'textfield',
+					    reference: 'longitudeGroupRef',
+					    items: [
+						    {
+						        bind: {
+						            value: '{longDegrees}',
+						            readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'numberfield',
+                                reference: 'longDegreesRef',
+                                flex: 1,
+                                allowBlank: false,
+                                minValue: -179,
+                                maxValue: 179,
+                                allowDecimals: false,
+							    fieldLabel: 'Longitude',
+							    cls: 'roc-required',
+							    listeners: {
+							        change: {fn: 'onLocationChange', delay: 1000}
+                                }
+                            },
+						    {
+						        xtype: 'displayfield',
+						        value: '°',
+						        width: 10,
+						        fieldStyle  : "text-align:center"
+                            },
+                            {
+                                bind: {
+                                    value: '{longDecimal}',
+                                    readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'numberfield',
+                                reference: 'longDecimalRef',
+                                flex: 1,
+                                allowBlank: false,
+                                allowDecimals: false,
+                                minValue:0,
+                                maxValue: 59,
+                                listeners: {
+                                    change: {fn: 'onLocationChange', delay: 100}
+                                }
+                            },
+                            {
+                                xtype: 'displayfield',
+                                value: '.',
+                                width: 10,
+                                fieldStyle  : "text-align:center"
+                            },
+
+                            /* Original field.  Make it hidden. */
+						    {
+						        bind: {
+						            value: '{longMinutes}',
+						            readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'hiddenfield',
+                                reference: 'longMinutesRef',
+                                flex: 1,
+                                allowBlank: false,
+                                minValue:0,
+                                maxValue: 9999,
+                                listeners: {
+                                    change: {fn: 'onLocationChange', delay: 100}
+                                }
+                            },
+
+                            /* New field.  Make it display purpose. */
+                            {
+                                bind: {
+                                    value: '{longMinutesDisplay}',
+                                    readOnly: '{readOnlyIncidentDetails}'
+                                },
+                                xtype: 'numberfield',
+                                reference: 'longMinutesDisplayRef',
+                                flex: 1,
+                                allowBlank: false,
+                                allowDecimals: false,
+                                minValue:0,
+                                maxValue: 9999,
+                                listeners: {
+                                    change: {fn: 'onLocationChange', delay: 100}
+                                }
+                            },
+
+                            {
+                                xtype: 'displayfield',
+                                value: '\'',
+                                width: 10,
+                                padding:'0 0 0 5'
+                            }
 						]
 					},
 					{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
@@ -181,7 +345,7 @@ function(Core, RocFormController, RocFormModel ) {
                         {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
                             items: [
                                 { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
-                                { boxLabel: 'Bush', name: 'fuelType', inputValue: 'Bush', cls: 'roc-no-style'},
+                                { boxLabel: 'Brush', name: 'fuelType', inputValue: 'Brush', cls: 'roc-no-style'},
                                 { boxLabel: 'Timber', name: 'fuelType', inputValue: 'Timber', cls: 'roc-no-style'},
                                 { boxLabel: 'Oak Woodland', name: 'fuelType', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
                                 { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
