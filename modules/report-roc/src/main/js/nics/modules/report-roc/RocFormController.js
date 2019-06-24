@@ -157,6 +157,12 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeIds});
 						}
 						this.getViewModel().set('additionalAffectedCounties', response.data.additionalAffectedCounties);
+						this.getViewModel().set('street', response.data.street);
+						this.getViewModel().set('crossStreet', response.data.crossStreet);
+						this.getViewModel().set('nearestCommunity', response.data.nearestCommunity);
+						this.getViewModel().set('milesFromNearestCommunity', response.data.milesFromNearestCommunity);
+						this.getViewModel().set('directionFromNearestCommunity', response.data.directionFromNearestCommunity);
+
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
 				} else if(response.status == 400){
@@ -213,6 +219,11 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.getViewModel().set('state', '');
 					this.getViewModel().set('county', '');
 					this.getViewModel().set('additionalAffectedCounties', '');
+                    this.getViewModel().set('street', '');
+                    this.getViewModel().set('crossStreet', '');
+                    this.getViewModel().set('nearestCommunity', '');
+                    this.getViewModel().set('milesFromNearestCommunity', '');
+                    this.getViewModel().set('directionFromNearestCommunity', '');
 					this.getViewModel().set('incidentType', '');
 				}
 			},
