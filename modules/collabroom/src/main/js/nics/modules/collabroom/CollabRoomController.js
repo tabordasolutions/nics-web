@@ -93,12 +93,11 @@ define(['ext', 'iweb/CoreModule', './CreateCollabroomWindow', './SecureRoomView'
 				
 				//add items to dropdown menu
 				var rooms = response.results;
-				if(rooms.length > 0){
+				if (typeof rooms != "undefined" && rooms.length > 0) {
 					Ext.iterate(rooms, function(value,index){
 						this.addCollabRoom(e, value);
 					}, this);
 				}
-				
 			},
 			
 			onLoadArchivedCollabRooms: function(e, response){

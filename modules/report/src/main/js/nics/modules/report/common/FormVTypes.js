@@ -83,9 +83,9 @@ define(['ext','iweb/CoreModule'], function(Ext, Core) {
 		
 	Ext.apply(Ext.form.field.VTypes, {
         extendedalphanumsspecialchars:  function(v) {
-            return /^[ A-Za-z0-9\(\),{}[\]&+\-_*\/\\%#@'"?|]*$/.test(v);
+            return /^[ A-Za-z0-9\(\),.{}[\]&+\-_*\/\\%#@'"?|]*$/.test(v);
         },
         extendedalphanumsspecialcharsText: 'This field should only contain letters, numbers and special characters',
-        extendedalphanumsspecialcharsMask: /^[ A-Za-z0-9\(\),{}[\]&+\-_*\/\\%#@'"?|]*$/
+        extendedalphanumsspecialcharsMask: /^[ A-Za-z0-9\(\),.{}[\]&+\-_*\/\\%#@'"?|]*$/
     });
 });
