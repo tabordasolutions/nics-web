@@ -64,10 +64,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				var incidentTypes = UserProfile.getIncidentTypes();
 				var incidentTypeCheckboxes = [];
 				var checkboxGroup = this.view.lookupReference('incidentTypesRef');
-				if(typeof(incidentTypes) != "undefined") {
-                    for(var i = 0; i<incidentTypes.length; i++) {
-                        checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeName, cls: 'roc-no-style'});
-                    }
+				for(var i = 0; i<incidentTypes.length; i++) {
+					checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeId, cls: 'roc-no-style'});
 				}
 			},
 
@@ -156,8 +154,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('longitude', response.data.longitude);
 						if(response.data.incidentTypes) {
 							var incidentTypeIds = response.data.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
-		                    var incidentTypeNamesArray = this.getIncidentTypeNamesFromIncidentTypeIds(incidentTypeIds);
-							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeNamesArray});
+							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeIds});
 						}
 						this.getViewModel().set('additionalAffectedCounties', response.data.additionalAffectedCounties);
 						this.getViewModel().set('street', response.data.street);
@@ -421,10 +418,18 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						'ROC');
 					Core.EventManager.fireEvent(this.newTopic);
 				} else { // submitting new incident & ROC
-                    var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
-                    var incidentNumber = formView.get('incidentNumber');
-                    var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
-                    var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI);
+					var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
+					var incidentNumber = formView.get('incidentNumber');
+					var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
+					var incidentTypesArray = [];
+					if(incidentTypesFromUI instanceof Array) {
+						for(var i=0; i<incidentTypesFromUI.length;i++) {
+							incidentTypesArray[i] = {incidenttypeid: incidentTypesFromUI[i]};
+						}
+					} else {
+						incidentTypesArray[0] = {incidenttypeid: incidentTypesFromUI};
+					}
+					
 					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'incidentnumber': incidentNumber, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
 						'workspaceid': UserProfile.getWorkspaceId(), 'incidentIncidenttypes': incidentTypesArray};
@@ -445,32 +450,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				form.email = this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
 
 			},
-			getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
-                var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
-                var incidentTypesArray = [];
-                for(var i=0; i<incidentTypesNames.length; i++) {
-                    for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
-                        if(incidentTypesNames[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
-                            break;
-                        }
-                    }
-                }
-                return incidentTypesArray;
-			},
-			getIncidentTypeNamesFromIncidentTypeIds: function(incidentTypesIds) {
-                var incidentTypesWithIncidentNames = UserProfile.getIncidentTypes();
-                var incidentTypesArray = [];
-                for(var i=0; i<incidentTypesIds.length; i++) {
-                    for(var j=0; j<incidentTypesWithIncidentNames.length; j++) {
-                        if(incidentTypesIds[i] === incidentTypesWithIncidentNames[j].incidentTypeId) {
-                            incidentTypesArray.push(incidentTypesWithIncidentNames[j].incidentTypeName);
-                            break;
-                        }
-                    }
-                }
-                return incidentTypesArray;
-            },
 			ISODateString: function(d){
 				function pad(n){return n<10 ? '0'+n : n}
 				return d.getUTCFullYear()+'-'
