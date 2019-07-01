@@ -422,18 +422,9 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
                     var incidentNumber = formView.get('incidentNumber');
                     var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
-                    var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI);
-
-
                     var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI).map(function (el) {
                         return { "incidenttypeid": JSON.stringify(el) };
                     });
-
-
-                    /*
-                    var incidentTypesArray = {"incidenttypeid" : this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI)};
-                    incidentTypesArray = JSON.stringify(incidentTypesArray)
-                    */
 
 					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'incidentnumber': incidentNumber, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
@@ -462,8 +453,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 for(var i=0; i<incidentTypesNames.length; i++) {
                     for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
                         if(incidentTypesNames[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                        incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
-                            // incidentTypesArray.push("{\"incidenttypeid\":" + incidentTypesWithIncidentID[j].incidentTypeId + "}");
+                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
                             break;
                         }
                     }

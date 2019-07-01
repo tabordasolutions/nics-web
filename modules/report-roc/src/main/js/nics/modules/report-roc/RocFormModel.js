@@ -63,90 +63,62 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		},
 		getReport: function(){
             var thisIncidentTypes = this.get('incidentTypes');
-            /*
-            console.log("--- getReport()'s thisIncidentTypes dump ---");
-            console.log(thisIncidentTypes);
-            */
-
             var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(thisIncidentTypes);
-            /*
-            console.log( "-------- ROCFormModel's getReport()'s incidentTypesArray dump --------" );
-            console.log(incidentTypesArray);
-            */
-
-
-             return {
-                    reportType: this.get('reportType'),
-                    county: this.get('county'),
-                    additionalAffectedCounties: this.get('additionalAffectedCounties'),
-                    street: this.get('street'),
-                    crossStreet: this.get('crossStreet'),
-                    nearestCommunity: this.get('nearestCommunity'),
-                    milesFromNearestCommunity: this.get('milesFromNearestCommunity'),
-                    directionFromNearestCommunity: this.get('directionFromNearestCommunity'),
-                    county: this.get('county'),
-                    date: this.get('date'),
-                    starttime: this.get('starttime'),
-                    location: this.get('location'),
-                    dpa: this.get('dpa'),
-                    sra: this.get('sra'),
-                    jurisdiction: this.get('jurisdiction'),
-                    incidentTypes: incidentTypesArray,
-                    scope: this.get('scope'),
-                    spreadRate: this.get('spreadRate'),
-                    fuelTypes: this.get('fuelTypeCheckBoxGroup').fuelType,
-                    otherFuelTypes: this.get('otherFuelTypes'),
-                    percentContained: this.get('percentContained'),
-                    temperature: this.get('temperature'),
-                    relHumidity: this.get('relHumidity'),
-                    windSpeed: this.get('windSpeed'),
-                    windDirection: this.get('windDirection'),
-                    evacuations: this.get('evacuations'),
-                    evacuationsInProgress: this.get('evacuationsInProgress'),
-                    structuresThreat: this.get('structuresThreat'),
-                    structuresThreatInProgress: this.get('structuresThreatInProgress'),
-                    infrastructuresThreat: this.get('infrastructuresThreat'),
-                    infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
-                    otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
-                    otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
-                    calfireIncident: this.get('calfireIncident'),
-                    resourcesAssigned: this.get('resourcesAssigned'),
-                    email: this.get('email'),
-                    simplifiedEmail: this.get('simplifiedEmail'),
-                    latitudeAtROCSubmission: this.get('latitude'),
-                    longitudeAtROCSubmission: this.get('longitude'),
-                    weatherDataAvailable: this.get('weatherDataAvailable')
+            return {
+                reportType: this.get('reportType'),
+                county: this.get('county'),
+                additionalAffectedCounties: this.get('additionalAffectedCounties'),
+                street: this.get('street'),
+                crossStreet: this.get('crossStreet'),
+                nearestCommunity: this.get('nearestCommunity'),
+                milesFromNearestCommunity: this.get('milesFromNearestCommunity'),
+                directionFromNearestCommunity: this.get('directionFromNearestCommunity'),
+                county: this.get('county'),
+                date: this.get('date'),
+                starttime: this.get('starttime'),
+                location: this.get('location'),
+                dpa: this.get('dpa'),
+                sra: this.get('sra'),
+                jurisdiction: this.get('jurisdiction'),
+                incidentTypes: incidentTypesArray,
+                scope: this.get('scope'),
+                spreadRate: this.get('spreadRate'),
+                fuelTypes: this.get('fuelTypeCheckBoxGroup').fuelType,
+                otherFuelTypes: this.get('otherFuelTypes'),
+                percentContained: this.get('percentContained'),
+                temperature: this.get('temperature'),
+                relHumidity: this.get('relHumidity'),
+                windSpeed: this.get('windSpeed'),
+                windDirection: this.get('windDirection'),
+                evacuations: this.get('evacuations'),
+                evacuationsInProgress: this.get('evacuationsInProgress'),
+                structuresThreat: this.get('structuresThreat'),
+                structuresThreatInProgress: this.get('structuresThreatInProgress'),
+                infrastructuresThreat: this.get('infrastructuresThreat'),
+                infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
+                otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
+                otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
+                calfireIncident: this.get('calfireIncident'),
+                resourcesAssigned: this.get('resourcesAssigned'),
+                email: this.get('email'),
+                simplifiedEmail: this.get('simplifiedEmail'),
+                latitudeAtROCSubmission: this.get('latitude'),
+                longitudeAtROCSubmission: this.get('longitude'),
+                weatherDataAvailable: this.get('weatherDataAvailable')
             };
 		},
 		getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
             var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
-
-            /*
-            console.log("----------------------------********************-----------------------------------");
-            console.log("----- getIncidentTypeIdsFromIncidentTypeNames()'s incidentTypesWithIncidentID -----");
-            console.log(incidentTypesWithIncidentID);
-            console.log(incidentTypesNames);
-            console.log("incidentTypesNames.length: " + incidentTypesNames.incidenttype.length);
-            console.log("" + incidentTypesWithIncidentID.length);
-            */
-
             var incidentTypesArray = [];
+
             for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
-                // console.log("value of i = " + i);
                 for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
-                    // console.log("value of j = " + j);
-                    // console.log((incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName));
                     if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
                         incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
                         break;
                     }
                 }
             }
-
-            console.log( "-------- ROCFormModel's getIncidentTypeIdsFromIncidentTypeNames() returning incidentTypesArray --------" );
-            console.log({ incidenttype: incidentTypesArray });
-            console.log("----------------------------xxxxxxxxxxxxxxxxxxxx-----------------------------------");
-
             return { "incidenttype": incidentTypesArray };
         },
 		formulas: {
