@@ -64,8 +64,10 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				var incidentTypes = UserProfile.getIncidentTypes();
 				var incidentTypeCheckboxes = [];
 				var checkboxGroup = this.view.lookupReference('incidentTypesRef');
-				for(var i = 0; i<incidentTypes.length; i++) {
-					checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeId, cls: 'roc-no-style'});
+				if(typeof(incidentTypes) != "undefined") {
+                    for(var i = 0; i<incidentTypes.length; i++) {
+                        checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeName, cls: 'roc-no-style'});
+                    }
 				}
 			},
 
@@ -154,7 +156,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('longitude', response.data.longitude);
 						if(response.data.incidentTypes) {
 							var incidentTypeIds = response.data.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
-							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeIds});
+		                    var incidentTypeNamesArray = this.getIncidentTypeNamesFromIncidentTypeIds(incidentTypeIds);
+							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeNamesArray});
 						}
 						this.getViewModel().set('additionalAffectedCounties', response.data.additionalAffectedCounties);
 						this.getViewModel().set('street', response.data.street);
@@ -378,7 +381,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		var formView = this.view.viewModel;
 
 	    		if (typeof(formView.data.simplifiedEmail) == "undefined" )  {formView.data.simplifiedEmail = true;}
-
 	    		if (formView.getReport() === null){
 	    			//create the report from the data
 	    		   for (item in formView.data){
@@ -393,7 +395,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		}else {
 	    			//report has already been created
 	    			message.report = formView.getReport();
-	    		
 	    		}
 	    		
 				//Populate form properties
@@ -418,21 +419,17 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						'ROC');
 					Core.EventManager.fireEvent(this.newTopic);
 				} else { // submitting new incident & ROC
-					var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
-					var incidentNumber = formView.get('incidentNumber');
-					var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
-					var incidentTypesArray = [];
-					if(incidentTypesFromUI instanceof Array) {
-						for(var i=0; i<incidentTypesFromUI.length;i++) {
-							incidentTypesArray[i] = {incidenttypeid: incidentTypesFromUI[i]};
-						}
-					} else {
-						incidentTypesArray[0] = {incidenttypeid: incidentTypesFromUI};
-					}
-					
+                    var incidentName = Ext.String.format('CA {0} {1}', UserProfile.getOrgPrefix(), formView.get('incidentName'));
+                    var incidentNumber = formView.get('incidentNumber');
+                    var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
+                    var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI).map(function (el) {
+                        return { "incidenttypeid": JSON.stringify(el) };
+                    });
+
 					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'incidentnumber': incidentNumber, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
 						'workspaceid': UserProfile.getWorkspaceId(), 'incidentIncidenttypes': incidentTypesArray};
+
 					form.incidentname = incidentName;
 					form.incidentnumber = incidentNumber;
 					var url = Ext.String.format('{0}/reports/{1}/IncidentAndROC',
@@ -450,6 +447,32 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				form.email = this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
 
 			},
+			getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
+                var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
+                var incidentTypesArray = [];
+                for(var i=0; i<incidentTypesNames.length; i++) {
+                    for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                        if(incidentTypesNames[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
+                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                            break;
+                        }
+                    }
+                }
+                return incidentTypesArray;
+			},
+			getIncidentTypeNamesFromIncidentTypeIds: function(incidentTypesIds) {
+                var incidentTypesWithIncidentNames = UserProfile.getIncidentTypes();
+                var incidentTypesArray = [];
+                for(var i=0; i<incidentTypesIds.length; i++) {
+                    for(var j=0; j<incidentTypesWithIncidentNames.length; j++) {
+                        if(incidentTypesIds[i] === incidentTypesWithIncidentNames[j].incidentTypeId) {
+                            incidentTypesArray.push(incidentTypesWithIncidentNames[j].incidentTypeName);
+                            break;
+                        }
+                    }
+                }
+                return incidentTypesArray;
+            },
 			ISODateString: function(d){
 				function pad(n){return n<10 ? '0'+n : n}
 				return d.getUTCFullYear()+'-'
