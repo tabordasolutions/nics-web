@@ -381,7 +381,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		var formView = this.view.viewModel;
 
 	    		if (typeof(formView.data.simplifiedEmail) == "undefined" )  {formView.data.simplifiedEmail = true;}
-
 	    		if (formView.getReport() === null){
 	    			//create the report from the data
 	    		   for (item in formView.data){
@@ -396,7 +395,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    		}else {
 	    			//report has already been created
 	    			message.report = formView.getReport();
-	    		
 	    		}
 	    		
 				//Populate form properties
@@ -425,9 +423,22 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     var incidentNumber = formView.get('incidentNumber');
                     var incidentTypesFromUI = formView.get('incidentTypes').incidenttype;
                     var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI);
+
+
+                    var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI).map(function (el) {
+                        return { "incidenttypeid": JSON.stringify(el) };
+                    });
+
+
+                    /*
+                    var incidentTypesArray = {"incidenttypeid" : this.getIncidentTypeIdsFromIncidentTypeNames(incidentTypesFromUI)};
+                    incidentTypesArray = JSON.stringify(incidentTypesArray)
+                    */
+
 					form.incident = {'incidentid': formView.data.incidentId, 'incidentname': incidentName, 'incidentnumber': incidentNumber, 'usersessionid': UserProfile.getUserSessionId(),
 						'lat': formView.get('latitude'), 'lon': formView.get('longitude'),
 						'workspaceid': UserProfile.getWorkspaceId(), 'incidentIncidenttypes': incidentTypesArray};
+
 					form.incidentname = incidentName;
 					form.incidentnumber = incidentNumber;
 					var url = Ext.String.format('{0}/reports/{1}/IncidentAndROC',
@@ -451,7 +462,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 for(var i=0; i<incidentTypesNames.length; i++) {
                     for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
                         if(incidentTypesNames[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                        incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                            // incidentTypesArray.push("{\"incidenttypeid\":" + incidentTypesWithIncidentID[j].incidentTypeId + "}");
                             break;
                         }
                     }
