@@ -510,6 +510,7 @@ function(Core, RocFormController, RocFormModel ) {
                                     cls: 'roc-required',
                                     vertical: true,
                                     columns: 2,
+                                    reference: 'otherSignificantInfoRef',
                                     items: [
                                         { boxLabel: 'Continued construction and improving control lines', name: 'otherSignificantInfo', inputValue: 'Continued construction and improving control lines', cls: 'roc-no-style'},
                                         { boxLabel: 'Extensive mop up in oak woodlands', name: 'otherSignificantInfo', inputValue: 'Extensive mop up in oak woodlands', cls: 'roc-no-style'},

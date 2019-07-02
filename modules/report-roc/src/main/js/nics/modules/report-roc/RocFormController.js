@@ -160,8 +160,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeNamesArray});
 						}
 
-//(myCondition == true) ? 1 : 0;
-
 						this.getViewModel().set('incidentNumber', (response.data.incidentNumber == 'null') ? '' :  response.data.incidentNumber);
 						this.getViewModel().set('additionalAffectedCounties', (response.data.message.additionalAffectedCounties == 'null') ? '' : response.data.message.additionalAffectedCounties );
 						this.getViewModel().set('street', (response.data.message.street == 'null') ? '' : response.data.message.street);
@@ -184,8 +182,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                         this.getViewModel().set('relHumidity', response.data.message.relHumidity);
                         this.view.lookupReference('resourcesAssignedRef').setValue({resourcesAssigned: response.data.message.resourcesAssigned});
                         this.getViewModel().set('temperature', response.data.message.temperature);
-                        this.getViewModel().set('otherSignificantInfo', response.data.message.otherSignificantInfo);
-
+                        this.view.lookupReference('otherSignificantInfoRef').setValue({otherSignificantInfo: response.data.message.otherSignificantInfo});
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
 				} else if(response.status == 400){
