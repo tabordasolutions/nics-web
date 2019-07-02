@@ -539,25 +539,25 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 		
     	},
 	    	
-	    	cancelForm: function(){
-	    		this.setFormReadOnly();
-		    		
-	    	},
-	    	
-	    	formatTime: function(date)
-	        {
-	            var str =  date.getHours() + ":" + Core.Util.pad(date.getMinutes()) ;
+        cancelForm: function(){
+            this.setFormReadOnly();
 
-	            return str;
-	        },
-	        formatDate: function(date)
-	        {
-	            var str = (date.getMonth() + 1) + "/"
-	            + date.getDate() + "/"
-	            + date.getFullYear();
+        },
 
-	            return str;
-	        }
-			
-		});
+        formatTime: function(date)
+        {
+            var str =  date.getHours() + ":" + Core.Util.pad(date.getMinutes()) ;
+
+            return str;
+        },
+        formatDate: function(date)
+        {
+            var str = (date.getMonth() + 1) + "/"
+            + date.getDate() + "/"
+            + date.getFullYear();
+
+            return str;
+        }
+
+    });
 });
