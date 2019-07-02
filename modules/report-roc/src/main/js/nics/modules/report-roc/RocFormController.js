@@ -160,14 +160,16 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 							this.view.lookupReference('incidentTypesRef').setValue({incidenttype: incidentTypeNamesArray});
 						}
 
-						this.getViewModel().set('incidentNumber', response.data.incidentNumber);
-						this.getViewModel().set('additionalAffectedCounties', response.data.message.additionalAffectedCounties);
-						this.getViewModel().set('street', response.data.message.street);
-						this.getViewModel().set('crossStreet', response.data.message.crossStreet);
-						this.getViewModel().set('nearestCommunity', response.data.message.nearestCommunity);
-						this.getViewModel().set('milesFromNearestCommunity', response.data.message.milesFromNearestCommunity);
+//(myCondition == true) ? 1 : 0;
+
+						this.getViewModel().set('incidentNumber', (response.data.incidentNumber == 'null') ? '' :  response.data.incidentNumber);
+						this.getViewModel().set('additionalAffectedCounties', (response.data.message.additionalAffectedCounties == 'null') ? '' : response.data.message.additionalAffectedCounties );
+						this.getViewModel().set('street', (response.data.message.street == 'null') ? '' : response.data.message.street);
+						this.getViewModel().set('crossStreet', (response.data.message.crossStreet == 'null') ? '' : response.data.message.crossStreet);
+						this.getViewModel().set('nearestCommunity', (response.data.message.nearestCommunity == 'null') ? '' : response.data.message.nearestCommunity);
+						this.getViewModel().set('milesFromNearestCommunity', (response.data.message.milesFromNearestCommunity == 'null') ? '' : response.data.message.milesFromNearestCommunity );
 						this.getViewModel().set('directionFromNearestCommunity', response.data.message.directionFromNearestCommunity);
-						this.getViewModel().set('scope', response.data.message.scope);
+						this.getViewModel().set('scope', (response.data.message.scope == 'null') ? '' : response.data.message.scope );
 						this.getViewModel().set('infrastructuresThreat', response.data.message.infrastructuresThreat);
                         this.view.lookupReference('infrastructuresThreatInProgressRef').setValue({infrastructuresThreat: response.data.message.infrastructuresThreats});
                         this.view.lookupReference('startTimeRef').setValue(response.data.message.startTime);
@@ -177,8 +179,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('evacuations', response.data.message.evacuations);
                         this.view.lookupReference('evacuationsInProgressRef').setValue({evacuations: response.data.message.evacuationsList});
 						this.getViewModel().set('fuelTypes', response.data.message.fuelTypes);
-						this.getViewModel().set('otherFuelTypes', response.data.message.otherFuelTypes);
-                        this.getViewModel().set('percentContained', response.data.message.percentageContained);
+						this.getViewModel().set('otherFuelTypes', (response.data.message.otherFuelTypes == 'null') ? '' : response.data.message.otherFuelTypes );
+                        this.getViewModel().set('percentContained', (response.data.message.percentageContained == 'null') ? '' : response.data.message.percentageContained );
                         this.getViewModel().set('relHumidity', response.data.message.relHumidity);
                         this.view.lookupReference('resourcesAssignedRef').setValue({resourcesAssigned: response.data.message.resourcesAssigned});
                         this.getViewModel().set('temperature', response.data.message.temperature);
