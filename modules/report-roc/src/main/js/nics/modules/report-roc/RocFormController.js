@@ -184,6 +184,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                         this.getViewModel().set('relHumidity', response.data.message.relHumidity);
                         this.view.lookupReference('resourcesAssignedRef').setValue({resourcesAssigned: response.data.message.resourcesAssigned});
                         this.getViewModel().set('temperature', response.data.message.temperature);
+                        this.getViewModel().set('otherSignificantInfo', response.data.message.otherSignificantInfo);
 
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
 					}
@@ -247,6 +248,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     this.getViewModel().set('milesFromNearestCommunity', '');
                     this.getViewModel().set('directionFromNearestCommunity', '');
 					this.getViewModel().set('incidentType', '');
+					this.getViewModel().set('otherSignificantInfo', '');
 				}
 			},
 

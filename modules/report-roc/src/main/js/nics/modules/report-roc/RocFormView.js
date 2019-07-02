@@ -501,15 +501,61 @@ function(Core, RocFormController, RocFormModel ) {
                                                     }, listeners: { disable: function() {
                                                        this.reset();
                                                     }}, cls: 'roc-required'
-                                }
-                                /*{bind:'{otherThreatsAndEvacuations}', xtype: 'combobox',fieldLabel: 'Other Threats & Evacuations*',allowBlank:false,cls:'roc-required',
-                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind:'{otherThreatsAndEvacuationsInProgress}',xtype: 'textarea',fieldLabel: 'Other Threats & Evacuations Information*',allowBlank:false,cls:'roc-required'},*/
+                                },
+                                {
+                                    bind: '{otherSignificantInfoCheckBoxGroup}',
+                                    xtype: 'checkboxgroup',
+                                    fieldLabel: 'Other Significant Info',
+                                    allowBlank: false,
+                                    cls: 'roc-required',
+                                    vertical: true,
+                                    columns: 2,
+                                    items: [
+                                        { boxLabel: 'Continued construction and improving control lines', name: 'otherSignificantInfo', inputValue: 'Continued construction and improving control lines', cls: 'roc-no-style'},
+                                        { boxLabel: 'Extensive mop up in oak woodlands', name: 'otherSignificantInfo', inputValue: 'Extensive mop up in oak woodlands', cls: 'roc-no-style'},
+                                        { boxLabel: 'Crews are improving control lines', name: 'otherSignificantInfo', inputValue: 'Crews are improving control lines', cls: 'roc-no-style'},
+                                        { boxLabel: 'Ground resources continue to mop-up and strengthen control line', name: 'otherSignificantInfo', inputValue: 'Ground resources continue to mop-up and strengthen control line', cls: 'roc-no-style'},
+                                        { boxLabel: 'Suppression repair is under way', name: 'otherSignificantInfo', inputValue: 'Suppression repair is under way', cls: 'roc-no-style'},
+                                        { boxLabel: 'Fire is in remote location with difficult access', name: 'otherSignificantInfo', inputValue: 'Fire is in remote location with difficult access', cls: 'roc-no-style'},
+                                        { boxLabel: 'Access and terrain continue to hamper control efforts', name: 'otherSignificantInfo', inputValue: 'Access and terrain continue to hamper control efforts', cls: 'roc-no-style'},
+                                        { boxLabel: 'Short range spotting causing erratic fire behavior', name: 'otherSignificantInfo', inputValue: 'Short range spotting causing erratic fire behavior', cls: 'roc-no-style'},
+                                        { boxLabel: 'Medium range spotting observed', name: 'otherSignificantInfo', inputValue: 'Medium range spotting observed', cls: 'roc-no-style'},
+                                        { boxLabel: 'Long range spotting observed', name: 'otherSignificantInfo', inputValue: 'Long range spotting observed', cls: 'roc-no-style'},
+                                        { boxLabel: 'Fire has spotted and is well established', name: 'otherSignificantInfo', inputValue: 'Fire has spotted and is well established', cls: 'roc-no-style'},
+                                        { boxLabel: 'Erratic winds, record high temperatures and low humidity are influencing fuels resulting in extreme fire behavior', name: 'otherSignificantInfo', inputValue: 'Erratic winds, record high temperatures and low humidity are influencing fuels resulting in extreme fire behavior', cls: 'roc-no-style'},
+                                        { boxLabel: 'Red Flag warning in effect in area', name: 'otherSignificantInfo', inputValue: 'Red Flag warning in effect in area', cls: 'roc-no-style'},
+                                        { boxLabel: 'Minimal fire behavior observed', name: 'otherSignificantInfo', inputValue: 'Minimal fire behavior observed', cls: 'roc-no-style'},
+                                        { boxLabel: 'CAL FIRE and USFS in unified command', name: 'otherSignificantInfo', inputValue: 'CAL FIRE and USFS in unified command', cls: 'roc-no-style'},
+                                        { boxLabel: 'CAL FIRE Type 1 Incident Management Team ordered', name: 'otherSignificantInfo', inputValue: 'CAL FIRE Type 1 Incident Management Team ordered', cls: 'roc-no-style'},
+                                        { boxLabel: 'Incident Management Team ordered', name: 'otherSignificantInfo', inputValue: 'Incident Management Team ordered', cls: 'roc-no-style'},
+                                        { boxLabel: 'FMAG application initiated', name: 'otherSignificantInfo', inputValue: 'FMAG application initiated', cls: 'roc-no-style'},
+                                        { boxLabel: 'FMAG has been submitted', name: 'otherSignificantInfo', inputValue: 'FMAG has been submitted', cls: 'roc-no-style'},
+                                        { boxLabel: 'FMAG application approved', name: 'otherSignificantInfo', inputValue: 'FMAG application approved', cls: 'roc-no-style'},
+                                        { boxLabel: 'No updated 209 data at time of report', name: 'otherSignificantInfo', inputValue: 'No updated 209 data at time of report', cls: 'roc-no-style'},
+                                        { boxLabel: 'CAL FIRE Mission Tasking has been approved', name: 'otherSignificantInfo', inputValue: 'CAL FIRE Mission Tasking has been approved', cls: 'roc-no-style'},
 
+                                        { boxLabel: 'Other', name: 'otherSignificantInfo', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
+                                    ]
+                                },
+                                {
+                                    bind: {
+                                        value: '{otherOtherSignificantInfo}',
+                                        disabled: '{!otherSignificantInfoCheckBox.checked}'
+                                    },
+                                    fieldLabel: 'Other',
+                                    vtype:'extendedalphanum',
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "Other Significant Info is required" : true;
+                                    }, listeners: {
+                                        disable: function() {
+                                            this.reset();
+                                        }
+                                    },
+                                    cls: 'roc-required'
+                                },
                         ]
                    },
-                {
+                   {
                         xtype: 'fieldset',
                         title: 'Resource Commitment',
                         defaultType: 'textfield',
