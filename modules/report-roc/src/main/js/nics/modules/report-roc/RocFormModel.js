@@ -92,8 +92,10 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 windDirection: this.get('windDirection'),
                 evacuations: this.get('evacuations'),
                 evacuationsInProgress: this.get('evacuationsInProgress'),
+                otherEvacuations: this.get('otherEvacuations'),
                 structuresThreat: this.get('structuresThreat'),
                 structuresThreatInProgress: this.get('structuresThreatInProgress'),
+                otherStructuresThreat: this.get('otherStructuresThreat'),
                 infrastructuresThreat: this.get('infrastructuresThreat'),
                 infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
                 otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
@@ -104,7 +106,8 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 simplifiedEmail: this.get('simplifiedEmail'),
                 latitudeAtROCSubmission: this.get('latitude'),
                 longitudeAtROCSubmission: this.get('longitude'),
-                weatherDataAvailable: this.get('weatherDataAvailable')
+                weatherDataAvailable: this.get('weatherDataAvailable'),
+                otherSignificantInfo: this.get('otherSignificantInfoCheckBoxGroup').otherSignificantInfo
             };
 		},
 		getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
