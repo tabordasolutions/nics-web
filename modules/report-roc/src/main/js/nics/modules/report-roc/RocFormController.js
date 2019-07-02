@@ -170,27 +170,17 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('scope', response.data.message.scope);
 						this.getViewModel().set('infrastructuresThreat', response.data.message.infrastructuresThreat);
                         this.view.lookupReference('infrastructuresThreatInProgressRef').setValue({infrastructuresThreat: response.data.message.infrastructuresThreats});
-
-
-						this.getViewModel().set('startTime', response.data.message.startTime);
+                        this.view.lookupReference('startTimeRef').setValue(response.data.message.startTime);
 						this.getViewModel().set('spreadRate', response.data.message.spreadRate);
 						this.getViewModel().set('structuresThreat', response.data.message.structuresThreat);
                         this.view.lookupReference('structuresThreatInProgressRef').setValue({structuresThreat: response.data.message.structuresThreats});
-
 						this.getViewModel().set('evacuations', response.data.message.evacuations);
                         this.view.lookupReference('evacuationsInProgressRef').setValue({evacuations: response.data.message.evacuationsList});
-
-
-						// this.getViewModel().set('', response.data.message.);
 						this.getViewModel().set('fuelTypes', response.data.message.fuelTypes);
 						this.getViewModel().set('otherFuelTypes', response.data.message.otherFuelTypes);
-                        this.getViewModel().set('percentageContained', response.data.message.percentageContained);
+                        this.getViewModel().set('percentContained', response.data.message.percentageContained);
                         this.getViewModel().set('relHumidity', response.data.message.relHumidity);
-
                         this.view.lookupReference('resourcesAssignedRef').setValue({resourcesAssigned: response.data.message.resourcesAssigned});
-
-
-
                         this.getViewModel().set('temperature', response.data.message.temperature);
 
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
