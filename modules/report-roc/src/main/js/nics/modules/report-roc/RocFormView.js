@@ -404,156 +404,155 @@ function(Core, RocFormController, RocFormModel ) {
                              vtype:'simplealphanum'
                         },
                         items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations',allowBlank:false,cls:'roc-required',
-                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                store: ['Yes', 'No', 'Mitigated'] },
-                                {bind: {
-                                    value: '{evacuationsInProgress}',
-                                    disabled: '{disableEvacuationsInProgress}'},
-                                    disabled: true,
-                                    xtype: 'checkboxgroup',
-                                    fieldLabel: 'Evacuations in progress for',
-                                    allowBlank: false,
-                                    cls: 'roc-required',
-                                    vertical: true,
-                                    columns: 2,
-                                    reference: 'evacuationsInProgressRef',
-                                    items: [
-                                        { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
-                                        { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
-                                        { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
-                                        { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style'},
-                                        { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
-                                        { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
-                                        
-                                    ],
-                                    validator: function(val) {
-                                        return (!this.disabled && !val) ? "This is a required field" : true;
-                                    }
-                                },
-                                {bind: { value: '{otherEvacuations}', disabled: '{!evacuationsRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
-                                                    validator: function(val) {
-                                                        return (!this.disabled && !val) ? "Evacuation field is required" : true;
-                                                    }, listeners: { disable: function() {
-                                                       this.reset();
-                                                    }}, cls: 'roc-required'
-                                },
-                                {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat',allowBlank:false,cls:'roc-required',
-                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind: {
-                                    value: '{structuresThreatInProgress}',
-                                    disabled: '{disableStructuresThreatInProgress}'},
-                                    disabled: true,
-                                    xtype: 'checkboxgroup',
-                                    fieldLabel: 'Structures Threat in progress for',
-                                    allowBlank: false, cls: 'roc-required',
-                                    vertical: true,
-                                    columns: 2,
-                                    reference: 'structuresThreatInProgressRef',
-                                    items: [
-                                        { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
-                                        { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued trear to structures', cls: 'roc-no-style'},
-                                        { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style'},
-                                        { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
-                                        { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
-                                        { boxLabel: 'Other', name: 'structuresThreat', inputValue: 'Other', reference: 'structureThreatRef', cls: 'roc-no-style'},
-                                    ],
-                                    validator: function(val) {
-                                        return (!this.disabled && !val) ? "This is a required field" : true;
-                                    }
-                                },
-                                {bind: { value: '{otherStructuresThreat}', disabled: '{!structureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
-                                                    validator: function(val) {
-                                                        return (!this.disabled && !val) ? "Structure Threat is required" : true;
-                                                    }, listeners: { disable: function() {
-                                                       this.reset();
-                                                    }}, cls: 'roc-required'
-                                },
-                                {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat',allowBlank:false,cls:'roc-required',
-                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                store: ['', 'Yes', 'No', 'Mitigated']},
-                                {bind: {
-                                    value: '{infrastructuresThreatInProgress}',
-                                    disabled: '{disableInfrastructuresThreatInProgress}'},
-                                    disabled: true,
-                                    xtype: 'checkboxgroup',
-                                    fieldLabel: 'Infrastructure Threat in progress for',
-                                    allowBlank: false,
-                                    cls: 'roc-required',
-                                    vertical: true,
-                                    columns: 2,
-                                    reference: 'infrastructuresThreatInProgressRef',
-                                    items: [
-                                        { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
-                                        { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
-                                        { boxLabel: 'Inspections are underway to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
-                                        { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
-                                        { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
-                                        { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
-                                    ],
-                                    validator: function(val) {
-                                        return (!this.disabled && !val) ? "This is a required field" : true;
-                                    }
-                                },
-                                {bind: { value: '{otherInfrastructuresThreat}', disabled: '{!infrastructureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
-                                                    validator: function(val) {
-                                                        return (!this.disabled && !val) ? "Other Infrastructure Threat is required" : true;
-                                                    }, listeners: { disable: function() {
-                                                       this.reset();
-                                                    }}, cls: 'roc-required'
-                                },
-                                {
-                                    bind: '{otherSignificantInfoCheckBoxGroup}',
-                                    xtype: 'checkboxgroup',
-                                    fieldLabel: 'Other Significant Info',
-                                    allowBlank: false,
-                                    cls: 'roc-required',
-                                    vertical: true,
-                                    columns: 2,
-                                    reference: 'otherSignificantInfoRef',
-                                    items: [
-                                        { boxLabel: 'Continued construction and improving control lines', name: 'otherSignificantInfo', inputValue: 'Continued construction and improving control lines', cls: 'roc-no-style'},
-                                        { boxLabel: 'Extensive mop up in oak woodlands', name: 'otherSignificantInfo', inputValue: 'Extensive mop up in oak woodlands', cls: 'roc-no-style'},
-                                        { boxLabel: 'Crews are improving control lines', name: 'otherSignificantInfo', inputValue: 'Crews are improving control lines', cls: 'roc-no-style'},
-                                        { boxLabel: 'Ground resources continue to mop-up and strengthen control line', name: 'otherSignificantInfo', inputValue: 'Ground resources continue to mop-up and strengthen control line', cls: 'roc-no-style'},
-                                        { boxLabel: 'Suppression repair is under way', name: 'otherSignificantInfo', inputValue: 'Suppression repair is under way', cls: 'roc-no-style'},
-                                        { boxLabel: 'Fire is in remote location with difficult access', name: 'otherSignificantInfo', inputValue: 'Fire is in remote location with difficult access', cls: 'roc-no-style'},
-                                        { boxLabel: 'Access and terrain continue to hamper control efforts', name: 'otherSignificantInfo', inputValue: 'Access and terrain continue to hamper control efforts', cls: 'roc-no-style'},
-                                        { boxLabel: 'Short range spotting causing erratic fire behavior', name: 'otherSignificantInfo', inputValue: 'Short range spotting causing erratic fire behavior', cls: 'roc-no-style'},
-                                        { boxLabel: 'Medium range spotting observed', name: 'otherSignificantInfo', inputValue: 'Medium range spotting observed', cls: 'roc-no-style'},
-                                        { boxLabel: 'Long range spotting observed', name: 'otherSignificantInfo', inputValue: 'Long range spotting observed', cls: 'roc-no-style'},
-                                        { boxLabel: 'Fire has spotted and is well established', name: 'otherSignificantInfo', inputValue: 'Fire has spotted and is well established', cls: 'roc-no-style'},
-                                        { boxLabel: 'Erratic winds, record high temperatures and low humidity are influencing fuels resulting in extreme fire behavior', name: 'otherSignificantInfo', inputValue: 'Erratic winds, record high temperatures and low humidity are influencing fuels resulting in extreme fire behavior', cls: 'roc-no-style'},
-                                        { boxLabel: 'Red Flag warning in effect in area', name: 'otherSignificantInfo', inputValue: 'Red Flag warning in effect in area', cls: 'roc-no-style'},
-                                        { boxLabel: 'Minimal fire behavior observed', name: 'otherSignificantInfo', inputValue: 'Minimal fire behavior observed', cls: 'roc-no-style'},
-                                        { boxLabel: 'CAL FIRE and USFS in unified command', name: 'otherSignificantInfo', inputValue: 'CAL FIRE and USFS in unified command', cls: 'roc-no-style'},
-                                        { boxLabel: 'CAL FIRE Type 1 Incident Management Team ordered', name: 'otherSignificantInfo', inputValue: 'CAL FIRE Type 1 Incident Management Team ordered', cls: 'roc-no-style'},
-                                        { boxLabel: 'Incident Management Team ordered', name: 'otherSignificantInfo', inputValue: 'Incident Management Team ordered', cls: 'roc-no-style'},
-                                        { boxLabel: 'FMAG application initiated', name: 'otherSignificantInfo', inputValue: 'FMAG application initiated', cls: 'roc-no-style'},
-                                        { boxLabel: 'FMAG has been submitted', name: 'otherSignificantInfo', inputValue: 'FMAG has been submitted', cls: 'roc-no-style'},
-                                        { boxLabel: 'FMAG application approved', name: 'otherSignificantInfo', inputValue: 'FMAG application approved', cls: 'roc-no-style'},
-                                        { boxLabel: 'No updated 209 data at time of report', name: 'otherSignificantInfo', inputValue: 'No updated 209 data at time of report', cls: 'roc-no-style'},
-                                        { boxLabel: 'CAL FIRE Mission Tasking has been approved', name: 'otherSignificantInfo', inputValue: 'CAL FIRE Mission Tasking has been approved', cls: 'roc-no-style'},
+                            queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                            store: ['Yes', 'No', 'Mitigated'] },
+                            {bind: {
+                                value: '{evacuationsInProgress}',
+                                disabled: '{disableEvacuationsInProgress}'},
+                                disabled: true,
+                                xtype: 'checkboxgroup',
+                                fieldLabel: 'Evacuations in progress for',
+                                allowBlank: false,
+                                cls: 'roc-required',
+                                vertical: true,
+                                columns: 2,
+                                reference: 'evacuationsInProgressRef',
+                                items: [
+                                    { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
+                                    { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
+                                    { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
+                                    { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style'},
+                                    { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
+                                    { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
 
-                                        { boxLabel: 'Other', name: 'otherSignificantInfo', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
-                                    ]
+                                ],
+                                validator: function(val) {
+                                    return (!this.disabled && !val) ? "This is a required field" : true;
+                                }
+                            },
+                            {bind: { value: '{otherEvacuations}', disabled: '{!evacuationsRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                validator: function(val) {
+                                                    return (!this.disabled && !val) ? "Evacuation field is required" : true;
+                                                }, listeners: { disable: function() {
+                                                   this.reset();
+                                                }}, cls: 'roc-required'
+                            },
+                            {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat',allowBlank:false,cls:'roc-required',
+                            queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                            store: ['', 'Yes', 'No', 'Mitigated']},
+                            {bind: {
+                                value: '{structuresThreatInProgress}',
+                                disabled: '{disableStructuresThreatInProgress}'},
+                                disabled: true,
+                                xtype: 'checkboxgroup',
+                                fieldLabel: 'Structures Threat in progress for',
+                                allowBlank: false, cls: 'roc-required',
+                                vertical: true,
+                                columns: 2,
+                                reference: 'structuresThreatInProgressRef',
+                                items: [
+                                    { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
+                                    { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued trear to structures', cls: 'roc-no-style'},
+                                    { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style'},
+                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                    { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
+                                    { boxLabel: 'Other', name: 'structuresThreat', inputValue: 'Other', reference: 'structureThreatRef', cls: 'roc-no-style'},
+                                ],
+                                validator: function(val) {
+                                    return (!this.disabled && !val) ? "This is a required field" : true;
+                                }
+                            },
+                            {bind: { value: '{otherStructuresThreat}', disabled: '{!structureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                validator: function(val) {
+                                                    return (!this.disabled && !val) ? "Structure Threat is required" : true;
+                                                }, listeners: { disable: function() {
+                                                   this.reset();
+                                                }}, cls: 'roc-required'
+                            },
+                            {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat',allowBlank:false,cls:'roc-required',
+                            queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                            store: ['', 'Yes', 'No', 'Mitigated']},
+                            {bind: {
+                                value: '{infrastructuresThreatInProgress}',
+                                disabled: '{disableInfrastructuresThreatInProgress}'},
+                                disabled: true,
+                                xtype: 'checkboxgroup',
+                                fieldLabel: 'Infrastructure Threat in progress for',
+                                allowBlank: false,
+                                cls: 'roc-required',
+                                vertical: true,
+                                columns: 2,
+                                reference: 'infrastructuresThreatInProgressRef',
+                                items: [
+                                    { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
+                                    { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                    { boxLabel: 'Inspections are underway to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
+                                    { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
+                                    { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
+                                    { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
+                                ],
+                                validator: function(val) {
+                                    return (!this.disabled && !val) ? "This is a required field" : true;
+                                }
+                            },
+                            {bind: { value: '{otherInfrastructuresThreat}', disabled: '{!infrastructureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
+                                                validator: function(val) {
+                                                    return (!this.disabled && !val) ? "Other Infrastructure Threat is required" : true;
+                                                }, listeners: { disable: function() {
+                                                   this.reset();
+                                                }}, cls: 'roc-required'
+                            },
+                            {
+                                bind: '{otherSignificantInfoCheckBoxGroup}',
+                                xtype: 'checkboxgroup',
+                                fieldLabel: 'Other Significant Info',
+                                allowBlank: false,
+                                vertical: true,
+                                columns: 2,
+                                reference: 'otherSignificantInfoRef',
+                                items: [
+                                    { boxLabel: 'Continued construction and improving control lines', name: 'otherSignificantInfo', inputValue: 'Continued construction and improving control lines', cls: 'roc-no-style'},
+                                    { boxLabel: 'Extensive mop up in oak woodlands', name: 'otherSignificantInfo', inputValue: 'Extensive mop up in oak woodlands', cls: 'roc-no-style'},
+                                    { boxLabel: 'Crews are improving control lines', name: 'otherSignificantInfo', inputValue: 'Crews are improving control lines', cls: 'roc-no-style'},
+                                    { boxLabel: 'Ground resources continue to mop-up and strengthen control line', name: 'otherSignificantInfo', inputValue: 'Ground resources continue to mop-up and strengthen control line', cls: 'roc-no-style'},
+                                    { boxLabel: 'Suppression repair is under way', name: 'otherSignificantInfo', inputValue: 'Suppression repair is under way', cls: 'roc-no-style'},
+                                    { boxLabel: 'Fire is in remote location with difficult access', name: 'otherSignificantInfo', inputValue: 'Fire is in remote location with difficult access', cls: 'roc-no-style'},
+                                    { boxLabel: 'Access and terrain continue to hamper control efforts', name: 'otherSignificantInfo', inputValue: 'Access and terrain continue to hamper control efforts', cls: 'roc-no-style'},
+                                    { boxLabel: 'Short range spotting causing erratic fire behavior', name: 'otherSignificantInfo', inputValue: 'Short range spotting causing erratic fire behavior', cls: 'roc-no-style'},
+                                    { boxLabel: 'Medium range spotting observed', name: 'otherSignificantInfo', inputValue: 'Medium range spotting observed', cls: 'roc-no-style'},
+                                    { boxLabel: 'Long range spotting observed', name: 'otherSignificantInfo', inputValue: 'Long range spotting observed', cls: 'roc-no-style'},
+                                    { boxLabel: 'Fire has spotted and is well established', name: 'otherSignificantInfo', inputValue: 'Fire has spotted and is well established', cls: 'roc-no-style'},
+                                    { boxLabel: 'Erratic winds, record high temperatures and low humidity are influencing fuels resulting in extreme fire behavior', name: 'otherSignificantInfo', inputValue: 'Erratic winds, record high temperatures and low humidity are influencing fuels resulting in extreme fire behavior', cls: 'roc-no-style'},
+                                    { boxLabel: 'Red Flag warning in effect in area', name: 'otherSignificantInfo', inputValue: 'Red Flag warning in effect in area', cls: 'roc-no-style'},
+                                    { boxLabel: 'Minimal fire behavior observed', name: 'otherSignificantInfo', inputValue: 'Minimal fire behavior observed', cls: 'roc-no-style'},
+                                    { boxLabel: 'CAL FIRE and USFS in unified command', name: 'otherSignificantInfo', inputValue: 'CAL FIRE and USFS in unified command', cls: 'roc-no-style'},
+                                    { boxLabel: 'CAL FIRE Type 1 Incident Management Team ordered', name: 'otherSignificantInfo', inputValue: 'CAL FIRE Type 1 Incident Management Team ordered', cls: 'roc-no-style'},
+                                    { boxLabel: 'Incident Management Team ordered', name: 'otherSignificantInfo', inputValue: 'Incident Management Team ordered', cls: 'roc-no-style'},
+                                    { boxLabel: 'FMAG application initiated', name: 'otherSignificantInfo', inputValue: 'FMAG application initiated', cls: 'roc-no-style'},
+                                    { boxLabel: 'FMAG has been submitted', name: 'otherSignificantInfo', inputValue: 'FMAG has been submitted', cls: 'roc-no-style'},
+                                    { boxLabel: 'FMAG application approved', name: 'otherSignificantInfo', inputValue: 'FMAG application approved', cls: 'roc-no-style'},
+                                    { boxLabel: 'No updated 209 data at time of report', name: 'otherSignificantInfo', inputValue: 'No updated 209 data at time of report', cls: 'roc-no-style'},
+                                    { boxLabel: 'CAL FIRE Mission Tasking has been approved', name: 'otherSignificantInfo', inputValue: 'CAL FIRE Mission Tasking has been approved', cls: 'roc-no-style'},
+
+                                    { boxLabel: 'Other', name: 'otherSignificantInfo', reference: 'otherOtherSignificantInfoCheckboxRef', inputValue: 'Other', cls: 'roc-no-style'},
+                                ]
+                            },
+                            {
+                                bind: {
+                                    value: '{otherOtherSignificantInfo}',
+                                    disabled: '{!otherOtherSignificantInfoCheckboxRef.checked}'
                                 },
-                                {
-                                    bind: {
-                                        value: '{otherOtherSignificantInfo}',
-                                        disabled: '{!otherSignificantInfoCheckBox.checked}'
-                                    },
-                                    fieldLabel: 'Other',
-                                    vtype:'extendedalphanum',
-                                    validator: function(val) {
-                                        return (!this.disabled && !val) ? "Other Significant Info is required" : true;
-                                    }, listeners: {
-                                        disable: function() {
-                                            this.reset();
-                                        }
-                                    },
-                                    cls: 'roc-required'
+                                fieldLabel: 'Other',
+                                vtype:'extendedalphanum',
+                                validator: function(val) {
+                                    return (!this.disabled && !val) ? "Other Significant Info is required" : true;
+                                }, listeners: {
+                                    disable: function() {
+                                        this.reset();
+                                    }
                                 },
+                                cls: 'roc-required'
+                            },
                         ]
                    },
                    {
@@ -565,40 +564,52 @@ function(Core, RocFormController, RocFormModel ) {
                             vtype:'simplealphanum'
                         },
                         items: [
-                        {bind:'{calfireIncident}',xtype: 'combobox',fieldLabel: 'CAL FIRE Incident',
-                         queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                         store: ['Yes', 'No']},
-                        {bind: '{resourcesAssigned}',
-                            xtype: 'checkboxgroup',
-                            fieldLabel: 'Resources Assigned',
-                            vertical: true,
-                            columns: 1,
-                            reference: 'resourcesAssignedRef',
-                            items: [
-                                { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'CAL FIRE Air Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air Resources Assigned', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'CAL FIRE Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'CAL FIRE Air and Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'CAL FIRE Air and Ground Resources Augmented', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Augmented', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'CAL FIRE Agency Rep ordered', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep ordered', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'CAL FIRE Agency Rep assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep assigned', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'Significant augmentation of resources', name: 'resourcesAssigned', inputValue: 'Significant augmentation of resources', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'Very Large Air Tanker (VLAT) on order', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) on order', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'Very Large Air Tanker (VLAT) assigned', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) assigned', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned', bind: {hidden: '{finalReport}'}},
-                                { boxLabel: 'Continued commitment of CAL FIRE air and ground resources', name: 'resourcesAssigned', inputValue: 'Continued commitment of CAL FIRE air and ground resources', bind: {hidden: '{!updateReport}'}},
-                                { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }},
-                                { boxLabel: 'Other', name: 'other', inputValue: 'Other', reference: 'otherResourcesAssignedCheckboxRef'}
-                            ]
-                        },
-                        {bind: { value: '{otherResourcesAssigned}', disabled: '{!otherResourcesAssignedCheckboxRef.checked}' }, fieldLabel: 'Other Resources Assigned', vtype:'extendedalphanum',
-                                                    validator: function(val) {
-                                                        return (!this.disabled && !val) ? "Other Resources Assigned is required" : true;
-                                                    }, listeners: { disable: function() {
-                                                       this.reset();
-                                                    }}, cls: 'roc-required'
-                                                },
+                            {
+                                bind:'{calfireIncident}',
+                                xtype: 'combobox',
+                                fieldLabel: 'CAL FIRE Incident',
+                                queryMode: 'local',
+                                forceSelection: true,
+                                autoSelect: false,
+                                editable: false,
+                                store: ['Yes', 'No']
+                            },
+                            {bind: '{resourcesAssigned}',
+                                xtype: 'checkboxgroup',
+                                fieldLabel: 'Resources Assigned',
+                                vertical: true,
+                                columns: 1,
+                                reference: 'resourcesAssignedRef',
+                                items: [
+                                    { boxLabel: 'No CAL FIRE Resources', name: 'resourcesAssigned', inputValue: 'No CAL FIRE Resources', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'CAL FIRE Air Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'CAL FIRE Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'CAL FIRE Air and Ground Resources Assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Assigned', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'CAL FIRE Air and Ground Resources Augmented', name: 'resourcesAssigned', inputValue: 'CAL FIRE Air and Ground Resources Augmented', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'CAL FIRE Agency Rep ordered', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep ordered', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'CAL FIRE Agency Rep assigned', name: 'resourcesAssigned', inputValue: 'CAL FIRE Agency Rep assigned', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'Significant augmentation of resources', name: 'resourcesAssigned', inputValue: 'Significant augmentation of resources', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'Very Large Air Tanker (VLAT) on order', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) on order', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'Very Large Air Tanker (VLAT) assigned', name: 'resourcesAssigned', inputValue: 'Very Large Air Tanker (VLAT) assigned', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned', bind: {hidden: '{finalReport}'}},
+                                    { boxLabel: 'Continued commitment of CAL FIRE air and ground resources', name: 'resourcesAssigned', inputValue: 'Continued commitment of CAL FIRE air and ground resources', bind: {hidden: '{!updateReport}'}},
+                                    { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }},
+                                    { boxLabel: 'Other', name: 'other', inputValue: 'Other', reference: 'otherResourcesAssignedCheckboxRef'}
+                                ]
+                            },
+                            {
+                                bind: {
+                                    value: '{otherResourcesAssigned}',
+                                    disabled: '{!otherResourcesAssignedCheckboxRef.checked}' },
+                                    fieldLabel: 'Other Resources Assigned',
+                                    vtype:'extendedalphanum',
+                                    validator: function(val) {
+                                        return (!this.disabled && !val) ? "Other Resources Assigned is required" : true;
+                                    }, listeners: { disable: function() {
+                                       this.reset();
+                                    }}, cls: 'roc-required'
+                            },
                         ]
 
                    },
