@@ -180,6 +180,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('otherFuelTypes', (response.data.message.otherFuelTypes == 'null') ? '' : response.data.message.otherFuelTypes );
                         this.getViewModel().set('percentContained', (response.data.message.percentageContained == 'null') ? '' : response.data.message.percentageContained );
                         this.getViewModel().set('relHumidity', response.data.message.relHumidity);
+                        this.getViewModel().set('calfireIncident', response.data.message.calfireIncident);
                         this.view.lookupReference('resourcesAssignedRef').setValue({resourcesAssigned: response.data.message.resourcesAssigned});
                         this.getViewModel().set('temperature', response.data.message.temperature);
                         this.view.lookupReference('otherSignificantInfoRef').setValue({otherSignificantInfo: response.data.message.otherSignificantInfo});
