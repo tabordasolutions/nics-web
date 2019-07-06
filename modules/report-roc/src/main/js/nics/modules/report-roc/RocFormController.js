@@ -309,77 +309,72 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					emailMessage  += "<li>" + data.infrastructuresThreat  + "Critical Infrastructure </li>";
 				    if(typeof(data.comments) != "undefined" && data.comments != ""){emailMessage  += "<li>" + data.comments  + "</li>"}
 					emailMessage   += "</ul>"; 
-				}
-				else { 
+				} else {
 					
 					try {
-					emailMessage = "<html><body><h2>Report on Conditions - " + data.incidentTypes ;
-					emailMessage += "<br/><br/>Incident Name/Number: " + data.incidentName + "/" + data.incidentId ;
-					emailMessage += "<br/>Start Date/Time: " + this.formatDate(data.date) + " @ "  + this.formatTime(data.starttime);
-					emailMessage += "<br/> Location: " + data.location + "</h2>";
-					emailMessage += "<ul style='list-style-type: none;'>";
-					emailMessage += "<li><strong>Report Type:</strong> " + data.reportType + "</li>";
-					emailMessage += "<li><strong>ROC Display Name:</strong> " + data.rocDisplayName + "</li>";
-					emailMessage += "<li><strong>County:</strong> " + data.county + "</li>";
-					emailMessage += "<li><strong>Date:</strong> " + this.formatDate(data.date) + "</li>";
-					emailMessage += "<li><strong>Time:</strong> " + this.formatTime(data.starttime) + "</li>";
-					emailMessage += "<li><strong>Jurisdiction:</strong> " + data.jurisdiction + "</li>";
-					emailMessage += "<li><strong>Type of Incident:</strong> " + data.incidentTypes + "</li>";
-					if(typeof(data.incidentCause) != "undefined" && data.incidentCause != "")emailMessage += "<li><strong>Cause:</strong> " + data.incidentCause + "</li>";
-					emailMessage += "<li><strong>Acres/Size/Area involved:</strong> " + data.scope + "</li>";
-					emailMessage += "<li><strong>Rate of Spread:</strong> " + data.spreadRate + "</li>";
-					if(typeof(data.fuelTypes) != "undefined" && data.fuelTypes != "")emailMessage += "<li><strong>Fuel Type</strong> " + data.fuelTypes + "</li>";
-					if(typeof(data.potential) != "undefined" && data.potential != "")emailMessage += "<li><strong>Potential:</strong> " + data.potential + "</li>";
-					emailMessage += "<li><strong> % contained:</strong> " + data.percentContained + "</li>";
-					if(typeof(data.estimatedContainment) != "undefined" && data.estimatedContainment != "")emailMessage += "<li><strong>Estimated Containment:</strong> " + data.estimatedContainment + "</li>";
-					if(typeof(data.estimatedControl) != "undefined" && data.estimatedControl != "")emailMessage += "<li><strong>Estimated Control:</strong> " + data.estimatedControl + "</li>";
-					
-					emailMessage += "<li><strong>Weather</strong> <ul style='list-style-type: none;'> ";
-					emailMessage += "<li><strong>Temperature:</strong> " + data.temperature + "</li>";
-					emailMessage += "<li><strong>Relative Humidity:</strong> " + data.relHumidity + "</li>";
-					emailMessage += "<li><strong>Wind Speed mph:</strong> " + data.windSpeed + "</li>";
-					emailMessage += "<li><strong>Wind Direction:</strong> " + data.windDirection + "</li>";
-					emailMessage +="<li><strong>Predicted Weather:</strong> " + data.predictedWeather + "</li></ul></li>";
-					emailMessage += "<li><strong>Evacuations:</strong> " + data.evacuations  + "</li>";
-					emailMessage += "<li><strong>Structures Threatened:</strong> " + data.structuresThreat  + "</li>";
-					emailMessage += "<li><strong>Critical Infrastructure Threatened:</strong> " + data.infrastructuresThreat  + "</li>";
-					if(typeof(data.icpLocation) != "undefined" && data.icpLocation != "")emailMessage += "<li><strong>ICP Location:</strong> " + data.icpLocation  + "</li>";
-					emailMessage += "<li><strong>Resources Committed</strong> <ul style='list-style-type: none;'> ";
-					emailMessage += "<li><strong>Aircraft</strong> <ul style='list-style-type: none;'> ";
-					if(typeof(data.airAttack) != "undefined" && data.airAttack != "")emailMessage +="<li><strong>Air Attack:</strong> " + data.airAttack + "</li>";
-					if(typeof(data.airTankers) != "undefined" && data.airTankers != "")emailMessage +="<li><strong>Air Tankers:</strong> " + data.airTankers + "</li>";
-					if(typeof(data.helicopters) != "undefined" && data.helicopters != "")emailMessage +="<li><strong>Helicopters:</strong> " + data.helicopters + "</li>";
-					emailMessage +=	"</ul></li>";
-					if(typeof(data.overhead) != "undefined" && data.overhead != "")emailMessage +="<li><strong>Overhead:</strong> " + data.overhead + "</li>";
-					if(typeof(data.typeIEngine) != "undefined" && data.typeIEngine != "")emailMessage +="<li><strong>Type I Engine:</strong> " + data.typeIEngine + "</li>";
-					if(typeof(data.typeIIEngine) != "undefined" && data.typeIIEngine != "")emailMessage +="<li><strong>Type II Engine:</strong> " + data.typeIIEngine + "</li>";
-					if(typeof(data.typeIIIEngine) != "undefined" && data.typeIIIEngine != "")emailMessage +="<li><strong>Type III Engine:</strong> " + data.typeIIIEngine + "</li>";
-					if(typeof(data.waterTender) != "undefined" && data.waterTender != "")emailMessage +="<li><strong>Water Tender:</strong> " + data.waterTender + "</li>";
-					if(typeof(data.dozers) != "undefined" && data.dozers != "")emailMessage +="<li><strong>Dozers:</strong> " + data.dozers + "</li>";
-					if(typeof(data.handcrews) != "undefined" && data.handcrews != "")emailMessage +="<li><strong>Hand Crews:</strong> " + data.handcrews + "</li>";
-					if(typeof(data.comUnit) != "undefined" && data.comUnit != "")emailMessage +="<li><strong>Com Unit:</strong> " + data.comUnit + "</li>";
-					emailMessage +=	"</ul></li>";
-					
-				    emailMessage += "</ul>"
-				    if(typeof(data.comments) != "undefined" && data.comments != "")emailMessage +="<strong>General Comments:</strong> " + data.comments;
-					 emailMessage += "<br/><strong>Reported By " + data.reportBy + "</strong>"; 
-					}
-					catch(e) {
+                        emailMessage = "<html><body><h2>Report on Conditions - " + data.incidentTypes ;
+                        emailMessage += "<br/><br/>Incident Name/Number: " + data.incidentName + "/" + data.incidentId ;
+                        emailMessage += "<br/>Start Date/Time: " + this.formatDate(data.date) + " @ "  + this.formatTime(data.starttime);
+                        emailMessage += "<br/> Location: " + data.location + "</h2>";
+                        emailMessage += "<ul style='list-style-type: none;'>";
+                        emailMessage += "<li><strong>Report Type:</strong> " + data.reportType + "</li>";
+                        emailMessage += "<li><strong>ROC Display Name:</strong> " + data.rocDisplayName + "</li>";
+                        emailMessage += "<li><strong>County:</strong> " + data.county + "</li>";
+                        emailMessage += "<li><strong>Date:</strong> " + this.formatDate(data.date) + "</li>";
+                        emailMessage += "<li><strong>Time:</strong> " + this.formatTime(data.starttime) + "</li>";
+                        emailMessage += "<li><strong>Jurisdiction:</strong> " + data.jurisdiction + "</li>";
+                        emailMessage += "<li><strong>Type of Incident:</strong> " + data.incidentTypes + "</li>";
+                        if(typeof(data.incidentCause) != "undefined" && data.incidentCause != "")emailMessage += "<li><strong>Cause:</strong> " + data.incidentCause + "</li>";
+                        emailMessage += "<li><strong>Acres/Size/Area involved:</strong> " + data.scope + "</li>";
+                        emailMessage += "<li><strong>Rate of Spread:</strong> " + data.spreadRate + "</li>";
+                        if(typeof(data.fuelTypes) != "undefined" && data.fuelTypes != "")emailMessage += "<li><strong>Fuel Type</strong> " + data.fuelTypes + "</li>";
+                        if(typeof(data.potential) != "undefined" && data.potential != "")emailMessage += "<li><strong>Potential:</strong> " + data.potential + "</li>";
+                        emailMessage += "<li><strong> % contained:</strong> " + data.percentContained + "</li>";
+                        if(typeof(data.estimatedContainment) != "undefined" && data.estimatedContainment != "")emailMessage += "<li><strong>Estimated Containment:</strong> " + data.estimatedContainment + "</li>";
+                        if(typeof(data.estimatedControl) != "undefined" && data.estimatedControl != "")emailMessage += "<li><strong>Estimated Control:</strong> " + data.estimatedControl + "</li>";
+
+                        emailMessage += "<li><strong>Weather</strong> <ul style='list-style-type: none;'> ";
+                        emailMessage += "<li><strong>Temperature:</strong> " + data.temperature + "</li>";
+                        emailMessage += "<li><strong>Relative Humidity:</strong> " + data.relHumidity + "</li>";
+                        emailMessage += "<li><strong>Wind Speed mph:</strong> " + data.windSpeed + "</li>";
+                        emailMessage += "<li><strong>Wind Direction:</strong> " + data.windDirection + "</li>";
+                        emailMessage +="<li><strong>Predicted Weather:</strong> " + data.predictedWeather + "</li></ul></li>";
+                        emailMessage += "<li><strong>Evacuations:</strong> " + data.evacuations  + "</li>";
+                        emailMessage += "<li><strong>Structures Threatened:</strong> " + data.structuresThreat  + "</li>";
+                        emailMessage += "<li><strong>Critical Infrastructure Threatened:</strong> " + data.infrastructuresThreat  + "</li>";
+                        if(typeof(data.icpLocation) != "undefined" && data.icpLocation != "")emailMessage += "<li><strong>ICP Location:</strong> " + data.icpLocation  + "</li>";
+                        emailMessage += "<li><strong>Resources Committed</strong> <ul style='list-style-type: none;'> ";
+                        emailMessage += "<li><strong>Aircraft</strong> <ul style='list-style-type: none;'> ";
+                        if(typeof(data.airAttack) != "undefined" && data.airAttack != "")emailMessage +="<li><strong>Air Attack:</strong> " + data.airAttack + "</li>";
+                        if(typeof(data.airTankers) != "undefined" && data.airTankers != "")emailMessage +="<li><strong>Air Tankers:</strong> " + data.airTankers + "</li>";
+                        if(typeof(data.helicopters) != "undefined" && data.helicopters != "")emailMessage +="<li><strong>Helicopters:</strong> " + data.helicopters + "</li>";
+                        emailMessage +=	"</ul></li>";
+                        if(typeof(data.overhead) != "undefined" && data.overhead != "")emailMessage +="<li><strong>Overhead:</strong> " + data.overhead + "</li>";
+                        if(typeof(data.typeIEngine) != "undefined" && data.typeIEngine != "")emailMessage +="<li><strong>Type I Engine:</strong> " + data.typeIEngine + "</li>";
+                        if(typeof(data.typeIIEngine) != "undefined" && data.typeIIEngine != "")emailMessage +="<li><strong>Type II Engine:</strong> " + data.typeIIEngine + "</li>";
+                        if(typeof(data.typeIIIEngine) != "undefined" && data.typeIIIEngine != "")emailMessage +="<li><strong>Type III Engine:</strong> " + data.typeIIIEngine + "</li>";
+                        if(typeof(data.waterTender) != "undefined" && data.waterTender != "")emailMessage +="<li><strong>Water Tender:</strong> " + data.waterTender + "</li>";
+                        if(typeof(data.dozers) != "undefined" && data.dozers != "")emailMessage +="<li><strong>Dozers:</strong> " + data.dozers + "</li>";
+                        if(typeof(data.handcrews) != "undefined" && data.handcrews != "")emailMessage +="<li><strong>Hand Crews:</strong> " + data.handcrews + "</li>";
+                        if(typeof(data.comUnit) != "undefined" && data.comUnit != "")emailMessage +="<li><strong>Com Unit:</strong> " + data.comUnit + "</li>";
+                        emailMessage +=	"</ul></li>";
+
+                        emailMessage += "</ul>"
+                        if(typeof(data.comments) != "undefined" && data.comments != "")emailMessage +="<strong>General Comments:</strong> " + data.comments;
+                         emailMessage += "<br/><strong>Reported By " + data.reportBy + "</strong>";
+					} catch(e) {
 						alert(e);
 					}
 				}
 				
-			    if (reportType == 'print'){
+			    if (reportType == 'print') {
 			    	 emailMessage += "</html></body >"; 
 			    	Core.EventManager.fireEvent("PrintROCReport",emailMessage);
-			    }
-			  else if (reportType == 'email'){
+			    } else if (reportType == 'email') {
 				  	emailMessage += "<p style='font-size:.8em;'>This e-mail was sent automatically by the Situation Awareness &amp; Collaboration Tool (SCOUT).Do not reply.</p></html></body >";
 				    var subject  = "Report on Conditions  - " + data.rocDisplayName + "," + data.incidentTypes + "," + data.county + "," + data.reportType;
 				    var emailResponse = {emailList: data.email, subject: subject, emailBody: emailMessage};
 			    	// Core.EventManager.fireEvent("EmailROCReport",emailResponse);
-
-				 
 			    } 
 			//	return emailMessage;
 				

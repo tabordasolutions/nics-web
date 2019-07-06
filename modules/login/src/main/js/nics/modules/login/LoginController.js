@@ -116,9 +116,9 @@ define([
 			loadUserOrg: function(e, info){
 				this.userId = info.userId;
 				var userOrgs = info.userOrgs;
-				if (userOrgs.length == 0) {
+				if (typeof(userOrgs) != "undefined" && userOrgs.length == 0) {
 					this.showEmptyErrorMsg();
-				} else if (userOrgs.length == 1) {
+				} else if (typeof(userOrgs) != "undefined" && userOrgs.length == 1) {
 					this.setUserOrg(userOrgs[0]);
 				} else {
 					this.showOrgsDropdown(userOrgs);
