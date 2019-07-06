@@ -266,7 +266,7 @@ function(Core, RocFormController, RocFormModel ) {
                             }
 						]
 					},
-					{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
+					{ xtype: 'button', text: 'Find Location on Map', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
 						width: 60, margin:'0 0 0 20'},
 					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type',
 						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
