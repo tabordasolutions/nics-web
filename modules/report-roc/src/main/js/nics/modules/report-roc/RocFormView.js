@@ -567,7 +567,7 @@ function(Core, RocFormController, RocFormModel ) {
                             {
                                 bind:'{calfireIncident}',
                                 xtype: 'combobox',
-                                fieldLabel: 'CAL FIRE Incident',
+                                fieldLabel: 'Is this CAL FIRE Incident?',
                                 queryMode: 'local',
                                 forceSelection: true,
                                 autoSelect: false,
