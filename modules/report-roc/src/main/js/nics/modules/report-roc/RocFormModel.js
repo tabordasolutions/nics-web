@@ -150,11 +150,6 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 				finalReport: function(get) {
 					return get('reportType') == 'FINAL';
 				},
-				makeFieldRequiredOnIncidentType: function(get) {
-				    var requireField = true;
-                    console.log(this.get('incidentTypes'));
-				    return requireField;
-				},
 				latitude: {
 					get: function(get) {
 						return this.decimalDegreesToCoordinate(get('latDegrees'), get('latMinutes'));
