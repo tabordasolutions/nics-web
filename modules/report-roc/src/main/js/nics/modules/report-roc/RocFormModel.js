@@ -90,16 +90,20 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 relHumidity: this.get('relHumidity'),
                 windSpeed: this.get('windSpeed'),
                 windDirection: this.get('windDirection'),
-                evacuations: this.get('evacuations'),
-                evacuationsInProgress: this.get('evacuationsInProgress'),
-                otherEvacuations: this.get('otherEvacuations'),
-                structuresThreat: this.get('structuresThreat'),
-                structuresThreatInProgress: this.get('structuresThreatInProgress'),
-                otherStructuresThreat: this.get('otherStructuresThreat'),
-                infrastructuresThreat: this.get('infrastructuresThreat'),
-                infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
-                otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
-                otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
+
+                // evacuations: this.get('evacuations'),
+                // evacuationsInProgress: this.get('evacuationsInProgress'),
+                // otherEvacuations: this.get('otherEvacuations'),
+
+                // structuresThreat: this.get('structuresThreat'),
+                // structuresThreatInProgress: this.get('structuresThreatInProgress'),
+                // otherStructuresThreat: this.get('otherStructuresThreat'),
+
+                // infrastructuresThreat: this.get('infrastructuresThreat'),
+                // infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
+                // otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
+                // otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
+
                 calfireIncident: this.get('calfireIncident'),
                 resourcesAssigned: this.get('resourcesAssigned'),
                 email: this.get('email'),
@@ -145,6 +149,11 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 				},
 				finalReport: function(get) {
 					return get('reportType') == 'FINAL';
+				},
+				makeFieldRequiredOnIncidentType: function(get) {
+				    var requireField = true;
+                    console.log(this.get('incidentTypes'));
+				    return requireField;
 				},
 				latitude: {
 					get: function(get) {
