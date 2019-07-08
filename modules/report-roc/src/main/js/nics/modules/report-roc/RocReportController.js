@@ -243,7 +243,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					this.lookupReference('printButton').disable();
 				}
 
-				if(formData.report != null) {
+				if(formData.report != null && rocForm != null && rocForm.viewModel != null) {
                     rocForm.viewModel.set(formData.report);
                     rocForm.viewModel.notify();
                     rocForm.controller.requestLocationBasedDataOnEditRequest();
@@ -326,103 +326,99 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 		
 		loadOrgAdminList:  function(e, response) {
 			var adminList = [];
-			if (response && response.orgAdminList.length > 0){
-					var adminList  = response.orgAdminList;
-				}
+			if (typeof(response) != "undefined" && typeof(response.orgAdminList) != "undefined" && response.orgAdminList.length > 0) {
+                var adminList  = response.orgAdminList;
+            }
 			
 			if (typeof(adminList) != "undefined" && adminList.length > 0){
 				var adminListString = adminList.toString();
-			
 				if (this.emailList != ""){
 					this.emailList += ",";
 				}
 				this.emailList +=  adminListString;
 			}
 		},
-		
-	   loadOrgDistList:  function(e, response) {		
+
+        loadOrgDistList:  function(e, response) {
 			var distributionList;
-			if (response) {
+			if ( typeof(response) != "undefined" ) {
 				if (response.organizations && response.organizations[0].distribution){
 					distributionList  = response.organizations[0].distribution;
 				}
 			}
-			if (typeof(distributionList ) != "undefined" && distributionList  != ""){
+			if (typeof(distributionList) != "undefined" && distributionList  != ""){
 				if (this.emailList != ""){
 					this.emailList += ",";
 				}
 				this.emailList +=  distributionList;
 			}
-			
-		},
-		onPrintROC: function(){
-			 //Need to actually get the from from the dropdown
-			this.displayCurrentRecord(true, 'select');	
-			 var printMsg = null;
-			var rocReportForm = this.view.lookupReference('rocReportForm');
-			var data = rocReportForm.viewModel.data;
-			Ext.MessageBox.show({
-				   title:'Print Format',
-				   form: this,
-				   msg: 'Would you like to print a simplified format? Choosing NO will print the entire form.',
-				   buttons: Ext.Msg.YESNOCANCEL,
-				   fn: function(btn) {
-				        if (btn === 'yes') {
-				         // printMsg = rocReportForm.controller.buildEmailReport(data, true);
-				        	rocReportForm.controller.buildReport(data, true, 'print');
-				             } else if (btn === 'no') {
-				           // 	 printMsg = rocReportForm.controller.buildEmailReport(data, false);
-				            	 rocReportForm.controller.buildReport(data, false, 'print');
-				             } else {
-				            //do nothing
-				        } 
-				    },
-				   icon: Ext.MessageBox.QUESTION
-				});
-			
-			
-	},
+        },
+        onPrintROC: function(){
+            //Need to actually get the from from the dropdown
+            this.displayCurrentRecord(true, 'select');
+            var printMsg = null;
+            var rocReportForm = this.view.lookupReference('rocReportForm');
+            var data = rocReportForm.viewModel.data;
+            Ext.MessageBox.show({
+               title:'Print Format',
+               form: this,
+               msg: 'Would you like to print a simplified format? Choosing NO will print the entire form.',
+               buttons: Ext.Msg.YESNOCANCEL,
+               fn: function(btn) {
+                    if (btn === 'yes') {
+                     // printMsg = rocReportForm.controller.buildEmailReport(data, true);
+                        rocReportForm.controller.buildReport(data, true, 'print');
+                         } else if (btn === 'no') {
+                       // 	 printMsg = rocReportForm.controller.buildEmailReport(data, false);
+                             rocReportForm.controller.buildReport(data, false, 'print');
+                         } else {
+                        //do nothing
+                    }
+                },
+               icon: Ext.MessageBox.QUESTION
+            });
+        },
 
-	onReportReady: function(e, response) {
-		if (response){
-			 var iFrameId = "printerFrame";
-			 var printFrame = Ext.get(iFrameId);
-			 if (printFrame == null) {
-		     printFrame = Ext.getBody().appendChild({
-		                id: iFrameId,
-		                tag: 'iframe',
-		                cls: 'x-hidden',  style: {
-		                    display: "none"
-		                }
-		            });
-		        }
-		     var printContent = printFrame.dom.contentWindow;
-			  // output to the iframe
-		     printContent.document.open();
-		     printContent.document.write(response);
-		     printContent.document.close();
-		  // print the iframe
-		     printContent.print();
-		
-			}
-			
-	},
-	loadActiveIncidents: function(e, incidents) {
-		this.activeIncidentsStore = Ext.create('Ext.data.Store', {
-			fields: ['incidentName', 'incidentId'],
-			data: incidents
-		});
-	},
-	addActiveIncident: function(e, incident) {
-		this.activeIncidentsStore.insert(0, incident);
-	},
-	updateActiveIncident: function(e, incidentId, incidentNameNew) {
-		var updatedIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
-		updatedIncidentRecord.set("incidentName", incidentNameNew);
-	},
-	removeActiveIncident: function(e, incidentId) {
-		var removeIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
-		this.activeIncidentsStore.remove(removeIncidentRecord);
-	}
-	});
+        onReportReady: function(e, response) {
+            if (response){
+                 var iFrameId = "printerFrame";
+                 var printFrame = Ext.get(iFrameId);
+                 if (printFrame == null) {
+                 printFrame = Ext.getBody().appendChild({
+                            id: iFrameId,
+                            tag: 'iframe',
+                            cls: 'x-hidden',  style: {
+                                display: "none"
+                            }
+                        });
+                    }
+                 var printContent = printFrame.dom.contentWindow;
+                  // output to the iframe
+                 printContent.document.open();
+                 printContent.document.write(response);
+                 printContent.document.close();
+                // print the iframe
+                 printContent.print();
+
+                }
+
+        },
+        loadActiveIncidents: function(e, incidents) {
+            this.activeIncidentsStore = Ext.create('Ext.data.Store', {
+                fields: ['incidentName', 'incidentId'],
+                data: incidents
+            });
+        },
+        addActiveIncident: function(e, incident) {
+            this.activeIncidentsStore.insert(0, incident);
+        },
+        updateActiveIncident: function(e, incidentId, incidentNameNew) {
+            var updatedIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
+            updatedIncidentRecord.set("incidentName", incidentNameNew);
+        },
+        removeActiveIncident: function(e, incidentId) {
+            var removeIncidentRecord = this.activeIncidentsStore.findRecord("incidentId", incidentId);
+            this.activeIncidentsStore.remove(removeIncidentRecord);
+        }
+    });
 });

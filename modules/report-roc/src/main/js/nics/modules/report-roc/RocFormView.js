@@ -266,7 +266,7 @@ function(Core, RocFormController, RocFormModel ) {
                             }
 						]
 					},
-					{ xtype: 'button', text: 'Locate', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
+					{ xtype: 'button', text: 'Find Location on Map', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
 						width: 60, margin:'0 0 0 20'},
 					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type',
 						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
@@ -567,7 +567,7 @@ function(Core, RocFormController, RocFormModel ) {
                             {
                                 bind:'{calfireIncident}',
                                 xtype: 'combobox',
-                                fieldLabel: 'CAL FIRE Incident',
+                                fieldLabel: 'Is this CAL FIRE Incident?',
                                 queryMode: 'local',
                                 forceSelection: true,
                                 autoSelect: false,
@@ -594,22 +594,9 @@ function(Core, RocFormController, RocFormModel ) {
                                     { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety', bind: {hidden: '{finalReport}'}},
                                     { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned', bind: {hidden: '{finalReport}'}},
                                     { boxLabel: 'Continued commitment of CAL FIRE air and ground resources', name: 'resourcesAssigned', inputValue: 'Continued commitment of CAL FIRE air and ground resources', bind: {hidden: '{!updateReport}'}},
-                                    { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }},
-                                    { boxLabel: 'Other', name: 'other', inputValue: 'Other', reference: 'otherResourcesAssignedCheckboxRef'}
+                                    { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }}
                                 ]
-                            },
-                            {
-                                bind: {
-                                    value: '{otherResourcesAssigned}',
-                                    disabled: '{!otherResourcesAssignedCheckboxRef.checked}' },
-                                    fieldLabel: 'Other Resources Assigned',
-                                    vtype:'extendedalphanum',
-                                    validator: function(val) {
-                                        return (!this.disabled && !val) ? "Other Resources Assigned is required" : true;
-                                    }, listeners: { disable: function() {
-                                       this.reset();
-                                    }}, cls: 'roc-required'
-                            },
+                            }
                         ]
 
                    },
