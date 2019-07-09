@@ -389,6 +389,7 @@ function(Core, RocFormController, RocFormModel ) {
                             reference: 'fuelTypeCheckboxRef',
                             vertical: true,
                             columns: 2,
+                            bind: {hidden: '{finalReport}'},
                             items: [
                                 { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
                                 { boxLabel: 'Brush', name: 'fuelType', inputValue: 'Brush', cls: 'roc-no-style'},
@@ -397,7 +398,14 @@ function(Core, RocFormController, RocFormModel ) {
                                 { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
                             ]
                         },
-                        {bind: { value: '{otherFuelTypes}', disabled: '{!otherFuelTypeCheckBox.checked}' }, fieldLabel: 'Other Fuel Type(s)', vtype:'extendedalphanum',
+                        {
+                            bind: {
+                                value: '{otherFuelTypes}',
+                                disabled: '{!otherFuelTypeCheckBox.checked}'
+                            },
+                            fieldLabel: 'Other Fuel Type(s)',
+                            vtype:'extendedalphanum',
+                            bind: {hidden: '{finalReport}'},
                             validator: function(val) {
                                 return (!this.disabled && !val) ? "Other Fuel Type is required" : true;
                             }, listeners: { disable: function() {
