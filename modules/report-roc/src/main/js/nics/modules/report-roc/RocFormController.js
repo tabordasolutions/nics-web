@@ -276,6 +276,99 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.requestLocationBasedData();
 				}
 			},
+            onIncidentTypeChange: function(checkbox, newValue, oldValue, eOpts) {
+                var incidentTypeSelectedValuesLength = 0;
+                var isFireWildlandCheckboxChecked = false;
+
+
+                this.view.lookupReference('spreadRateComboRef').removeCls('roc-required');
+                this.view.lookupReference('spreadRateComboRef').addCls('roc-no-style');
+                this.view.lookupReference('spreadRateComboRef').allowBlank = true;
+                this.view.lookupReference('spreadRateComboRef').validate();
+
+                this.view.lookupReference('scopeRef').removeCls('roc-required');
+                this.view.lookupReference('scopeRef').addCls('roc-no-style');
+                this.view.lookupReference('scopeRef').allowBlank = true;
+                this.view.lookupReference('scopeRef').validate();
+
+                this.view.lookupReference('fuelTypeCheckboxRef').removeCls('roc-required');
+                this.view.lookupReference('fuelTypeCheckboxRef').addCls('roc-no-style');
+                this.view.lookupReference('fuelTypeCheckboxRef').allowBlank = true;
+                this.view.lookupReference('fuelTypeCheckboxRef').validate();
+
+                this.view.lookupReference('percentContainedRef').removeCls('roc-required');
+                this.view.lookupReference('percentContainedRef').addCls('roc-no-style');
+                this.view.lookupReference('percentContainedRef').allowBlank = true;
+                this.view.lookupReference('percentContainedRef').validate();
+
+                this.view.lookupReference('evacuationsComboboxRef').removeCls('roc-required');
+                this.view.lookupReference('evacuationsComboboxRef').addCls('roc-no-style');
+                this.view.lookupReference('evacuationsComboboxRef').allowBlank = true;
+                this.view.lookupReference('evacuationsComboboxRef').validate();
+
+                this.view.lookupReference('structuresThreatComboRef').removeCls('roc-required');
+                this.view.lookupReference('structuresThreatComboRef').addCls('roc-no-style');
+                this.view.lookupReference('structuresThreatComboRef').allowBlank = true;
+                this.view.lookupReference('structuresThreatComboRef').validate();
+
+                this.view.lookupReference('infrastructuresThreatComboRef').removeCls('roc-required');
+                this.view.lookupReference('infrastructuresThreatComboRef').addCls('roc-no-style');
+                this.view.lookupReference('infrastructuresThreatComboRef').allowBlank = true;
+                this.view.lookupReference('infrastructuresThreatComboRef').validate();
+
+                if (newValue != null && newValue.incidenttype != null) {
+                    incidentTypeSelectedValuesLength = newValue.incidenttype.length;
+                    if(Array.isArray(newValue.incidenttype)) {
+                        for(var j=0; j<incidentTypeSelectedValuesLength; j++) {
+                            if(newValue.incidenttype[j] == "Fire (Wildland)") {
+                                isFireWildlandCheckboxChecked = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        if(newValue.incidenttype == "Fire (Wildland)") {
+                            isFireWildlandCheckboxChecked = true;
+                        }
+                    }
+                }
+
+                if(isFireWildlandCheckboxChecked) {
+                    this.view.lookupReference('spreadRateComboRef').removeCls('roc-no-style');
+                    this.view.lookupReference('spreadRateComboRef').addCls('roc-required');
+                    this.view.lookupReference('spreadRateComboRef').allowBlank = false;
+                    this.view.lookupReference('spreadRateComboRef').validate();
+
+                    this.view.lookupReference('scopeRef').removeCls('roc-no-style');
+                    this.view.lookupReference('scopeRef').addCls('roc-required');
+                    this.view.lookupReference('scopeRef').allowBlank = false;
+                    this.view.lookupReference('scopeRef').validate();
+
+                    this.view.lookupReference('fuelTypeCheckboxRef').removeCls('roc-no-style');
+                    this.view.lookupReference('fuelTypeCheckboxRef').addCls('roc-required');
+                    this.view.lookupReference('fuelTypeCheckboxRef').allowBlank = false;
+                    this.view.lookupReference('fuelTypeCheckboxRef').validate();
+
+                    this.view.lookupReference('percentContainedRef').removeCls('roc-no-style');
+                    this.view.lookupReference('percentContainedRef').addCls('roc-required');
+                    this.view.lookupReference('percentContainedRef').allowBlank = false;
+                    this.view.lookupReference('percentContainedRef').validate();
+
+                    this.view.lookupReference('evacuationsComboboxRef').removeCls('roc-no-style');
+                    this.view.lookupReference('evacuationsComboboxRef').addCls('roc-required');
+                    this.view.lookupReference('evacuationsComboboxRef').allowBlank = false;
+                    this.view.lookupReference('evacuationsComboboxRef').validate();
+
+                    this.view.lookupReference('structuresThreatComboRef').removeCls('roc-no-style');
+                    this.view.lookupReference('structuresThreatComboRef').addCls('roc-required');
+                    this.view.lookupReference('structuresThreatComboRef').allowBlank = false;
+                    this.view.lookupReference('structuresThreatComboRef').validate();
+
+                    this.view.lookupReference('infrastructuresThreatComboRef').removeCls('roc-no-style');
+                    this.view.lookupReference('infrastructuresThreatComboRef').addCls('roc-required');
+                    this.view.lookupReference('infrastructuresThreatComboRef').allowBlank = false;
+                    this.view.lookupReference('infrastructuresThreatComboRef').validate();
+                }
+            },
 
 			processLocationBasedData: function(e, response) {
 				if(response.status == 200) {

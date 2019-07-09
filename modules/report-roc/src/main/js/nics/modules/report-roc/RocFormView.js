@@ -35,9 +35,9 @@ function(Core, RocFormController, RocFormModel ) {
 		extend: 'Ext.form.Panel',
 		
 	 	controller: 'rocformcontroller',
-	 	 viewModel: {
-		       type: 'roc'
-		    },
+        viewModel: {
+           type: 'roc'
+        },
 	 	buttonAlign: 'center',
 	 	autoHeight: true,
 	 	defaults: { padding:'7'},
@@ -268,11 +268,23 @@ function(Core, RocFormController, RocFormModel ) {
 					},
 					{ xtype: 'button', text: 'Find Location on Map', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
 						width: 60, margin:'0 0 0 20'},
-					{bind: {value: '{incidentTypes}', readOnly: '{readOnlyIncidentDetails}'}, xtype: 'checkboxgroup', fieldLabel: 'Incident Type',
-						vertical: true, columns: 2, scrollable: true, reference: 'incidentTypesRef', items: [], cls: 'roc-required',
-						validator: function(val) {
-							return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
-						}
+					{
+					    bind: {
+					        value: '{incidentTypes}',
+					        readOnly: '{readOnlyIncidentDetails}'
+                        },
+                        xtype: 'checkboxgroup',
+                        fieldLabel: 'Incident Type',
+                        vertical: true,
+                        columns: 2,
+                        scrollable: true,
+                        reference: 'incidentTypesRef',
+                        items: [],
+                        cls: 'roc-required',
+                        validator: function(val) {
+                            return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
+                        },
+                        listeners: { change: {fn: 'onIncidentTypeChange'}}
 					},
 					{ bind: '{state}', fieldLabel: 'State / Province / Region', xtype: 'displayfield' },
 					{xtype: 'hiddenfield',bind:'{formTypeId}' },
@@ -343,7 +355,12 @@ function(Core, RocFormController, RocFormModel ) {
 	            },
 	            items: [
 	                    {
-	                        bind:'{scope}', vtype:'extendedalphanum', fieldLabel: 'Acreage', allowBlank:false, cls:'roc-required'
+	                        bind:'{scope}',
+	                        vtype:'extendedalphanum',
+	                        fieldLabel: 'Acreage',
+	                        allowBlank:false,
+	                        cls:'roc-no-style',
+	                        reference: 'scopeRef'
 	                    },
                         {
                             bind: '{spreadRate}',
@@ -353,6 +370,7 @@ function(Core, RocFormController, RocFormModel ) {
                             forceSelection: true,
                             autoSelect: false,
                             editable: false,
+                            reference: 'spreadRateComboRef',
                             store: [
                                 '',
                                 'Low rate of spread',
@@ -362,7 +380,15 @@ function(Core, RocFormController, RocFormModel ) {
                                 'Forward spread has been stopped'
                             ]
                         },
-                        {bind: '{fuelTypeCheckBoxGroup}', xtype: 'checkboxgroup', fieldLabel: 'Fuel Type(s)', allowBlank: false, cls: 'roc-required', vertical: true, columns: 2,
+                        {
+                            bind: '{fuelTypeCheckBoxGroup}',
+                            xtype: 'checkboxgroup',
+                            fieldLabel: 'Fuel Type(s)',
+                            allowBlank: false,
+                            cls: 'roc-no-style',
+                            reference: 'fuelTypeCheckboxRef',
+                            vertical: true,
+                            columns: 2,
                             items: [
                                 { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
                                 { boxLabel: 'Brush', name: 'fuelType', inputValue: 'Brush', cls: 'roc-no-style'},
@@ -378,7 +404,14 @@ function(Core, RocFormController, RocFormModel ) {
                                 this.reset();
                             }}, cls: 'roc-required'
                         },
-                        {bind:'{percentContained}',vtype:'extendednum',fieldLabel: '% Contained',allowBlank:false,cls:'roc-required'},
+                        {
+                            bind:'{percentContained}',
+                            vtype:'extendednum',
+                            fieldLabel: '% Contained',
+                            allowBlank:false,
+                            cls:'roc-no-style',
+                            reference: 'percentContainedRef'
+                        },
 	                ]
 	            },
                 {
@@ -403,9 +436,20 @@ function(Core, RocFormController, RocFormModel ) {
                              anchor: '100%',
                              vtype:'simplealphanum'
                         },
-                        items: [{bind: '{evacuations}', xtype: 'combobox', fieldLabel: 'Evacuations',allowBlank:false,cls:'roc-required',
-                            queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                            store: ['Yes', 'No', 'Mitigated'] },
+                        items: [
+                            {
+                                bind: '{evacuations}',
+                                xtype: 'combobox',
+                                fieldLabel: 'Evacuations',
+                                allowBlank:false,
+                                cls:'roc-no-style',
+                                queryMode: 'local',
+                                forceSelection: true,
+                                autoSelect: false,
+                                editable: false,
+                                store: ['Yes', 'No', 'Mitigated'],
+                                reference: 'evacuationsComboboxRef'
+                            },
                             {bind: {
                                 value: '{evacuationsInProgress}',
                                 disabled: '{disableEvacuationsInProgress}'},
@@ -437,16 +481,26 @@ function(Core, RocFormController, RocFormModel ) {
                                                    this.reset();
                                                 }}, cls: 'roc-required'
                             },
-                            {bind:'{structuresThreat}',xtype: 'combobox',fieldLabel: 'Structures Threat',allowBlank:false,cls:'roc-required',
-                            queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                            store: ['', 'Yes', 'No', 'Mitigated']},
-                            {bind: {
-                                value: '{structuresThreatInProgress}',
-                                disabled: '{disableStructuresThreatInProgress}'},
+                            {
+                                bind:'{structuresThreat}',
+                                xtype: 'combobox',
+                                fieldLabel: 'Structures Threat',
+                                allowBlank:false,
+                                cls:'roc-no-style',
+                                queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
+                                store: ['', 'Yes', 'No', 'Mitigated'],
+                                reference: 'structuresThreatComboRef',
+                            },
+                            {
+                                bind: {
+                                    value: '{structuresThreatInProgress}',
+                                    disabled: '{disableStructuresThreatInProgress}'
+                                },
                                 disabled: true,
                                 xtype: 'checkboxgroup',
                                 fieldLabel: 'Structures Threat in progress for',
-                                allowBlank: false, cls: 'roc-required',
+                                allowBlank: false,
+                                cls: 'roc-required',
                                 vertical: true,
                                 columns: 2,
                                 reference: 'structuresThreatInProgressRef',
@@ -462,16 +516,32 @@ function(Core, RocFormController, RocFormModel ) {
                                     return (!this.disabled && !val) ? "This is a required field" : true;
                                 }
                             },
-                            {bind: { value: '{otherStructuresThreat}', disabled: '{!structureThreatRef.checked}' }, fieldLabel: 'Other', vtype:'extendedalphanum',
-                                                validator: function(val) {
-                                                    return (!this.disabled && !val) ? "Structure Threat is required" : true;
-                                                }, listeners: { disable: function() {
-                                                   this.reset();
-                                                }}, cls: 'roc-required'
+                            {
+                                bind: {
+                                    value: '{otherStructuresThreat}',
+                                    disabled: '{!structureThreatRef.checked}'
+                                },
+                                fieldLabel: 'Other',
+                                vtype:'extendedalphanum',
+                                validator: function(val) {
+                                    return (!this.disabled && !val) ? "Structure Threat is required" : true;
+                                }, listeners: { disable: function() {
+                                   this.reset();
+                                }}, cls: 'roc-required'
                             },
-                            {bind: '{infrastructuresThreat}', xtype: 'combobox',fieldLabel: 'Infrastructure Threat',allowBlank:false,cls:'roc-required',
-                            queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                            store: ['', 'Yes', 'No', 'Mitigated']},
+                            {
+                                bind: '{infrastructuresThreat}',
+                                xtype: 'combobox',
+                                fieldLabel: 'Infrastructure Threat',
+                                allowBlank:false,
+                                cls:'roc-no-style',
+                                queryMode: 'local',
+                                forceSelection: true,
+                                autoSelect: false,
+                                editable: false,
+                                store: ['', 'Yes', 'No', 'Mitigated'],
+                                reference: 'infrastructuresThreatComboRef',
+                            },
                             {bind: {
                                 value: '{infrastructuresThreatInProgress}',
                                 disabled: '{disableInfrastructuresThreatInProgress}'},
