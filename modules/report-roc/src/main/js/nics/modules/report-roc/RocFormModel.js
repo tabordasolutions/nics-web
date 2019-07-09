@@ -83,7 +83,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 incidentTypes: incidentTypesArray,
                 scope: this.get('scope'),
                 spreadRate: this.get('spreadRate'),
-                fuelTypes: this.get('fuelTypeCheckBoxGroup').fuelType,
+                fuelTypes: (this.get('fuelTypeCheckBoxGroup') != null && this.get('fuelTypeCheckBoxGroup').fuelType != null) ? this.get('fuelTypeCheckBoxGroup').fuelType: [],
                 otherFuelTypes: this.get('otherFuelTypes'),
                 percentContained: this.get('percentContained'),
                 temperature: this.get('temperature'),
