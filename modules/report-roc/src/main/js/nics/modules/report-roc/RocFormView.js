@@ -580,7 +580,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 bind: '{otherSignificantInfoCheckBoxGroup}',
                                 xtype: 'checkboxgroup',
                                 fieldLabel: 'Other Significant Info',
-                                allowBlank: false,
+                                allowBlank: true,
                                 vertical: true,
                                 columns: 2,
                                 reference: 'otherSignificantInfoRef',
