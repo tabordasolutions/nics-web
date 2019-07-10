@@ -370,6 +370,41 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 }
             },
 
+            onOtherFuelTypeCheckBoxChecked: function(checkbox, newValue, oldValue, eOpts) {
+                var fuelTypeSelectedValuesLength = 0;
+                var isOtherFuelTypeCheckBoxChecked = false;
+
+                this.view.lookupReference('otherFuelTypesRef').removeCls('roc-required');
+                this.view.lookupReference('otherFuelTypesRef').addCls('roc-no-style');
+                this.view.lookupReference('otherFuelTypesRef').disable();
+                this.view.lookupReference('otherFuelTypesRef').allowBlank = true;
+                this.view.lookupReference('otherFuelTypesRef').validate();
+
+                if (newValue != null && newValue.fuelType != null) {
+                    fuelTypeSelectedValuesLength = newValue.fuelType.length;
+                    if(Array.isArray(newValue.fuelType)) {
+                        for(var j=0; j<fuelTypeSelectedValuesLength; j++) {
+                            if(newValue.fuelType[j] == "Other") {
+                                isOtherFuelTypeCheckBoxChecked = true;
+                                break;
+                            }
+                        }
+                    } else {
+                        if(newValue.fuelType == "Other") {
+                            isOtherFuelTypeCheckBoxChecked = true;
+                        }
+                    }
+                }
+
+                if (isOtherFuelTypeCheckBoxChecked) {
+                    this.view.lookupReference('otherFuelTypesRef').removeCls('roc-no-style');
+                    this.view.lookupReference('otherFuelTypesRef').addCls('roc-required');
+                    this.view.lookupReference('otherFuelTypesRef').enable();
+                    this.view.lookupReference('otherFuelTypesRef').allowBlank = false;
+                    this.view.lookupReference('otherFuelTypesRef').validate();
+                }
+            },
+
 			processLocationBasedData: function(e, response) {
 				if(response.status == 200) {
 					this.bindLocationBasedData(response.data);

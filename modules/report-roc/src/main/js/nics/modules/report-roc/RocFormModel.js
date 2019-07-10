@@ -111,7 +111,8 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 latitudeAtROCSubmission: this.get('latitude'),
                 longitudeAtROCSubmission: this.get('longitude'),
                 weatherDataAvailable: this.get('weatherDataAvailable'),
-                otherSignificantInfo: this.get('otherSignificantInfoCheckBoxGroup').otherSignificantInfo
+                otherSignificantInfo: (this.get('otherSignificantInfoCheckBoxGroup') != null && this.get('otherSignificantInfoCheckBoxGroup').otherSignificantInfo != null) ? this.get('otherSignificantInfoCheckBoxGroup').otherSignificantInfo : [],
+
             };
 		},
 		getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
