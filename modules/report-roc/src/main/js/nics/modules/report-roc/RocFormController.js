@@ -548,17 +548,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				form.formtypeid = formView.data.formTypeId; //this is always a ROC
 				form.usersessionid = UserProfile.getUserSessionId();
 				form.distributed = false;
-
-				// message.report.fuelTypes = this.view.lookupReference('fuelTypeCheckboxRef').fuelType;
-
-				console.log("********************************");
-				console.log(message);
-
-				console.log(this.view.lookupReference('fuelTypeCheckboxRef').fuelType);
-
-				console.log("--------------------------------");
-				console.log(JSON.stringify(message));
-
 				form.message = JSON.stringify(message);
 
 				if(form.incidentid) {  //submitting ROC on existing incident

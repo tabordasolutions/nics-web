@@ -64,15 +64,6 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		getReport: function(){
             var thisIncidentTypes = this.get('incidentTypes');
             var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(thisIncidentTypes);
-
-            /*
-            console.log(this);
-            console.log(this.get('fuelTypeCheckBoxGroup') != null);
-            console.log(this.get('fuelTypeCheckBoxGroup'));
-            console.log(this.get('fuelTypeCheckBoxGroup').fuelType != null);
-            */
-
-
             return {
                 reportType: this.get('reportType'),
                 county: this.get('county'),
