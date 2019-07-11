@@ -64,6 +64,15 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		getReport: function(){
             var thisIncidentTypes = this.get('incidentTypes');
             var incidentTypesArray = this.getIncidentTypeIdsFromIncidentTypeNames(thisIncidentTypes);
+
+            /*
+            console.log(this);
+            console.log(this.get('fuelTypeCheckBoxGroup') != null);
+            console.log(this.get('fuelTypeCheckBoxGroup'));
+            console.log(this.get('fuelTypeCheckBoxGroup').fuelType != null);
+            */
+
+
             return {
                 reportType: this.get('reportType'),
                 county: this.get('county'),
@@ -119,14 +128,17 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
             var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
             var incidentTypesArray = [];
 
-            for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
-                for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
-                    if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                        incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
-                        break;
+            if(incidentTypesNames != null && incidentTypesNames.incidenttype != null) {
+                for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
+                    for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                        if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
+                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                            break;
+                        }
                     }
                 }
             }
+
             return { "incidenttype": incidentTypesArray };
         },
 		formulas: {

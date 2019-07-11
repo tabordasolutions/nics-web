@@ -426,8 +426,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					emailMessage  = "<html><body >Intel - for internal use only. Numbers subject to change<br/><br/";
 					emailMessage  +=  "Location: " + data.location + "</br>";
 					emailMessage  += "Jurisdiction: " + data.jurisdiction + "<br/>";
-					emailMessage  += "Start Date/Time: " + this.formatDate(data.date) + " @ " + this.formatTime(data.starttime);
-					
+					// emailMessage  += "Start Date/Time: " + this.formatDate(data.date) + " @ " + this.formatTime(data.starttime);
+					emailMessage  += "Start Date/Time: " + this.formatDate(data.date) + " @ " + data.starttime;
 					
 					emailMessage  += "<ul>";
 					emailMessage  += "<li>Scope " + data.scope + " acres, "  + data.percentContained + "% contained</li>";
@@ -443,14 +443,16 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					try {
                         emailMessage = "<html><body><h2>Report on Conditions - " + data.incidentTypes ;
                         emailMessage += "<br/><br/>Incident Name/Number: " + data.incidentName + "/" + data.incidentId ;
-                        emailMessage += "<br/>Start Date/Time: " + this.formatDate(data.date) + " @ "  + this.formatTime(data.starttime);
+                        // emailMessage += "<br/>Start Date/Time: " + this.formatDate(data.date) + " @ "  + this.formatTime(data.starttime);
+                        emailMessage += "<br/>Start Date/Time: " + this.formatDate(data.date) + " @ "  + data.starttime;
                         emailMessage += "<br/> Location: " + data.location + "</h2>";
                         emailMessage += "<ul style='list-style-type: none;'>";
                         emailMessage += "<li><strong>Report Type:</strong> " + data.reportType + "</li>";
                         emailMessage += "<li><strong>ROC Display Name:</strong> " + data.rocDisplayName + "</li>";
                         emailMessage += "<li><strong>County:</strong> " + data.county + "</li>";
                         emailMessage += "<li><strong>Date:</strong> " + this.formatDate(data.date) + "</li>";
-                        emailMessage += "<li><strong>Time:</strong> " + this.formatTime(data.starttime) + "</li>";
+                        // emailMessage += "<li><strong>Time:</strong> " + this.formatTime(data.starttime) + "</li>";
+                        emailMessage += "<li><strong>Time:</strong> " + data.starttime + "</li>";
                         emailMessage += "<li><strong>Jurisdiction:</strong> " + data.jurisdiction + "</li>";
                         emailMessage += "<li><strong>Type of Incident:</strong> " + data.incidentTypes + "</li>";
                         if(typeof(data.incidentCause) != "undefined" && data.incidentCause != "")emailMessage += "<li><strong>Cause:</strong> " + data.incidentCause + "</li>";
@@ -546,6 +548,17 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				form.formtypeid = formView.data.formTypeId; //this is always a ROC
 				form.usersessionid = UserProfile.getUserSessionId();
 				form.distributed = false;
+
+				// message.report.fuelTypes = this.view.lookupReference('fuelTypeCheckboxRef').fuelType;
+
+				console.log("********************************");
+				console.log(message);
+
+				console.log(this.view.lookupReference('fuelTypeCheckboxRef').fuelType);
+
+				console.log("--------------------------------");
+				console.log(JSON.stringify(message));
+
 				form.message = JSON.stringify(message);
 
 				if(form.incidentid) {  //submitting ROC on existing incident

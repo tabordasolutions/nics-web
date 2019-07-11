@@ -335,7 +335,7 @@ function(Core, RocFormController, RocFormModel ) {
                         {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction', allowBlank:false, cls:'roc-required'},
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
                         {
-                            bind: '{startTime}',
+                            bind: { value: '{startTime}' },
                             reference: 'startTimeRef',
                             xtype: 'timefield',
                             fieldLabel: 'Start Time',
@@ -381,7 +381,10 @@ function(Core, RocFormController, RocFormModel ) {
                             ]
                         },
                         {
-                            bind: '{fuelTypeCheckBoxGroup}',
+                            bind: {
+                                value: '{fuelTypeCheckBoxGroup}',
+                                hidden: '{finalReport}'
+                            },
                             xtype: 'checkboxgroup',
                             fieldLabel: 'Fuel Type(s)',
                             allowBlank: true,
@@ -389,13 +392,12 @@ function(Core, RocFormController, RocFormModel ) {
                             reference: 'fuelTypeCheckboxRef',
                             vertical: true,
                             columns: 2,
-                            bind: {hidden: '{finalReport}'},
                             items: [
                                 { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
                                 { boxLabel: 'Brush', name: 'fuelType', inputValue: 'Brush', cls: 'roc-no-style'},
                                 { boxLabel: 'Timber', name: 'fuelType', inputValue: 'Timber', cls: 'roc-no-style'},
                                 { boxLabel: 'Oak Woodland', name: 'fuelType', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
-                                { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'},
+                                { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'}
                             ],
                             listeners: { change: {fn: 'onOtherFuelTypeCheckBoxChecked'}}
                         },
