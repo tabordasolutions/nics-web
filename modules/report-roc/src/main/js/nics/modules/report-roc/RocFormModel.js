@@ -101,8 +101,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
                 infrastructuresThreat: this.get('infrastructuresThreat'),
                 infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
-                otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
-                otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
+                otherInfrastructuresThreat: this.get('otherInfrastructuresThreat'),
 
                 calfireIncident: this.get('calfireIncident'),
                 resourcesAssigned: this.get('resourcesAssigned'),
