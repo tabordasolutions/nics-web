@@ -335,14 +335,17 @@ function(Core, RocFormController, RocFormModel ) {
                         {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction', allowBlank:false, cls:'roc-required'},
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
                         {
-                            bind: { value: '{startTime}' },
-                            reference: 'startTimeRef',
+                            bind: {
+                                value: '{startTime}'
+                            },
                             xtype: 'timefield',
                             fieldLabel: 'Start Time',
+                            allowBlank: false,
+                            cls: 'roc-required',
+                            reference: 'startTimeRef',
                             format: 'Hi',
-                            hideTrigger:true,
-                            allowBlank:false,
-                            cls:'roc-required'
+                            hideTrigger: true
+
                         }
 	                ]
 	            },

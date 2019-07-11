@@ -75,7 +75,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 directionFromNearestCommunity: this.get('directionFromNearestCommunity'),
                 county: this.get('county'),
                 date: this.get('date'),
-                starttime: this.get('starttime'),
+                startTime: Ext.Date.format(this.get('startTime'), 'Hi'),
                 location: this.get('location'),
                 dpa: this.get('dpa'),
                 sra: this.get('sra'),
