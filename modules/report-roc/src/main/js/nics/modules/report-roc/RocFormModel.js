@@ -75,7 +75,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 directionFromNearestCommunity: this.get('directionFromNearestCommunity'),
                 county: this.get('county'),
                 date: this.get('date'),
-                starttime: this.get('starttime'),
+                startTime: Ext.Date.format(this.get('startTime'), 'Hi'),
                 location: this.get('location'),
                 dpa: this.get('dpa'),
                 sra: this.get('sra'),
@@ -101,8 +101,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
                 infrastructuresThreat: this.get('infrastructuresThreat'),
                 infrastructuresThreatInProgress: this.get('infrastructuresThreatInProgress'),
-                otherThreatsAndEvacuations: this.get('otherThreatsAndEvacuations'),
-                otherThreatsAndEvacuationsInProgress: this.get('otherThreatsAndEvacuationsInProgress'),
+                otherInfrastructuresThreat: this.get('otherInfrastructuresThreat'),
 
                 calfireIncident: this.get('calfireIncident'),
                 resourcesAssigned: this.get('resourcesAssigned'),
@@ -119,14 +118,17 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
             var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
             var incidentTypesArray = [];
 
-            for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
-                for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
-                    if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                        incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
-                        break;
+            if(incidentTypesNames != null && incidentTypesNames.incidenttype != null) {
+                for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
+                    for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                        if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
+                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                            break;
+                        }
                     }
                 }
             }
+
             return { "incidenttype": incidentTypesArray };
         },
 		formulas: {
