@@ -180,7 +180,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                         this.getViewModel().set('relHumidity', response.data.message.relHumidity);
                         this.getViewModel().set('calfireIncident', response.data.message.calfireIncident);
                         this.view.lookupReference('resourcesAssignedRef').setValue({resourcesAssigned: response.data.message.resourcesAssigned});
-                        this.view.lookupReference('otherResourcesAssignedCheckboxRef').setValue({resourcesAssigned: response.data.message.otherResourcesAssigned});
+                        this.getViewModel().set('otherResourcesAssigned', response.data.message.otherResourcesAssigned);
 
                         this.getViewModel().set('temperature', response.data.message.temperature);
                         this.view.lookupReference('otherSignificantInfoRef').setValue({otherSignificantInfo: response.data.message.otherSignificantInfo});
