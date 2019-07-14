@@ -105,6 +105,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
                 calfireIncident: this.get('calfireIncident'),
                 resourcesAssigned: this.get('resourcesAssigned'),
+                otherResourcesAssigned: this.get('otherResourcesAssigned'),
                 email: this.get('email'),
                 simplifiedEmail: this.get('simplifiedEmail'),
                 latitudeAtROCSubmission: this.get('latitude'),
