@@ -673,9 +673,28 @@ function(Core, RocFormController, RocFormModel ) {
                                     { boxLabel: 'No divert on Air Tankers for life safety', name: 'resourcesAssigned', inputValue: 'No divert on Air Tankers for life safety', bind: {hidden: '{finalReport}'}},
                                     { boxLabel: 'Large Air Tanker (LAT) assigned', name: 'resourcesAssigned', inputValue: 'Large Air Tanker (LAT) assigned', bind: {hidden: '{finalReport}'}},
                                     { boxLabel: 'Continued commitment of CAL FIRE air and ground resources', name: 'resourcesAssigned', inputValue: 'Continued commitment of CAL FIRE air and ground resources', bind: {hidden: '{!updateReport}'}},
-                                    { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }}
+                                    { boxLabel: 'All CAL FIRE air and ground resources released', name: 'resourcesAssigned', inputValue: 'All CAL FIRE air and ground resources released', bind: {hidden: '{!finalReport}' }},
+
+                                    { boxLabel: 'Other', name: 'resourcesAssigned', reference: 'otherResourcesAssignedCheckboxRef', inputValue: 'Other', cls: 'roc-no-style'},
+
                                 ]
-                            }
+                            },
+                            {
+                                bind: {
+                                    value: '{otherResourcesAssigned}',
+                                    disabled: '{!otherResourcesAssignedCheckboxRef.checked}'
+                                },
+                                fieldLabel: 'Other',
+                                vtype:'extendedalphanum',
+                                validator: function(val) {
+                                    return (!this.disabled && !val) ? "Other Resources Assigned is required" : true;
+                                }, listeners: {
+                                    disable: function() {
+                                        this.reset();
+                                    }
+                                },
+                                cls: 'roc-required'
+                            },
                         ]
 
                    },
