@@ -515,7 +515,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 reference: 'structuresThreatInProgressRef',
                                 items: [
                                     { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
-                                    { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued trear to structures', cls: 'roc-no-style'},
+                                    { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued threat to structures', cls: 'roc-no-style'},
                                     { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style'},
                                     { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
                                     { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
