@@ -89,6 +89,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 temperature: this.get('temperature'),
                 relHumidity: this.get('relHumidity'),
                 windSpeed: this.get('windSpeed'),
+                windGust: this.get('windGust'),
                 windDirection: this.get('windDirection'),
 
                 evacuations: this.get('evacuations'),

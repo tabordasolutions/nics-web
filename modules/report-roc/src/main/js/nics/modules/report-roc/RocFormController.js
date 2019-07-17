@@ -204,6 +204,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					this.getViewModel().set('temperature', data.temperature);
 					this.getViewModel().set('relHumidity', data.relHumidity);
 					this.getViewModel().set('windSpeed', data.windSpeed);
+					this.getViewModel().set('windGust', data.windGust);
 					this.getViewModel().set('windDirection', data.windDirection);
 			},
 
@@ -213,6 +214,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('temperature', response.weatherData.temperature);
 						this.getViewModel().set('relHumidity', response.weatherData.relHumidity);
 						this.getViewModel().set('windSpeed', response.weatherData.windSpeed);
+						this.getViewModel().set('windGust', response.weatherData.windGust);
 						this.getViewModel().set('windDirection', response.weatherData.windDirection);
 						this.getViewModel().set('weatherDataAvailable', true);
 					} else {
@@ -432,7 +434,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 					emailMessage  += "<ul>";
 					emailMessage  += "<li>Scope " + data.scope + " acres, "  + data.percentContained + "% contained</li>";
 					emailMessage  += "<li>" + data.spreadRate  + "Rate of Spread </li>";
-					emailMessage  += "<li>" + data.temperature  + "&deg;, " + data.relHumidity + "% RH, " + data.windSpeed +  " mph, " +  data.windDirection  + "  </li>";
+					emailMessage  += "<li>" + data.temperature  + "&deg;, " + data.relHumidity + "% RH, " + data.windSpeed +  " mph, " +  data.windGust +  " mph, " + data.windDirection  + "  </li>";
 						emailMessage  += "<li>" + data.evacuations + " Evacuated </li>";
 					emailMessage  += "<li>" + data.structuresThreat  + " Structure Threat</li>";
 					emailMessage  += "<li>" + data.infrastructuresThreat  + "Critical Infrastructure </li>";
@@ -468,6 +470,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                         emailMessage += "<li><strong>Temperature:</strong> " + data.temperature + "</li>";
                         emailMessage += "<li><strong>Relative Humidity:</strong> " + data.relHumidity + "</li>";
                         emailMessage += "<li><strong>Wind Speed mph:</strong> " + data.windSpeed + "</li>";
+                        emailMessage += "<li><strong>Wind Gust mph:</strong> " + data.windGust + "</li>";
                         emailMessage += "<li><strong>Wind Direction:</strong> " + data.windDirection + "</li>";
                         emailMessage +="<li><strong>Predicted Weather:</strong> " + data.predictedWeather + "</li></ul></li>";
                         emailMessage += "<li><strong>Evacuations:</strong> " + data.evacuations  + "</li>";
@@ -526,21 +529,20 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 	    		if (typeof(formView.data.simplifiedEmail) == "undefined" )  {formView.data.simplifiedEmail = true;}
 	    		if (formView.getReport() === null){
-	    			//create the report from the data
-	    		   for (item in formView.data){
-	    			   //Don't capture the buttons, or the incident name and id in the report
-	    			   var buttonRE = /button$/i;
-	    			  // var isButton = buttonRE.test(item);
-	    			   if (item != 'incidentId' && item != 'incidentName' && !(buttonRE.test(item)) && item != 'activeIncidentsStore'  && item != 'incidentNameReadOnly')
-	    					report[item] = formView.data[item];
-	    		  }
-	    		   message.report = report;
-	    		   
-	    		}else {
+                    //create the report from the data
+                    for (item in formView.data){
+                        //Don't capture the buttons, or the incident name and id in the report
+                        var buttonRE = /button$/i;
+                        // var isButton = buttonRE.test(item);
+                        if (item != 'incidentId' && item != 'incidentName' && !(buttonRE.test(item)) && item != 'activeIncidentsStore'  && item != 'incidentNameReadOnly')
+                        report[item] = formView.data[item];
+                    }
+                    message.report = report;
+	    		} else {
 	    			//report has already been created
 	    			message.report = formView.getReport();
 	    		}
-	    		
+
 				//Populate form properties
 				form.incidentid = formView.data.incidentId;
 				form.incidentname = formView.data.incidentName;
