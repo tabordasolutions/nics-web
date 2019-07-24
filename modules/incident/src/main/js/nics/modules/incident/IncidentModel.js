@@ -29,7 +29,7 @@
  */
 define([], function() {
 
-	var IncidentModel = function(){};http://www.localhost.com:8080/nics/login
+	var IncidentModel = function(){};
 
 	var NO_INCIDENT = 'noincident';
 	
