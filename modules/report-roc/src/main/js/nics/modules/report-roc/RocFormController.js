@@ -27,9 +27,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView','./RocFormModel'],
+define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView', './RocFormModel', 'iweb/modules/drawmenu/Interactions'],
 
-	function(ol, Core, MapModule, UserProfile, RocReportView, RocFormView , RocFormModel ){
+	function(ol, Core, MapModule, UserProfile, RocReportView, RocFormView , RocFormModel, Interactions ){
 
 		Ext.define('modules.report-roc.RocFormController', {
 			extend : 'Ext.app.ViewController',
@@ -258,14 +258,29 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onLocateCallback: function(feature) {
-				this.lookupReference('locateButton').toggle(false);
-				var view = MapModule.getMap().getView();
-				var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
-				var coord = clone.getCoordinates();
-				this.getViewModel().set('latitude', coord[1]);
-				this.getViewModel().set('longitude', coord[0]);
-				this.mixins.geoApp.removeLayer();
-				this.mixins.geoApp.resetInteractions();
+                var source = this.mixins.geoApp.getLayer().getSource();
+                var style = this.mixins.geoApp.getLayer().getStyle();
+                var interaction = Interactions.drawPoint(source, style);
+                interaction.on("drawend", this.onDrawEnd.bind(this));
+
+                this.lookupReference('locateButton').toggle(false);
+                var view = MapModule.getMap().getView();
+                var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
+                var coord = clone.getCoordinates();
+                this.getViewModel().set('latitude', coord[1]);
+                this.getViewModel().set('longitude', coord[0]);
+                // this.mixins.geoApp.removeLayer();
+                this.mixins.geoApp.resetInteractions();
+
+                MapModule.getMapController().setInteractions([interaction]);
+			},
+
+			onDrawEnd: function(drawEvent){
+			    // var view = MapModule.getMap().getView();
+			    // var clone = drawEvent.feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
+
+                var actions = Core.Ext.Map.getDefaultInteractions();
+                Core.Ext.Map.setInteractions(actions);
 			},
 
 			onLocationChange: function() {
