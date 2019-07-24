@@ -269,6 +269,21 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onLocationChange: function() {
+			    if (( this.view.lookupReference('latMinutesRef').getValue() == "" || this.view.lookupReference('latMinutesRef').getValue() == 0 ) &&
+                    (this.view.lookupReference('latDecimalRef').getValue() != "" && this.view.lookupReference('latMinutesDisplayRef').getValue() != "" &&
+                        this.view.lookupReference('latDecimalRef').getValue() > 0 && this.view.lookupReference('latMinutesDisplayRef').getValue() > 0)
+                ) {
+                    this.view.lookupReference('latMinutesRef').setValue(this.view.lookupReference('latDecimalRef').getValue() + "." + this.view.lookupReference('latMinutesDisplayRef').getValue());  // hidden
+                }
+
+
+                if (( this.view.lookupReference('longMinutesRef').getValue() == "" || this.view.lookupReference('longMinutesRef').getValue() == 0 ) &&
+                    ( this.view.lookupReference('longDecimalRef').getValue() != "" && this.view.lookupReference('longMinutesDisplayRef').getValue() != "" &&
+                      this.view.lookupReference('longDecimalRef').getValue() > 0 && this.view.lookupReference('longMinutesDisplayRef').getValue() > 0)
+                ) {
+                    this.view.lookupReference('longMinutesRef').setValue(this.view.lookupReference('longDecimalRef').getValue() + "." + this.view.lookupReference('longMinutesDisplayRef').getValue());  // hidden
+                }
+
 				//if no change in lat/long since fetching last location based data
 				if(this.prevLatitude == this.getViewModel().get('latitude') && this.prevLongitude == this.getViewModel().get('longitude'))
 					return;
