@@ -544,17 +544,19 @@ define(['iweb/CoreModule',
 			parseIncidents: function(data){
 				var incidents = [];
 				var collabRooms = {};
-		
-				for(var i=0; i<data.incidents.length; i++){
-					incidents.push({
-						incidentName: data.incidents[i].incidentname,
-						incidentId: data.incidents[i].incidentid,
-						lat: data.incidents[i].lat,
-						lon: data.incidents[i].lon,
-						incidentTypes: data.incidents[i].incidentIncidenttypes.map(function(item) {return item.incidenttypeid;})
-					});
-					collabRooms[data.incidents[i].incidentName] = data.incidents[i].collabrooms;
-				}
+
+		        if(typeof(data) != "undefined" && typeof(data.incidents) != "undefined") {
+                    for(var i=0; i<data.incidents.length; i++){
+                        incidents.push({
+                            incidentName: data.incidents[i].incidentname,
+                            incidentId: data.incidents[i].incidentid,
+                            lat: data.incidents[i].lat,
+                            lon: data.incidents[i].lon,
+                            incidentTypes: data.incidents[i].incidentIncidenttypes.map(function(item) {return item.incidenttypeid;})
+                        });
+                        collabRooms[data.incidents[i].incidentName] = data.incidents[i].collabrooms;
+                    }
+                }
 		
 				return { incidents: incidents, collabRooms: collabRooms };
 			},
