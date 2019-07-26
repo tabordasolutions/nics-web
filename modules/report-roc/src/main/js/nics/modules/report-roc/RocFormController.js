@@ -36,7 +36,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			
 			alias: 'controller.rocformcontroller',
 			mixins: {geoApp: 'modules.geocode.AbstractController'},
-			
+
 			init : function(args) {
 			
 				this.mediator = Core.Mediator.getInstance();
@@ -253,34 +253,28 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onLocateToggle: function(locateButton, state) {
-				this.setErrorMessage('');
-				this.mixins.geoApp.onLocateToggle(locateButton, state);
+                this.setErrorMessage('');
+                if(state) {
+                    this.mixins.geoApp.removeLayer();
+                }
+
+                this.mixins.geoApp.onLocateToggle(locateButton, state);
 			},
 
 			onLocateCallback: function(feature) {
                 var source = this.mixins.geoApp.getLayer().getSource();
                 var style = this.mixins.geoApp.getLayer().getStyle();
                 var interaction = Interactions.drawPoint(source, style);
-                interaction.on("drawend", this.onDrawEnd.bind(this));
 
-                this.lookupReference('locateButton').toggle(false);
                 var view = MapModule.getMap().getView();
                 var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
                 var coord = clone.getCoordinates();
                 this.getViewModel().set('latitude', coord[1]);
                 this.getViewModel().set('longitude', coord[0]);
-                // this.mixins.geoApp.removeLayer();
-                this.mixins.geoApp.resetInteractions();
 
+                this.view.lookupReference('locateButton').toggle();
+                
                 MapModule.getMapController().setInteractions([interaction]);
-			},
-
-			onDrawEnd: function(drawEvent){
-			    // var view = MapModule.getMap().getView();
-			    // var clone = drawEvent.feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
-
-                var actions = Core.Ext.Map.getDefaultInteractions();
-                Core.Ext.Map.setInteractions(actions);
 			},
 
 			onLocationChange: function() {
