@@ -139,7 +139,6 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 9999,
                                 listeners: {
                                     change: {fn: 'onLocationChange', delay: 100}
                                 }
@@ -157,7 +156,6 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 9999,
                                 listeners: {
                                     change: {fn: 'onLocationChange', delay: 100}
                                 }
@@ -234,7 +232,6 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 minValue:0,
-                                maxValue: 9999,
                                 listeners: {
                                     change: {fn: 'onLocationChange', delay: 100}
                                 }
@@ -252,7 +249,6 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 9999,
                                 listeners: {
                                     change: {fn: 'onLocationChange', delay: 100}
                                 }

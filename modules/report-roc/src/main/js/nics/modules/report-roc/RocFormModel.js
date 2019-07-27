@@ -178,7 +178,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                                 latMinutes: latDegreesMinutes.minutes,
 
                                 latDecimal: latDegreesMinutesSplitArray[0],
-                                latMinutesDisplay: ((typeof latDegreesMinutesSplitArray[1] === 'undefined') ? 0 : latDegreesMinutesSplitArray[1].substring(0,4))
+                                latMinutesDisplay: ((typeof latDegreesMinutesSplitArray[1] === 'undefined') ? 0 : latDegreesMinutesSplitArray[1])
                             });
                         }
 					}
@@ -207,7 +207,7 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 
                                 longDecimal: longDegreesMinutesSplitArray[0],
 
-                                longMinutesDisplay: ((typeof longDegreesMinutesSplitArray[1] === 'undefined') ? 0 : longDegreesMinutesSplitArray[1].substring(0,4))
+                                longMinutesDisplay: ((typeof longDegreesMinutesSplitArray[1] === 'undefined') ? 0 : longDegreesMinutesSplitArray[1])
 
                             });
                         }

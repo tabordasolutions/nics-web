@@ -27,16 +27,16 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView','./RocFormModel'],
+define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserProfileModule", './RocReportView',  './RocFormView', './RocFormModel', 'iweb/modules/drawmenu/Interactions'],
 
-	function(ol, Core, MapModule, UserProfile, RocReportView, RocFormView , RocFormModel ){
+	function(ol, Core, MapModule, UserProfile, RocReportView, RocFormView , RocFormModel, Interactions ){
 
 		Ext.define('modules.report-roc.RocFormController', {
 			extend : 'Ext.app.ViewController',
 			
 			alias: 'controller.rocformcontroller',
 			mixins: {geoApp: 'modules.geocode.AbstractController'},
-			
+
 			init : function(args) {
 			
 				this.mediator = Core.Mediator.getInstance();
@@ -253,19 +253,28 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			},
 
 			onLocateToggle: function(locateButton, state) {
-				this.setErrorMessage('');
-				this.mixins.geoApp.onLocateToggle(locateButton, state);
+                this.setErrorMessage('');
+                if(state) {
+                    this.mixins.geoApp.removeLayer();
+                }
+
+                this.mixins.geoApp.onLocateToggle(locateButton, state);
 			},
 
 			onLocateCallback: function(feature) {
-				this.lookupReference('locateButton').toggle(false);
-				var view = MapModule.getMap().getView();
-				var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
-				var coord = clone.getCoordinates();
-				this.getViewModel().set('latitude', coord[1]);
-				this.getViewModel().set('longitude', coord[0]);
-				this.mixins.geoApp.removeLayer();
-				this.mixins.geoApp.resetInteractions();
+                var source = this.mixins.geoApp.getLayer().getSource();
+                var style = this.mixins.geoApp.getLayer().getStyle();
+                var interaction = Interactions.drawPoint(source, style);
+
+                var view = MapModule.getMap().getView();
+                var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
+                var coord = clone.getCoordinates();
+                this.getViewModel().set('latitude', coord[1]);
+                this.getViewModel().set('longitude', coord[0]);
+
+                this.view.lookupReference('locateButton').toggle();
+                
+                MapModule.getMapController().setInteractions([interaction]);
 			},
 
 			onLocationChange: function() {
