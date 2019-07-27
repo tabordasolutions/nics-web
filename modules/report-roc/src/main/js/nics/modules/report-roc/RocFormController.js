@@ -299,9 +299,37 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.prevLatitude = this.getViewModel().get('latitude');
 				this.prevLongitude = this.getViewModel().get('longitude');
 				if(!this.getViewModel().get('incidentId') && this.getViewModel().get('latitude') && this.getViewModel().get('longitude')) {
+
+					/* Remove any previous pins */
+					this.mixins.geoApp.removeLayer();
+
+                    /* Put pin on map */
+
+					var view = MapModule.getMap().getView();
+					var point = this.buildPoint(this.getViewModel().get('latitude'), this.getViewModel().get('longitude'), view);
+                    view.setCenter(point.getCoordinates());
+                    // MapModule.getMapController.zoomTo(10);
+
+                    /*
+                    var source = this.mixins.geoApp.getLayer().getSource();
+                    var style = this.mixins.geoApp.getLayer().getStyle();
+                    var interaction = Interactions.drawPoint(source, style);
+                    MapModule.getMapController().setInteractions([interaction]);
+                    */
+
+					/* Get weather data */
 					this.requestLocationBasedData();
 				}
 			},
+
+			buildPoint: function(lat, long, view) {
+			    console.log(lat);
+			    console.log(long);
+
+                return new ol.geom.Point([long, lat])
+                    .transform(ol.proj.get('EPSG:4326'), view.getProjection());
+            },
+
             onIncidentTypeChange: function(checkbox, newValue, oldValue, eOpts) {
                 var incidentTypeSelectedValuesLength = 0;
                 var isFireWildlandCheckboxChecked = false;
