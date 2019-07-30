@@ -401,11 +401,13 @@ function(Core, RocFormController, RocFormModel ) {
                             listeners: { change: {fn: 'onOtherFuelTypeCheckBoxChecked'}}
                         },
                         {
-                            bind: { value: '{otherFuelTypes}' },
+                            bind: {
+                                value: '{otherFuelTypes}',
+                                hidden: '{finalReport}'
+                            },
                             disabled: true,
                             fieldLabel: 'Other Fuel Type(s)',
                             vtype:'extendedalphanum',
-                            bind: {hidden: '{finalReport}'},
                             reference: 'otherFuelTypesRef',
                             cls: 'roc-no-style'
                         },
