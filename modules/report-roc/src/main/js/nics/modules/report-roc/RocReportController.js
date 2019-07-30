@@ -157,7 +157,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			rocList.getStore().removeAll()
 		},
 
-	onAddROC: function(e) {
+	    onAddROC: function(e) {
 			var rocReportContainer = this.view.lookupReference('rocReport');
 			var username  = UserProfile.getFirstName() + " " + UserProfile.getLastName();
 			var initialData= {
