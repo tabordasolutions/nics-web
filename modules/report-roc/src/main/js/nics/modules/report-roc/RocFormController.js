@@ -154,6 +154,11 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('reportType', response.data.reportType);
 						this.getViewModel().set('latitude', response.data.latitude);
 						this.getViewModel().set('longitude', response.data.longitude);
+
+                        console.log("*************************");
+						console.log(response.data);
+						console.log("*************************");
+
 						if(response.data.incidentTypes) {
 							var incidentTypeIds = response.data.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
 		                    var incidentTypeNamesArray = this.getIncidentTypeNamesFromIncidentTypeIds(incidentTypeIds);
@@ -378,13 +383,13 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     incidentTypeSelectedValuesLength = newValue.incidenttype.length;
                     if(Array.isArray(newValue.incidenttype)) {
                         for(var j=0; j<incidentTypeSelectedValuesLength; j++) {
-                            if(newValue.incidenttype[j] == "Fire (Wildland)") {
+                            if(newValue.incidenttype[j] == "Vegetation Fire") {
                                 isFireWildlandCheckboxChecked = true;
                                 break;
                             }
                         }
                     } else {
-                        if(newValue.incidenttype == "Fire (Wildland)") {
+                        if(newValue.incidenttype == "Vegetation Fire") {
                             isFireWildlandCheckboxChecked = true;
                         }
                     }
