@@ -301,13 +301,15 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				if(!this.getViewModel().get('incidentId') && this.getViewModel().get('latitude') && this.getViewModel().get('longitude')) {
 
 					/* Remove any previous pins */
-					this.mixins.geoApp.removeLayer();
+					/* this.mixins.geoApp.removeLayer(); */
 
                     /* Put pin on map */
 
+					/*
 					var view = MapModule.getMap().getView();
 					var point = this.buildPoint(this.getViewModel().get('latitude'), this.getViewModel().get('longitude'), view);
                     view.setCenter(point.getCoordinates());
+                    */
                     // MapModule.getMapController.zoomTo(10);
 
                     /*
@@ -322,6 +324,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				}
 			},
 
+            /*
 			buildPoint: function(lat, long, view) {
 			    console.log(lat);
 			    console.log(long);
@@ -329,6 +332,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 return new ol.geom.Point([long, lat])
                     .transform(ol.proj.get('EPSG:4326'), view.getProjection());
             },
+            */
 
             onIncidentTypeChange: function(checkbox, newValue, oldValue, eOpts) {
                 var incidentTypeSelectedValuesLength = 0;
