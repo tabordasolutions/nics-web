@@ -155,10 +155,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 						this.getViewModel().set('latitude', response.data.latitude);
 						this.getViewModel().set('longitude', response.data.longitude);
 
-                        console.log("*************************");
-						console.log(response.data);
-						console.log("*************************");
-
 						if(response.data.incidentTypes) {
 							var incidentTypeIds = response.data.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
 		                    var incidentTypeNamesArray = this.getIncidentTypeNamesFromIncidentTypeIds(incidentTypeIds);
