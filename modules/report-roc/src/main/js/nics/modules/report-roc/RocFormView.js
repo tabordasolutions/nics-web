@@ -320,7 +320,7 @@ function(Core, RocFormController, RocFormModel ) {
                             fieldLabel: 'Direction from Nearest Community',
                             allowBlank:false,
                             cls:'roc-required',
-                            store: ['', 'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+                            store: ["", "north", "northwest", "northeast", "south", "southwest", "southeast", "east", "west"]
                         },
                         {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA',
                             queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
