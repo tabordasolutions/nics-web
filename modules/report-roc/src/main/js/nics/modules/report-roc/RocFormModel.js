@@ -55,10 +55,6 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 			}
 			var degrees = Math.floor(coordinateMod);
 			var minutes = 60 * (coordinateMod - degrees);
-
-			console.log("Degrees: " + degrees);
-			console.log("Minutes: " + minutes);
-
 			return {'degrees': negateVal*degrees, 'minutes': minutes};
 		},
 		decimalDegreesToCoordinate: function(degrees, minutes) {
