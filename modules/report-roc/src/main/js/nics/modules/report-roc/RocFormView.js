@@ -95,8 +95,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 maxValue: 89,
                                 allowDecimals: false,
                                 fieldLabel: 'Latitude',
-                                cls: 'roc-required',
-                                listeners: { change: {fn: 'onLocationChange', delay: 1000} }
+                                cls: 'roc-required'
                             },
 						    {
 						        xtype: 'displayfield',
@@ -115,10 +114,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 59,
-                                listeners: {
-                                    change: {fn: 'onLocationChange', delay: 100}
-                                }
+                                maxValue: 59
                             },
 						    {
 						        xtype: 'displayfield',
@@ -138,10 +134,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 allowDecimals: false,
-                                minValue:0,
-                                listeners: {
-                                    change: {fn: 'onLocationChange', delay: 100}
-                                }
+                                minValue:0
                             },
 
                             /* New field.  Make it display purpose. */
@@ -155,10 +148,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 allowDecimals: false,
-                                minValue:0,
-                                listeners: {
-                                    change: {fn: 'onLocationChange', delay: 100}
-                                }
+                                minValue:0
                             },
                             {
                                 xtype: 'displayfield',
@@ -187,10 +177,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 maxValue: 179,
                                 allowDecimals: false,
 							    fieldLabel: 'Longitude',
-							    cls: 'roc-required',
-							    listeners: {
-							        change: {fn: 'onLocationChange', delay: 1000}
-                                }
+							    cls: 'roc-required'
                             },
 						    {
 						        xtype: 'displayfield',
@@ -209,10 +196,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 59,
-                                listeners: {
-                                    change: {fn: 'onLocationChange', delay: 100}
-                                }
+                                maxValue: 59
                             },
                             {
                                 xtype: 'displayfield',
@@ -231,10 +215,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 reference: 'longMinutesRef',
                                 flex: 1,
                                 allowBlank: false,
-                                minValue:0,
-                                listeners: {
-                                    change: {fn: 'onLocationChange', delay: 100}
-                                }
+                                minValue:0
                             },
 
                             /* New field.  Make it display purpose. */
@@ -248,10 +229,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 allowDecimals: false,
-                                minValue:0,
-                                listeners: {
-                                    change: {fn: 'onLocationChange', delay: 100}
-                                }
+                                minValue:0
                             },
 
                             {
@@ -262,8 +240,27 @@ function(Core, RocFormController, RocFormModel ) {
                             }
 						]
 					},
-					{ xtype: 'button', text: 'Find Location on Map', enableToggle: true, toggleHandler: 'onLocateToggle', reference: 'locateButton', bind: {disabled: '{readOnlyIncidentDetails}'},
-						width: 60, margin:'0 0 0 20'},
+					{
+					    xtype: 'button',
+                        text: 'Find Location on Map',
+                        enableToggle: true,
+                        toggleHandler: 'onLocateToggle',
+                        reference: 'locateButton',
+                        bind: {disabled: '{readOnlyIncidentDetails}'},
+						margin:'0 0 0 20',
+						cls: 'roc-button'
+                    },
+                    {
+                        xtype: 'button',
+                        text: 'Search',
+                        enableToggle: true,
+                        // toggleHandler: 'onLocationChange',
+                        reference: 'searchButton',
+                        bind: {disabled: '{readOnlyIncidentDetails}'},
+                        margin:'0 0 0 20',
+                        cls: 'roc-button',
+                        listeners: { click: {fn: 'onLocationChange'}}
+                    },
 					{
 					    bind: {
 					        value: '{incidentTypes}',
