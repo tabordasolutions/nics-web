@@ -43,7 +43,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
 				this.emailROCBinding = this.emailROC.bind(this);
 				Core.EventManager.addListener("EmailROCReport", this.emailROCBinding);
-				this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
+				// this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
 				this.loadLocationBasedDataByIncidentBinding = this.processLocationBasedDataForIncident.bind(this);
 				this.processLocationBasedDataBinding = this.processLocationBasedData.bind(this);
 				this.processWeatherDataBinding = this.processWeatherData.bind(this);
@@ -257,83 +257,74 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 this.setErrorMessage('');
                 if(state) {
                     this.mixins.geoApp.removeLayer();
-                }
-
-                this.mixins.geoApp.onLocateToggle(locateButton, state);
-			},
-
-			onLocateCallback: function(feature) {
-                var source = this.mixins.geoApp.getLayer().getSource();
-                var style = this.mixins.geoApp.getLayer().getStyle();
-                var interaction = Interactions.drawPoint(source, style);
-
-                var view = MapModule.getMap().getView();
-                var clone = feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
-                var coord = clone.getCoordinates();
-                this.getViewModel().set('latitude', coord[1]);
-                this.getViewModel().set('longitude', coord[0]);
-
-                this.view.lookupReference('locateButton').toggle();
-                
-                MapModule.getMapController().setInteractions([interaction]);
-			},
-
-			onLocationChange: function() {
-			    if (( this.view.lookupReference('latMinutesRef').getValue() == "" || this.view.lookupReference('latMinutesRef').getValue() == 0 ) &&
-                    (this.view.lookupReference('latDecimalRef').getValue() != "" && this.view.lookupReference('latMinutesDisplayRef').getValue() != "" &&
-                        this.view.lookupReference('latDecimalRef').getValue() > 0 && this.view.lookupReference('latMinutesDisplayRef').getValue() > 0)
-                ) {
-                    this.view.lookupReference('latMinutesRef').setValue(this.view.lookupReference('latDecimalRef').getValue() + "." + this.view.lookupReference('latMinutesDisplayRef').getValue());  // hidden
-                }
-
-
-                if (( this.view.lookupReference('longMinutesRef').getValue() == "" || this.view.lookupReference('longMinutesRef').getValue() == 0 ) &&
-                    ( this.view.lookupReference('longDecimalRef').getValue() != "" && this.view.lookupReference('longMinutesDisplayRef').getValue() != "" &&
-                      this.view.lookupReference('longDecimalRef').getValue() > 0 && this.view.lookupReference('longMinutesDisplayRef').getValue() > 0)
-                ) {
-                    this.view.lookupReference('longMinutesRef').setValue(this.view.lookupReference('longDecimalRef').getValue() + "." + this.view.lookupReference('longMinutesDisplayRef').getValue());  // hidden
-                }
-
-				//if no change in lat/long since fetching last location based data
-				if(this.prevLatitude == this.getViewModel().get('latitude') && this.prevLongitude == this.getViewModel().get('longitude'))
-					return;
-				this.prevLatitude = this.getViewModel().get('latitude');
-				this.prevLongitude = this.getViewModel().get('longitude');
-				if(!this.getViewModel().get('incidentId') && this.getViewModel().get('latitude') && this.getViewModel().get('longitude')) {
-
-					/* Remove any previous pins */
-					/* this.mixins.geoApp.removeLayer(); */
-
-                    /* Put pin on map */
-
-					/*
-					var view = MapModule.getMap().getView();
-					var point = this.buildPoint(this.getViewModel().get('latitude'), this.getViewModel().get('longitude'), view);
-                    view.setCenter(point.getCoordinates());
-                    */
-                    // MapModule.getMapController.zoomTo(10);
-
-                    /*
                     var source = this.mixins.geoApp.getLayer().getSource();
                     var style = this.mixins.geoApp.getLayer().getStyle();
                     var interaction = Interactions.drawPoint(source, style);
+                    interaction.on("drawend", this.onDrawEnd.bind(this));
                     MapModule.getMapController().setInteractions([interaction]);
-                    */
-
-					/* Get weather data */
-					this.requestLocationBasedData();
-				}
+                } else {
+                    Core.Ext.Map.setInteractions(null);
+                    var me = this;
+                    setTimeout(function(){
+                        me.requestLocationBasedData();
+                    }, 100);
+                }
 			},
 
-            /*
-			buildPoint: function(lat, long, view) {
-			    console.log(lat);
-			    console.log(long);
+			onDrawEnd: function( drawEvent ) {
+                var view = MapModule.getMap().getView();
+                var clone = drawEvent.feature.getGeometry().clone().transform(view.getProjection(), ol.proj.get('EPSG:4326'));
+                var coord = clone.getCoordinates();
+                this.getViewModel().set('latitude', coord[1]);
+                this.getViewModel().set('longitude', coord[0]);
+                /*
+                console.log("=====================================");
+                console.log(coord[0]);
+                console.log(coord[1]);
+                console.log("=====================================");
+                */
+                this.view.lookupReference('locateButton').toggle();
+			},
 
+			onLocationChange: function() {
+                this.mixins.geoApp.removeLayer();
+
+                var latDegrees = this.view.lookupReference("latDegreesRef").getValue();
+                var latMinutes = this.view.lookupReference('latDecimalRef').getValue() + "." + this.view.lookupReference('latMinutesDisplayRef').getValue();
+
+                var longDegrees = this.view.lookupReference("longDegreesRef").getValue();
+                var longMinutes = this.view.lookupReference('longDecimalRef').getValue() + "." + this.view.lookupReference('longMinutesDisplayRef').getValue();
+
+                this.getViewModel().set('latitude', this.getViewModel().decimalDegreesToCoordinate(latDegrees, latMinutes));
+                this.getViewModel().set('longitude', this.getViewModel().decimalDegreesToCoordinate(longDegrees, longMinutes));
+
+                var me = this;
+                setTimeout(function(){
+                    console.log("******************************************************");
+                    console.log(me.getViewModel().get('latitude'));
+                    console.log(me.getViewModel().get('longitude'));
+
+                    // console.log(me.view.lookupReference('longMinutesRef').getValue());
+                    // console.log(me.view.lookupReference('latMinutesRef').getValue());
+                    // console.log("------------------------------------------------------");
+
+                    console.log("******************************************************");
+
+                    var view = MapModule.getMap().getView();
+                    var point = me.buildPoint(me.getViewModel().get('latitude'), me.getViewModel().get('longitude'), view);
+                    view.setCenter(point.getCoordinates());
+                    MapModule.getMapController().zoomTo(15);
+
+                    me.requestLocationBasedData();
+                }, 100);
+
+                this.view.lookupReference('searchButton').toggle();
+			},
+
+            buildPoint: function(lat, long, view) {
                 return new ol.geom.Point([long, lat])
                     .transform(ol.proj.get('EPSG:4326'), view.getProjection());
             },
-            */
 
             onIncidentTypeChange: function(checkbox, newValue, oldValue, eOpts) {
                 var incidentTypeSelectedValuesLength = 0;

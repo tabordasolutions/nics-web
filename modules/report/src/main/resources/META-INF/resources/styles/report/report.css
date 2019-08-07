@@ -45,6 +45,10 @@ div.roc-read-only input {
     background: #f3f2f2;
 }
 
+a.roc-button {
+    width: 45% !important;
+}
+
 .fmag-fieldset .x-fieldset-header-text{
     font-weight:bold;
 }

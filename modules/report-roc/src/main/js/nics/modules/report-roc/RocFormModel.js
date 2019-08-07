@@ -55,6 +55,10 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 			}
 			var degrees = Math.floor(coordinateMod);
 			var minutes = 60 * (coordinateMod - degrees);
+
+			console.log("Degrees: " + degrees);
+			console.log("Minutes: " + minutes);
+
 			return {'degrees': negateVal*degrees, 'minutes': minutes};
 		},
 		decimalDegreesToCoordinate: function(degrees, minutes) {
@@ -134,96 +138,96 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
             return { "incidenttype": incidentTypesArray };
         },
 		formulas: {
-				readOnlyIncidentDetails: function(get) {
-					return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
-				},
-				disableEvacuationsInProgress: function(get) {
-					var evacuations = get('evacuations') ;
-					return (typeof evacuations == "string") ? evacuations === 'No' : true;
-				},
-				disableStructuresThreatInProgress: function(get) {
-					var structuresThreat = get('structuresThreat') ;
-					return (typeof structuresThreat == "string") ? structuresThreat === 'No' : true;
-				},
-				disableInfrastructuresThreatInProgress: function(get) {
-					var infrastructuresThreat = get('infrastructuresThreat') ;
-					return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
-				},
-				updateReport: function(get) {
-					return get('reportType') == 'UPDATE';
-				},
-				finalReport: function(get) {
-					return get('reportType') == 'FINAL';
-				},
-				latitude: {
-					get: function(get) {
-						return this.decimalDegreesToCoordinate(get('latDegrees'), get('latMinutes'));
-					},
+            readOnlyIncidentDetails: function(get) {
+                return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
+            },
+            disableEvacuationsInProgress: function(get) {
+                var evacuations = get('evacuations') ;
+                return (typeof evacuations == "string") ? evacuations === 'No' : true;
+            },
+            disableStructuresThreatInProgress: function(get) {
+                var structuresThreat = get('structuresThreat') ;
+                return (typeof structuresThreat == "string") ? structuresThreat === 'No' : true;
+            },
+            disableInfrastructuresThreatInProgress: function(get) {
+                var infrastructuresThreat = get('infrastructuresThreat') ;
+                return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
+            },
+            updateReport: function(get) {
+                return get('reportType') == 'UPDATE';
+            },
+            finalReport: function(get) {
+                return get('reportType') == 'FINAL';
+            },
+            latitude: {
+                get: function(get) {
+                    return this.decimalDegreesToCoordinate(get('latDegrees'), get('latMinutes'));
+                },
 
-					set: function(value) {
-						var latDegreesMinutes = this.coordinateToDecimalDegrees(value);
-						var latDegreesMinutesSplitArray = 0;
+                set: function(value) {
+                    var latDegreesMinutes = this.coordinateToDecimalDegrees(value);
+                    var latDegreesMinutesSplitArray = 0;
 
-						this.set({
-                            latDegrees: 0,
-                            latDecimal: 0,
-                            latMinutes: 0
-                        });
+                    this.set({
+                        latDegrees: 0,
+                        latDecimal: 0,
+                        latMinutes: 0
+                    });
 
-                        if(!isNaN(latDegreesMinutes.minutes)) {
-                            latDegreesMinutesSplitArray = latDegreesMinutes.minutes.toString().split(".");
-
-                            this.set({
-                                latDegrees: latDegreesMinutes.degrees,
-                                latMinutes: latDegreesMinutes.minutes,
-
-                                latDecimal: latDegreesMinutesSplitArray[0],
-                                latMinutesDisplay: ((typeof latDegreesMinutesSplitArray[1] === 'undefined') ? 0 : latDegreesMinutesSplitArray[1])
-                            });
-                        }
-					}
-				},
-				longitude: {
-					get: function(get) {
-						return this.decimalDegreesToCoordinate(get('longDegrees'), get('longMinutes'));
-					},
-
-					set: function(value) {
-						var longDegreesMinutes = this.coordinateToDecimalDegrees(value);
-                        var longDegreesMinutesSplitArray = 0;
+                    if(!isNaN(latDegreesMinutes.minutes)) {
+                        latDegreesMinutesSplitArray = latDegreesMinutes.minutes.toString().split(".");
 
                         this.set({
-                            longDegrees: 0,
-                            longDecimal: 0,
-                            longMinutes: 0
+                            latDegrees: latDegreesMinutes.degrees,
+                            latMinutes: latDegreesMinutes.minutes,
+
+                            latDecimal: latDegreesMinutesSplitArray[0],
+                            latMinutesDisplay: ((typeof latDegreesMinutesSplitArray[1] === 'undefined') ? 0 : latDegreesMinutesSplitArray[1])
                         });
+                    }
+                }
+            },
+            longitude: {
+                get: function(get) {
+                    return this.decimalDegreesToCoordinate(get('longDegrees'), get('longMinutes'));
+                },
 
-                        if(!isNaN(longDegreesMinutes.minutes)) {
-                            longDegreesMinutesSplitArray = longDegreesMinutes.minutes.toString().split(".");
+                set: function(value) {
+                    var longDegreesMinutes = this.coordinateToDecimalDegrees(value);
+                    var longDegreesMinutesSplitArray = 0;
 
-                            this.set({
-                                longDegrees: longDegreesMinutes.degrees,
-                                longMinutes: longDegreesMinutes.minutes,
+                    this.set({
+                        longDegrees: 0,
+                        longDecimal: 0,
+                        longMinutes: 0
+                    });
 
-                                longDecimal: longDegreesMinutesSplitArray[0],
+                    if(!isNaN(longDegreesMinutes.minutes)) {
+                        longDegreesMinutesSplitArray = longDegreesMinutes.minutes.toString().split(".");
 
-                                longMinutesDisplay: ((typeof longDegreesMinutesSplitArray[1] === 'undefined') ? 0 : longDegreesMinutesSplitArray[1])
+                        this.set({
+                            longDegrees: longDegreesMinutes.degrees,
+                            longMinutes: longDegreesMinutes.minutes,
 
-                            });
-                        }
-					}
-				},
-				fuelTypes: {
-					get: function(get) {
-						get('fuelTypeCheckBoxGroup').fuelType;
-					},
+                            longDecimal: longDegreesMinutesSplitArray[0],
 
-					set: function(value) {
-						this.set({
-							fuelTypeCheckBoxGroup: {'fuelType': value}
-						});
-					}
-				}
+                            longMinutesDisplay: ((typeof longDegreesMinutesSplitArray[1] === 'undefined') ? 0 : longDegreesMinutesSplitArray[1])
+
+                        });
+                    }
+                }
+            },
+            fuelTypes: {
+                get: function(get) {
+                    get('fuelTypeCheckBoxGroup').fuelType;
+                },
+
+                set: function(value) {
+                    this.set({
+                        fuelTypeCheckBoxGroup: {'fuelType': value}
+                    });
+                }
+            }
 		 }
 	 });
 });
