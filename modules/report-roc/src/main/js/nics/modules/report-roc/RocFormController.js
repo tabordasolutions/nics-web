@@ -277,12 +277,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 var coord = clone.getCoordinates();
                 this.getViewModel().set('latitude', coord[1]);
                 this.getViewModel().set('longitude', coord[0]);
-                /*
-                console.log("=====================================");
-                console.log(coord[0]);
-                console.log(coord[1]);
-                console.log("=====================================");
-                */
                 this.view.lookupReference('locateButton').toggle();
 			},
 
@@ -300,21 +294,12 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
                 var me = this;
                 setTimeout(function(){
-                    console.log("******************************************************");
-                    console.log(me.getViewModel().get('latitude'));
-                    console.log(me.getViewModel().get('longitude'));
-
-                    // console.log(me.view.lookupReference('longMinutesRef').getValue());
-                    // console.log(me.view.lookupReference('latMinutesRef').getValue());
-                    // console.log("------------------------------------------------------");
-
-                    console.log("******************************************************");
-
                     var view = MapModule.getMap().getView();
                     var point = me.buildPoint(me.getViewModel().get('latitude'), me.getViewModel().get('longitude'), view);
                     view.setCenter(point.getCoordinates());
                     MapModule.getMapController().zoomTo(15);
-
+                    var feature = me.mixins.geoApp.buildFeature(point,"");
+                    me.mixins.geoApp.getLayer().getSource().addFeature(feature);
                     me.requestLocationBasedData();
                 }, 100);
 
