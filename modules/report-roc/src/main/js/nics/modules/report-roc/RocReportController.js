@@ -231,9 +231,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.editROC = !displayOnly;
 			    //Convert date and starttime back to date objects so they will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
-				formData.report.startTime = new Date(Ext.Date.format(new Date(formData.report.startTime), 'Hi'));
-
-				// formData.report.startTime = formData.report.startTime;
+				formData.report.startTime = formData.report.startTime;
 
 				if (displayOnly){
 					rocForm.controller.setFormReadOnly();
