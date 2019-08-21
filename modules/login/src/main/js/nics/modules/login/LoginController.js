@@ -67,24 +67,23 @@ define([
 			},
 
 			logout: function(){
-				LOGOUT = true;
+                LOGOUT = true;
                 this.loginCleanup();
-                Core.EventManager.fireEvent('logout'); //Give everyone a chance to clean up
-				
-				var topic = "nics.logout.usersession.callback";
-				Core.EventManager.createCallbackHandler(topic, this, function(){
+                var topic = "nics.logout.usersession.callback";
+                Core.EventManager.createCallbackHandler(topic, this, function(){
                     this.mediator.close();
-					location.href = "./login";
-				});
+                    location.href = "./login";
+                });
 
+                Core.EventManager.fireEvent('logout'); //Give everyone a chance to clean up
             },
 			
 			logoutFromMessage: function(evt, currentUserSessionId){
 				if(!LOGOUT && currentUserSessionId === UserProfile.getCurrentUserSessionId()){
 					LOGOUT = true;
-					
+
 					Core.EventManager.fireEvent('logout'); //Give everyone a chance to clean up
-					
+
 					var _mediator = this.mediator;
 					
 					//remove from openam
@@ -93,11 +92,13 @@ define([
 						_mediator.close();
 						location.href = "./login?loggedOut=true";
 					});
-					
-					this.mediator.sendDeleteMessage(
-							Ext.String.format("{0}/login/{1}", 
-									Core.Config.getProperty(UserProfile.REST_ENDPOINT), 
-									UserProfile.getUsername()), topic);
+
+					_mediator.sendDeleteMessage(
+                        Ext.String.format("{0}/login/{1}",
+                        Core.Config.getProperty(UserProfile.REST_ENDPOINT),
+                        UserProfile.getUsername()),
+                        topic
+                    );
 				}
 			},
 			
@@ -216,11 +217,8 @@ define([
 				//Get rid of the OpenAm Token.
 				var topic = "nics.logout.usersession.callback";
 				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
-                Core.Mediator.getInstance().sendDeleteMessage(
-					Ext.String.format("{0}/login", endpoint), topic);
 
-				//Issue a get of the login page with the loggedOut param set, which will clean up the java session.
-                $.get('./login?loggedOut=true');
+                Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login", endpoint), topic);
 			},
 
 
