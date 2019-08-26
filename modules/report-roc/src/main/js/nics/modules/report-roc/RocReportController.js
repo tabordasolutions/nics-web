@@ -225,7 +225,9 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.longitude = this.incidentLongitude;
 
                 if(this.incidentTypes != null) {
-                    this.incidentTypes.map(function(curr, index, array) {return curr.incidentTypeId;});
+                    var incidentTypeIds = formData.report.incidentTypes.incidenttype;
+                    var incidentTypeNamesArray = this.getIncidentTypeNamesFromIncidentTypeIds(incidentTypeIds);
+                    formData.report.incidentTypes.incidenttype = incidentTypeNamesArray;
                 }
 
 			    formData.report.editROC = !displayOnly;
@@ -250,6 +252,20 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				}
 			}
 		},
+
+		getIncidentTypeNamesFromIncidentTypeIds: function(incidentTypesIds) {
+            var incidentTypesWithIncidentNames = UserProfile.getIncidentTypes();
+            var incidentTypesArray = [];
+            for(var i=0; i<incidentTypesIds.length; i++) {
+                for(var j=0; j<incidentTypesWithIncidentNames.length; j++) {
+                    if(incidentTypesIds[i] === incidentTypesWithIncidentNames[j].incidentTypeId) {
+                        incidentTypesArray.push(incidentTypesWithIncidentNames[j].incidentTypeName);
+                        break;
+                    }
+                }
+            }
+            return incidentTypesArray;
+        },
 
 		onReportAdded: function() {	
 			this.lookupReference('createButton').disable();
