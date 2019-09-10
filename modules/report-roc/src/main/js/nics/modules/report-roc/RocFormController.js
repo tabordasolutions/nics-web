@@ -186,6 +186,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                         this.getViewModel().set('temperature', response.data.message.temperature);
                         this.view.lookupReference('otherSignificantInfoRef').setValue({otherSignificantInfo: response.data.message.otherSignificantInfo});
 						this.bindLocationBasedData(response.data.message, response.data.reportType);
+						this.getViewModel().set('state', response.data.message.state);
 					}
 				} else if(response.status == 400){
 					this.setErrorMessage(response.validationErrors);
