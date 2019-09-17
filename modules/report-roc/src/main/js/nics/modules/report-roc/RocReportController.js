@@ -224,6 +224,10 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.latitude = this.incidentLatitude;
 			    formData.report.longitude = this.incidentLongitude;
 
+                formData.report.otherSignificantInfoCheckBoxGroup = {};
+                formData.report.otherSignificantInfoCheckBoxGroup.otherSignificantInfo = [];
+                formData.report.otherSignificantInfoCheckBoxGroup.otherSignificantInfo = formData.report.otherSignificantInfo;
+
                 if(this.incidentTypes != null) {
                     var incidentTypeIds = formData.report.incidentTypes.incidenttype;
                     var incidentTypeNamesArray = this.getIncidentTypeNamesFromIncidentTypeIds(incidentTypeIds);
@@ -233,7 +237,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			    formData.report.editROC = !displayOnly;
 			    //Convert date and starttime back to date objects so they will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
-				formData.report.startTime = formData.report.startTime;
 
 				if (displayOnly){
 					rocForm.controller.setFormReadOnly();
