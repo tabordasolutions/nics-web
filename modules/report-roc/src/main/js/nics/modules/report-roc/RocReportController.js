@@ -245,6 +245,21 @@ function(Core, UserProfile, RocReportView, RocFormView) {
                     formData.report.fuelTypes = [];
                     formData.report.otherFuelTypes = "";
                     formData.report.percentContained = "";
+
+                    formData.report.evacuations = "";
+                    formData.report.evacuationsInProgress = "";
+                    formData.report.otherEvacuations = "";
+
+                    formData.report.structuresThreat = "";
+                    formData.report.structuresThreatInProgress = "";
+                    formData.report.otherStructuresThreat = "";
+
+                    formData.report.infrastructuresThreat = "";
+                    formData.report.infrastructuresThreatInProgress = "";
+                    formData.report.otherInfrastructuresThreat = "";
+
+                    formData.report.otherSignificantInfoCheckBoxGroup = "";
+                    formData.report.otherOtherSignificantInfo = "";
                 }
 
 				if (displayOnly){
