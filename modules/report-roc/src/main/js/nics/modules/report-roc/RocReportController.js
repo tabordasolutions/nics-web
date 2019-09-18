@@ -200,8 +200,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			var combo  = this.lookupReference('rocList');
 			var currentFormId=combo.getValue();
 			var record = combo.findRecordByValue(currentFormId);
-			
-			if(record){
+
+			if(record) {
 				var rocReportContainer = this.view.lookupReference('rocReport');
 				//Clear away any previous report
 				rocReportContainer.removeAll();
@@ -234,18 +234,28 @@ function(Core, UserProfile, RocReportView, RocFormView) {
                     formData.report.incidentTypes.incidenttype = incidentTypeNamesArray;
                 }
 
+                formData.report.startTime = formData.report.startTime;
 			    formData.report.editROC = !displayOnly;
-			    //Convert date and starttime back to date objects so they will display properly on the forms
+			    //Convert date back to date object so it will display properly on the forms
 				formData.report.date = new Date(formData.report.date);
+
+                if(status == 'UPDATE' || status == 'FINAL' ) {
+                    formData.report.scope = "";
+                    formData.report.spreadRate = "";
+                    formData.report.fuelTypes = [];
+                    formData.report.otherFuelTypes = "";
+                    formData.report.percentContained = "";
+                }
 
 				if (displayOnly){
 					rocForm.controller.setFormReadOnly();
 				} else {
-					if(status == 'UPDATE' || status == 'FINAL' )
-					//this is an updated or finalized form, change report name to the current status
-					formData.report.reportType = status;
-					this.lookupReference('finalButton').disable();
-					this.lookupReference('printButton').disable();
+					if(status == 'UPDATE' || status == 'FINAL' ) {
+                        //this is an updated or finalized form, change report name to the current status
+                        formData.report.reportType = status;
+                        this.lookupReference('finalButton').disable();
+                        this.lookupReference('printButton').disable();
+					}
 				}
 
 				if(formData.report != null && rocForm != null && rocForm.viewModel != null) {
