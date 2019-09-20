@@ -77,7 +77,15 @@ function(Core, RocFormController, RocFormModel ) {
                          xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield',
                          items: [
                              {bind: '{incidentNumber}', vtype:'extendedalphanum', fieldLabel: 'Incident Number', flex:1, labelAlign:"left", width: 100, reference: 'incidentNumber'}
-                         ]
+                         ],
+                         listeners: {
+                             afterrender: function() {
+                                 var tip = Ext.create('Ext.tip.ToolTip', {
+                                     target: this.id,
+                                     html: 'State Agency ID 6 digit incident number (e.g. CASCU001234)'
+                                 });
+                             }
+                         }
                       },
 
 					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
@@ -95,13 +103,29 @@ function(Core, RocFormController, RocFormModel ) {
                                 maxValue: 89,
                                 allowDecimals: false,
                                 fieldLabel: 'Latitude',
-                                cls: 'roc-required'
+                                cls: 'roc-required',
+                                listeners: {
+                                     afterrender: function() {
+                                         var tip = Ext.create('Ext.tip.ToolTip', {
+                                             target: this.id,
+                                             html: 'Example: 41° 9.13\', -78° 34.15\''
+                                         });
+                                     }
+                                 }
                             },
 						    {
 						        xtype: 'displayfield',
 						        value: '°',
 						        width: 10,
-						        fieldStyle  : "text-align:center"
+						        fieldStyle  : "text-align:center",
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\''
+                                        });
+                                    }
+                                }
                             },
                             {
                                 bind: {
@@ -114,13 +138,29 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 59
+                                maxValue: 59,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\''
+                                        });
+                                    }
+                                }
                             },
 						    {
 						        xtype: 'displayfield',
 						        value: '.',
 						        width: 10,
-						        fieldStyle  : "text-align:center"
+						        fieldStyle  : "text-align:center",
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\''
+                                        });
+                                    }
+                                }
                             },
 
                             /* Original field.  Make it hidden. */
@@ -134,7 +174,15 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 allowDecimals: false,
-                                minValue:0
+                                minValue:0,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\''
+                                        });
+                                    }
+                                }
                             },
 
                             /* New field.  Make it display purpose. */
@@ -148,13 +196,29 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 allowDecimals: false,
-                                minValue:0
+                                minValue:0,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\''
+                                        });
+                                    }
+                                }
                             },
                             {
                                 xtype: 'displayfield',
                                 value: '\'',
                                 width: 10,
-                                padding:'0 0 0 5'
+                                padding:'0 0 0 5',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\''
+                                        });
+                                    }
+                                }
                             }
 						]
 					},
@@ -163,6 +227,7 @@ function(Core, RocFormController, RocFormModel ) {
 					    layout: 'hbox',
 					    defaultType: 'textfield',
 					    reference: 'longitudeGroupRef',
+					    tooltip: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)',
 					    items: [
 						    {
 						        bind: {
@@ -177,13 +242,29 @@ function(Core, RocFormController, RocFormModel ) {
                                 maxValue: 179,
                                 allowDecimals: false,
 							    fieldLabel: 'Longitude',
-							    cls: 'roc-required'
+							    cls: 'roc-required',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             },
 						    {
 						        xtype: 'displayfield',
 						        value: '°',
 						        width: 10,
-						        fieldStyle  : "text-align:center"
+						        fieldStyle  : "text-align:center",
+						        listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             },
                             {
                                 bind: {
@@ -196,13 +277,29 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank: false,
                                 allowDecimals: false,
                                 minValue:0,
-                                maxValue: 59
+                                maxValue: 59,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             },
                             {
                                 xtype: 'displayfield',
                                 value: '.',
                                 width: 10,
-                                fieldStyle  : "text-align:center"
+                                fieldStyle  : "text-align:center",
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             },
 
                             /* Original field.  Make it hidden. */
@@ -215,7 +312,15 @@ function(Core, RocFormController, RocFormModel ) {
                                 reference: 'longMinutesRef',
                                 flex: 1,
                                 allowBlank: false,
-                                minValue:0
+                                minValue:0,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             },
 
                             /* New field.  Make it display purpose. */
@@ -229,14 +334,30 @@ function(Core, RocFormController, RocFormModel ) {
                                 flex: 1,
                                 allowBlank: false,
                                 allowDecimals: false,
-                                minValue:0
+                                minValue:0,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             },
 
                             {
                                 xtype: 'displayfield',
                                 value: '\'',
                                 width: 10,
-                                padding:'0 0 0 5'
+                                padding:'0 0 0 5',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                        });
+                                    }
+                                }
                             }
 						]
 					},
@@ -248,7 +369,15 @@ function(Core, RocFormController, RocFormModel ) {
                         reference: 'locateButton',
                         bind: {disabled: '{readOnlyIncidentDetails}'},
 						margin:'0 0 0 20',
-						cls: 'roc-button'
+						cls: 'roc-button',
+                        listeners: {
+                            afterrender: function() {
+                                var tip = Ext.create('Ext.tip.ToolTip', {
+                                    target: this.id,
+                                    html: 'Find location on map'
+                                });
+                            }
+                        }
                     },
                     {
                         xtype: 'button',
@@ -307,7 +436,21 @@ function(Core, RocFormController, RocFormModel ) {
 							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
 						},
 	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
-                        {bind:'{location}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Location', allowBlank:false, cls:'roc-required'},
+                        {
+                            bind:'{location}',
+                            vtype:'extendedalphanumsspecialchars',
+                            fieldLabel: 'Location',
+                            allowBlank:false,
+                            cls:'roc-required',
+                            listeners: {
+                                afterrender: function() {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: this.id,
+                                        html: 'Geo-referenced location based on lat/long'
+                                    });
+                                }
+                            }
+                        },
                         {bind:'{street}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Street', allowBlank:false, cls:'roc-required'},
                         {bind:'{crossStreet}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Cross Street', allowBlank:false, cls:'roc-required'},
                         {bind:'{nearestCommunity}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Nearest Community', allowBlank:false, cls:'roc-required'},
@@ -319,13 +462,44 @@ function(Core, RocFormController, RocFormModel ) {
                             cls:'roc-required',
                             store: ["", "north", "northwest", "northeast", "south", "southwest", "southeast", "east", "west"]
                         },
-                        {bind:'{dpa}', xtype: 'combobox', fieldLabel: 'DPA',
-                            queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
-                            forceSelection: true, autoSelect: false, store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal']},
+                        {
+                            bind:'{dpa}',
+                            xtype: 'combobox',
+                            fieldLabel: 'DPA',
+                            queryMode: 'local',
+                            allowBlank:false,
+                            cls: 'roc-required',
+                            editable: false,
+                            forceSelection: true,
+                            autoSelect: false,
+                            store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal'],
+                            listeners: {
+                                afterrender: function() {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: this.id,
+                                        html: 'Direct Protection Area'
+                                    });
+                                }
+                            }
+                        },
                         {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership',
                             queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
                             forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
-                        {bind:'{jurisdiction}', vtype:'extendedalphanum', fieldLabel: 'Jurisdiction', allowBlank:false, cls:'roc-required'},
+                        {
+                            bind:'{jurisdiction}',
+                            vtype:'extendedalphanum',
+                            fieldLabel: 'Jurisdiction',
+                            allowBlank:false,
+                            cls:'roc-required',
+                            listeners: {
+                                afterrender: function() {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: this.id,
+                                        html: 'For non-CAL FIRE incidents, enter name of responsible agency'
+                                    });
+                                }
+                            }
+                        },
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
                         {
                             bind: {
@@ -337,7 +511,15 @@ function(Core, RocFormController, RocFormModel ) {
                             cls: 'roc-required',
                             reference: 'startTimeRef',
                             format: 'Hi',
-                            hideTrigger: true
+                            hideTrigger: true,
+                            listeners: {
+                                afterrender: function() {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: this.id,
+                                        html: 'Start Time'
+                                    });
+                                }
+                            }
 
                         }
 	                ]
@@ -647,6 +829,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 forceSelection: true,
                                 autoSelect: false,
                                 editable: false,
+                                tooltip: 'Is this a CAL FIRE Incident?',
                                 store: ['Yes', 'No']
                             },
                             {bind: '{resourcesAssigned}',
@@ -702,7 +885,19 @@ function(Core, RocFormController, RocFormModel ) {
                              anchor: '100%'
                         },
                         items: [
-                            {bind:'{email}',xtype: 'displayfield',fieldLabel: 'Recipient Email'}
+                            {
+                                bind:'{email}',
+                                xtype: 'displayfield',
+                                fieldLabel: 'Recipient Email',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'ROC emailed to form creator only'
+                                        });
+                                    }
+                                }
+                            }
                         ]
                 },
             ]
