@@ -227,7 +227,6 @@ function(Core, RocFormController, RocFormModel ) {
 					    layout: 'hbox',
 					    defaultType: 'textfield',
 					    reference: 'longitudeGroupRef',
-					    tooltip: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)',
 					    items: [
 						    {
 						        bind: {
@@ -829,7 +828,14 @@ function(Core, RocFormController, RocFormModel ) {
                                 forceSelection: true,
                                 autoSelect: false,
                                 editable: false,
-                                tooltip: 'Is this a CAL FIRE Incident?',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Is this a CAL FIRE Incident?'
+                                        });
+                                    }
+                                },
                                 store: ['Yes', 'No']
                             },
                             {bind: '{resourcesAssigned}',
