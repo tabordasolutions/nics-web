@@ -141,9 +141,9 @@ define(['iweb/CoreModule',
 				}
 				
 				var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
-				var incident = { name: menuItem.text, id: menuItem.incidentId, incidentTypes: menuItem.incidentTypes,
+				var incident = { name: menuItem.text, id: menuItem.incidentId, incidentNumber: menuItem.incidentNumber, incidentTypes: menuItem.incidentTypes,
 								 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
-			
+
 				if(!this.model.isOpen(incident)){
 					this.mediator.subscribe(topic);
 				}
@@ -211,6 +211,7 @@ define(['iweb/CoreModule',
 				this.getView().addMenuItem(
 						incident.incidentname,
 						incident.incidentid,
+						incident.incidentnumber,
 						incident.lat, incident.lon,
 						incident.incidenttypes, //need to figure out incidenttypes? -- Not returning from API atm
 						3, false, //0 is Find Incidents, 1 is the Create Incident option & 2 is the menu separator
@@ -244,6 +245,7 @@ define(['iweb/CoreModule',
 						this.onJoinIncident({
 								text: incident.incidentname,
 								incidentId: incident.incidentid,
+								incidentNumber: incident.incidentnumber,
 								lat: incident.lat,
 								lon: incident.lon
 							});
@@ -562,6 +564,7 @@ define(['iweb/CoreModule',
                         incidents.push({
                             incidentName: data.incidents[i].incidentname,
                             incidentId: data.incidents[i].incidentid,
+                            incidentNumber: data.incidents[i].incidentnumber,
                             lat: data.incidents[i].lat,
                             lon: data.incidents[i].lon,
                             incidentTypes: data.incidents[i].incidentIncidenttypes.map(function(item) {return item.incidenttypeid;})
@@ -569,7 +572,7 @@ define(['iweb/CoreModule',
                         collabRooms[data.incidents[i].incidentName] = data.incidents[i].collabrooms;
                     }
                 }
-		
+
 				return { incidents: incidents, collabRooms: collabRooms };
 			},
 	});

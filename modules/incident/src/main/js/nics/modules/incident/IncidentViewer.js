@@ -244,14 +244,14 @@
 		
 				parentIncidents.push(p);
 				
-				this.addMenuItem(incidents[i].incidentName,incidents[i].incidentId,
+				this.addMenuItem(incidents[i].incidentName,incidents[i].incidentId,incidents[i].incidentNumber,
 					incidents[i].lat, incidents[i].lon, null, -1, false, model.getIncidentCallBack());
 			}
 			this.setParentIncidents(parentIncidents);
 		},
 
 		addMenuItem: function(
-			text, incidentid, lat, lon, incidentTypes, index, child, onclick){
+			text, incidentid, incidentnumber, lat, lon, incidentTypes, index, child, onclick){
 			
 			var config = {
 				text: Ext.String.htmlEncode(text),
@@ -259,7 +259,8 @@
 				lat: lat,
 				lon: lon,
 				incidentTypes: [],
-				incidentId: incidentid
+				incidentId: incidentid,
+				incidentNumber: incidentnumber
 			};
 		
 			if(child){
