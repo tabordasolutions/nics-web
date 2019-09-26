@@ -119,13 +119,13 @@ define(['iweb/CoreModule','./RocReportController', './RocReportModel'],
 				}]
 	 	}],
 	 	items:[
-	 	       {
-	 	    	   	xtype: 'container',
-	 	    	    reference: 'rocReport'
-	 	    	   
-	 	    	    
-	 	       }
-	 	       ]
+           {
+                xtype: 'container',
+                reference: 'rocReport'
+
+
+           }
+       ]
         
 	 	
  	

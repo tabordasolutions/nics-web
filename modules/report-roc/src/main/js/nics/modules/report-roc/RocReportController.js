@@ -52,6 +52,8 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.incidentLatitude = null;
 			this.incidentLongitude = null;
 
+			this.eventListenerRemoved = false;
+
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
 					topic, this, function(evt, response){
@@ -90,6 +92,20 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 		},
 
 		onJoinIncident: function(e, incident) {
+		    var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+
+            if(this.eventListenerRemoved) {
+                Core.EventManager.addListener("LoadROCReports", this.onLoadReports.bind(this));
+                Core.EventManager.addListener("LoadOrgAdminList", this.loadOrgAdminList.bind(this));
+                Core.EventManager.addListener("LoadOrgDistList", this.loadOrgDistList.bind(this));
+                Core.EventManager.addListener("PrintROCReport", this.onReportReady.bind(this));
+
+                this.eventListenerRemoved = false;
+            }
+
+		    this.clearReportsInView();
+		    this.getView().enable();
+
 			this.incidentName = incident.name;
 			this.incidentNumber = incident.incidentNumber;
 			this.incidentId = incident.id;
@@ -98,25 +114,37 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.incidentLongitude = incident.longitude;
 			this.emailList = UserProfile.getUsername();
 
-			this.getView().enable();
-
-			var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
-
-			this.clearReportsInView();
 			//Load reports
-			this.mediator.sendRequestMessage(endpoint +
-					"/reports/" + this.incidentId + '/ROC', "LoadROCReports");
+			this.mediator.sendRequestMessage(
+			    endpoint + "/reports/" + this.incidentId + '/ROC',
+                "LoadROCReports"
+            );
+
 			//Load list of admins, and distribution list for this incident
-			var url = Ext.String.format("{0}/orgs/{1}/adminlist/{2}",endpoint, UserProfile.getWorkspaceId(), UserProfile.getOrgId());
+			var url = Ext.String.format(
+			    "{0}/orgs/{1}/adminlist/{2}",
+			    endpoint,
+			    UserProfile.getWorkspaceId(),
+			    UserProfile.getOrgId()
+            );
+
 			this.mediator.sendRequestMessage(url, "LoadOrgAdminList");
-			var url = Ext.String.format("{0}/orgs/{1}/org/{2}",endpoint, UserProfile.getWorkspaceId(), UserProfile.getOrgName());
+
+			var url = Ext.String.format(
+			    "{0}/orgs/{1}/org/{2}",
+			    endpoint,
+			    UserProfile.getWorkspaceId(),
+			    UserProfile.getOrgName()
+            );
 
 			this.mediator.sendRequestMessage(url, "LoadOrgDistList");
 
 			//Subscribe to New ROC report message on the bus
 			this.newTopic = Ext.String.format(
-					"iweb.NICS.incident.{0}.report.{1}.new", this.incidentId,
-					'ROC');
+                "iweb.NICS.incident.{0}.report.{1}.new",
+                this.incidentId,
+                "ROC"
+            );
 			this.mediator.subscribe(this.newTopic);
 			
 			this.newHandler = this.onReportAdded.bind(this);
@@ -126,11 +154,14 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 
 		onCloseIncident: function(e, incidentId) {
 			this.mediator.unsubscribe(this.newTopic);
-			
+
 			Core.EventManager.removeListener(this.newTopic, this.newHandler);
 			Core.EventManager.removeListener("LoadOrgAdminList", this.loadOrgAdminList);
 			Core.EventManager.removeListener("LoadOrgDistList", this.loadOrgDistList);
 			Core.EventManager.removeListener("PrintROCReport", this.onReportReady);
+			Core.EventManager.removeListener("LoadROCReports", this.onLoadReports);
+
+			this.eventListenerRemoved = true;
 
 			this.clearReportsInView();
 
