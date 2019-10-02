@@ -71,6 +71,49 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				}
 			},
 
+			populateFormFields: function(reportTypeValue, newValue, oldValue, eOpts) {
+                if(this.view.editROC && (reportTypeValue.getValue() == 'FINAL'))    {
+                    this.view.lookupReference('spreadRateComboRef').bindStore([
+                        'Forward spread has been stopped'
+                    ]);
+
+                    this.view.lookupReference('evacuationsComboboxRef').bindStore([
+                        'No', 'Mitigated'
+                    ]);
+
+                    this.view.lookupReference('structuresThreatComboRef').bindStore([
+                        'No', 'Mitigated'
+                    ]);
+
+                    this.view.lookupReference('infrastructuresThreatComboRef').bindStore([
+                        'No', 'Mitigated'
+                    ]);
+
+                } else {
+                    this.view.lookupReference('spreadRateComboRef').bindStore([
+                        '',
+                        'Low rate of spread',
+                        'Moderate rate of spread',
+                        'Dangerous rate of spread',
+                        'Critical rate of spread',
+                        'Forward spread has been stopped'
+                    ]);
+
+                    this.view.lookupReference('evacuationsComboboxRef').bindStore([
+                        'Yes', 'No', 'Mitigated'
+                    ]);
+
+                    this.view.lookupReference('structuresThreatComboRef').bindStore([
+                        '', 'Yes', 'No', 'Mitigated'
+                    ]);
+
+                    this.view.lookupReference('infrastructuresThreatComboRef').bindStore([
+                        '', 'Yes', 'No', 'Mitigated'
+                    ]);
+                }
+
+            },
+
 			destroy: function() {
 				this.callParent(arguments);
 				Core.EventManager.removeListener("EmailROCReport", this.emailROCBinding);

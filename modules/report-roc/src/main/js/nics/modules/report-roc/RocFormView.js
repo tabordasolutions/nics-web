@@ -58,7 +58,12 @@ function(Core, RocFormController, RocFormModel ) {
 	         defaults: {
 	             anchor: '100%'
 	         },
-	    	 items:[  {bind:'{reportType}',fieldLabel: 'Report Type',xtype:'displayfield'},
+	    	 items:[  {
+	    	                bind:'{reportType}',
+	    	                fieldLabel: 'Report Type',
+	    	                xtype:'displayfield',
+                            listeners: { change: {fn: 'populateFormFields'}}
+                      },
 	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
                       {xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
                         items:[
@@ -382,7 +387,6 @@ function(Core, RocFormController, RocFormModel ) {
                         xtype: 'button',
                         text: 'Search',
                         enableToggle: true,
-                        // toggleHandler: 'onLocationChange',
                         reference: 'searchButton',
                         bind: {disabled: '{readOnlyIncidentDetails}'},
                         margin:'0 0 0 20',
@@ -548,14 +552,12 @@ function(Core, RocFormController, RocFormModel ) {
                             autoSelect: false,
                             editable: false,
                             reference: 'spreadRateComboRef',
-                            store: [
-                                '',
-                                'Low rate of spread',
-                                'Moderate rate of spread',
-                                'Dangerous rate of spread',
-                                'Critical rate of spread',
-                                'Forward spread has been stopped'
-                            ]
+                            store: [],
+                            listeners: {
+                                afterrender: function(){
+                                    fn: 'populateSpreadRateDropDown'
+                                }
+                            }
                         },
                         {
                             bind: {
@@ -633,7 +635,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 forceSelection: true,
                                 autoSelect: false,
                                 editable: false,
-                                store: ['Yes', 'No', 'Mitigated'],
+                                store: [],
                                 reference: 'evacuationsComboboxRef'
                             },
                             {bind: {
@@ -674,7 +676,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 allowBlank:false,
                                 cls:'roc-no-style',
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
-                                store: ['', 'Yes', 'No', 'Mitigated'],
+                                store: [],
                                 reference: 'structuresThreatComboRef',
                             },
                             {
@@ -725,7 +727,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 forceSelection: true,
                                 autoSelect: false,
                                 editable: false,
-                                store: ['', 'Yes', 'No', 'Mitigated'],
+                                store: [],
                                 reference: 'infrastructuresThreatComboRef',
                             },
                             {bind: {
