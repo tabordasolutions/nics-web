@@ -64,9 +64,19 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				var incidentTypes = UserProfile.getIncidentTypes();
 				var incidentTypeCheckboxes = [];
 				var checkboxGroup = this.view.lookupReference('incidentTypesRef');
+				var checkboxGroupIndex = 2;
+
 				if(typeof(incidentTypes) != "undefined") {
-                    for(var i = 0; i<incidentTypes.length; i++) {
-                        checkboxGroup.insert(i, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeName, cls: 'roc-no-style'});
+                    incidentTypes = incidentTypes.filter(function(incidentType) {
+                        return (incidentType.incidentTypeName != "Vegetation Fire" && incidentType.incidentTypeName != "Structure Fire" )
+                    });
+
+                    checkboxGroup.insert(0, { boxLabel: "Vegetation Fire", name: 'incidenttype', inputValue: "Vegetation Fire", cls: 'roc-no-style'});
+                    checkboxGroup.insert(1, { boxLabel: "Structure Fire", name: 'incidenttype', inputValue: "Structure Fire", cls: 'roc-no-style'});
+
+                    for(var i = 0; i< incidentTypes.length; i++) {
+                        checkboxGroup.insert(checkboxGroupIndex, { boxLabel: incidentTypes[i].incidentTypeName, name: 'incidenttype', inputValue: incidentTypes[i].incidentTypeName, cls: 'roc-no-style'});
+                        checkboxGroupIndex = checkboxGroupIndex + 1;
                     }
 				}
 			},
