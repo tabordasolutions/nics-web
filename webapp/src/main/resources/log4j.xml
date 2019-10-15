@@ -59,7 +59,7 @@
 
 	<appender name="SADISPLAY_ROLLING_FILE"
 		class="org.apache.log4j.RollingFileAppender">
-		<param name="Threshold" value="DEBUG"/>
+		<param name="Threshold" value="TRACE"/>
 		<param name="File" value="${catalina.base}/logs/nics.log" />
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="500KB" />
