@@ -62,8 +62,8 @@
 		<param name="Threshold" value="TRACE"/>
 		<param name="File" value="${catalina.base}/logs/nics.log" />
 		<param name="Append" value="true" />
-		<param name="MaxFileSize" value="5MB" />
-		<param name="MaxBackupIndex" value="10" />
+		<param name="MaxFileSize" value="500KB" />
+		<param name="MaxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{ISO8601} %-5p (%t) [%c{1}(%M:%L)] %m%n" />
 				<!--value="[%d{ISO8601}] %-5p %m%n" />-->
