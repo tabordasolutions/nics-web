@@ -636,7 +636,8 @@ function(Core, RocFormController, RocFormModel ) {
                                 autoSelect: false,
                                 editable: false,
                                 store: [],
-                                reference: 'evacuationsComboboxRef'
+                                reference: 'evacuationsComboboxRef',
+                                listeners: { change: {fn: 'onEvacuationsChange'}}
                             },
                             {bind: {
                                 value: '{evacuationsInProgress}',
@@ -649,15 +650,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 vertical: true,
                                 columns: 2,
                                 reference: 'evacuationsInProgressRef',
-                                items: [
-                                    { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'},
-                                    { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'},
-                                    { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'},
-                                    { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style'},
-                                    { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'},
-                                    { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
-
-                                ],
+                                items: [],
                                 validator: function(val) {
                                     return (!this.disabled && !val) ? "This is a required field" : true;
                                 }
@@ -678,6 +671,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: [],
                                 reference: 'structuresThreatComboRef',
+                                listeners: { change: {fn: 'onStructureThreatsChange'}}
                             },
                             {
                                 bind: {
@@ -692,14 +686,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 vertical: true,
                                 columns: 2,
                                 reference: 'structuresThreatInProgressRef',
-                                items: [
-                                    { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style'},
-                                    { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued threat to structures', cls: 'roc-no-style'},
-                                    { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style'},
-                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
-                                    { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
-                                    { boxLabel: 'Other', name: 'structuresThreat', inputValue: 'Other', reference: 'structureThreatRef', cls: 'roc-no-style'},
-                                ],
+                                items: [],
                                 validator: function(val) {
                                     return (!this.disabled && !val) ? "This is a required field" : true;
                                 }
@@ -729,10 +716,13 @@ function(Core, RocFormController, RocFormModel ) {
                                 editable: false,
                                 store: [],
                                 reference: 'infrastructuresThreatComboRef',
+                                listeners: { change: {fn: 'onInfrastructuresThreatInProgressChange'}}
                             },
-                            {bind: {
-                                value: '{infrastructuresThreatInProgress}',
-                                disabled: '{disableInfrastructuresThreatInProgress}'},
+                            {
+                                bind: {
+                                    value: '{infrastructuresThreatInProgress}',
+                                    disabled: '{disableInfrastructuresThreatInProgress}'
+                                },
                                 disabled: true,
                                 xtype: 'checkboxgroup',
                                 fieldLabel: 'Infrastructure Threat in progress for',
@@ -741,14 +731,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 vertical: true,
                                 columns: 2,
                                 reference: 'infrastructuresThreatInProgressRef',
-                                items: [
-                                    { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'},
-                                    { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
-                                    { boxLabel: 'Inspections are underway to identify damage', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style'},
-                                    { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'},
-                                    { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'},
-                                    { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'},
-                                ],
+                                items: [],
                                 validator: function(val) {
                                     return (!this.disabled && !val) ? "This is a required field" : true;
                                 }
