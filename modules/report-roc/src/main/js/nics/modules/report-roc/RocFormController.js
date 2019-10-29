@@ -668,7 +668,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				
 				// message.dateCreated = this.ISODateString(new Date());
 				message.datecreated = time;
-	    		
+
 	    		var formView = this.view.viewModel;
 
 	    		if (typeof(formView.data.simplifiedEmail) == "undefined" )  {formView.data.simplifiedEmail = true;}
@@ -686,6 +686,8 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 	    			//report has already been created
 	    			message.report = formView.getReport();
 	    		}
+
+	    		message.report.orgPrefix = Ext.String.format('CA {0}', UserProfile.getOrgPrefix());
 
 				//Populate form properties
 				form.incidentid = formView.data.incidentId;
