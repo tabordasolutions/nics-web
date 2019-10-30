@@ -48,6 +48,7 @@ function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
 	    var reportViewer = Ext.create('modules.report.ReportViewer');
 		GeneralReportModule.load();
 		DamageReportModule.load();
+		RocReportModule.load();
 		I215ReportModule.load();
 		FmagReportModule.load();
 
@@ -68,6 +69,7 @@ function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
 				Core.View.setActiveTabOnSidePanel(reportViewer);
 			}
 		});
+		Core.View.addToTitleBar([rocButton, {xtype: 'tbspacer', width: 15}]);
 	};
 
 	return new ReportModule();
