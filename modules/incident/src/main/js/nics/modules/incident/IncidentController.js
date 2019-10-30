@@ -134,23 +134,23 @@ define(['iweb/CoreModule',
 				Core.EventManager.fireEvent("nics.active.incidents.ready", this.model.getIncidents());
 			},
 
-			onJoinIncident: function(menuItem){
-				//For now leave the incident that you are in to join a new one
-				if(this.model.getCurrentIncident().id != -1){
-					Core.EventManager.fireEvent("nics.incident.close");
-				}
-				
-				var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
-				var incident = { name: menuItem.text, id: menuItem.incidentId, incidentNumber: menuItem.incidentNumber, incidentTypes: menuItem.incidentTypes,
-								 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
+            onJoinIncident: function(menuItem){
+                //For now leave the incident that you are in to join a new one
+                if(this.model.getCurrentIncident().id != -1){
+                    Core.EventManager.fireEvent("nics.incident.close");
+                }
 
-				if(!this.model.isOpen(incident)){
-					this.mediator.subscribe(topic);
-				}
-				
-				this.model.setCurrentIncident(incident);
-				this.getView().setIncidentLabel(menuItem.text, menuItem.incidentId);
-				
+                var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
+                var incident = { name: menuItem.text, id: menuItem.incidentId, incidentNumber: menuItem.incidentNumber, incidentTypes: menuItem.incidentTypes,
+                                 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
+
+                if(!this.model.isOpen(incident)){
+                    this.mediator.subscribe(topic);
+                }
+
+                this.model.setCurrentIncident(incident);
+                this.getView().setIncidentLabel(menuItem.text, menuItem.incidentId);
+
                 var latAndLonValues = [menuItem.lon,menuItem.lat];
                 var center = ol.proj.transform(latAndLonValues,'EPSG:4326','EPSG:3857');
                 var view = MapModule.getMap().getView();
@@ -162,14 +162,14 @@ define(['iweb/CoreModule',
                 this.mixins.geoApp.getLayer().getSource().addFeature(feature);
                 MapModule.getMapController().zoomTo(15);
 
-				Core.EventManager.fireEvent("nics.incident.join", incident);
-			},
+                Core.EventManager.fireEvent("nics.incident.join", incident);
+            },
 
-			buildPoint: function(lat, long, view) {
+            buildPoint: function(lat, long, view) {
                 return new ol.geom.Point([long, lat])
                     .transform(ol.proj.get('EPSG:4326'), view.getProjection());
             },
-			
+
 			onJoinArchivedIncident: function(evt, incident){
 				this.onMIVJoinIncident(evt, incident.name);
 			},
