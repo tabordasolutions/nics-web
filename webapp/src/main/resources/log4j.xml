@@ -94,7 +94,7 @@
 	 -->
 
 	<logger name="ALL" additivity="false">
-		<level value="TRACE" />
+		<level value="INFO" />
 		<appender-ref ref="SADISPLAY_ROLLING_FILE" />
 		<appender-ref ref="STDOUT" />
 	</logger>
@@ -102,7 +102,7 @@
 	<!-- ** -->
 
 	<root>
-		<level value="TRACE" />
+		<level value="INFO" />
 		<appender-ref ref="STDERR" />
 		<appender-ref ref="SADISPLAY_ROLLING_FILE" />
 	</root>
