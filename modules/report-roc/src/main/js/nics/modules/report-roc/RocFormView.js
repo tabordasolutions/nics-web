@@ -62,7 +62,7 @@ function(Core, RocFormController, RocFormModel ) {
 	    	                bind:'{reportType}',
 	    	                fieldLabel: 'Report Type',
 	    	                xtype:'displayfield',
-                            listeners: { change: {fn: 'populateFormFields'}}
+                            listeners: { change: {fn: 'populateROCFormFields'}}
                       },
 	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
                       {xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},

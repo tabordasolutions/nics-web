@@ -141,8 +141,15 @@ define(['iweb/CoreModule',
                 }
 
                 var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
-                var incident = { name: menuItem.text, id: menuItem.incidentId, incidentNumber: menuItem.incidentNumber, incidentTypes: menuItem.incidentTypes,
-                                 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
+                var incident = {
+                    name: menuItem.text,
+                    id: menuItem.incidentId,
+                    incidentNumber: menuItem.incidentNumber,
+                    incidentTypes: menuItem.incidentTypes,
+                    latitude: menuItem.lat,
+                    longitude: menuItem.lon,
+                    topic: topic
+                };
 
                 if(!this.model.isOpen(incident)){
                     this.mediator.subscribe(topic);
@@ -162,7 +169,7 @@ define(['iweb/CoreModule',
                 this.mixins.geoApp.getLayer().getSource().addFeature(feature);
                 MapModule.getMapController().zoomTo(15);
 
-                Core.EventManager.fireEvent("nics.incident.join", incident);
+                Core.EventManager.fireEvent("nics.incident.roc.join", incident);
             },
 
             buildPoint: function(lat, long, view) {

@@ -33,44 +33,62 @@ requirejs.config({
 	}
 });
 
-define(['iweb/CoreModule', './report/ReportViewer', './GeneralReportModule',
+define(
+    [
+        'iweb/CoreModule',
+        './report/ReportViewer',
+        './GeneralReportModule',
+        './DamageReportModule',
+        './RocReportModule',
+        './FmagReportModule',
+        './I215ReportModule',
+        'iweb/modules/MapModule'
+    ],
 
-		'./DamageReportModule', './RocReportModule','./FmagReportModule','./I215ReportModule', 'iweb/modules/MapModule' ],
-
-function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
-		RocReportModule, FmagReportModule, I215ReportModule,  MapModule) {
-
-
-	var ReportModule = function() {};
-	var buttonStyle = 'nontb_style';
-
-	ReportModule.prototype.load = function() {
-	    var reportViewer = Ext.create('modules.report.ReportViewer');
-		GeneralReportModule.load();
-		DamageReportModule.load();
-		RocReportModule.load();
-		I215ReportModule.load();
-		FmagReportModule.load();
+    function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
+            RocReportModule, FmagReportModule, I215ReportModule,  MapModule) {
 
 
-		// Enables ROC by default. All other report types are enabled when user joins an incident
-		Core.View.addToSidePanel(reportViewer);
-		var rocButton = Ext.create('Ext.Button', {
-			text: 'ROC',
-			baseCls: buttonStyle,
-			handler: function() {
-				Core.View.showSidePanel();
-				if(reportViewer.getActiveTab().title != 'ROC') {
-					var rocElement = reportViewer.items.items.find(function(element) {
-						return element.title == 'ROC';
-					});
-					reportViewer.setActiveItem(rocElement);
-				}
-				Core.View.setActiveTabOnSidePanel(reportViewer);
-			}
-		});
-		Core.View.addToTitleBar([rocButton, {xtype: 'tbspacer', width: 15}]);
-	};
+        var ReportModule = function() {};
+        var buttonStyle = 'nontb_style';
 
-	return new ReportModule();
-});
+        ReportModule.prototype.load = function() {
+            var reportViewer = Ext.create('modules.report.ReportViewer');
+
+            RocReportModule.load();
+
+            setTimeout(function(){
+                GeneralReportModule.load();
+            }, 2000);
+            setTimeout(function(){
+                DamageReportModule.load();
+            }, 2000);
+            setTimeout(function(){
+                I215ReportModule.load();
+            }, 2000);
+            setTimeout(function(){
+                FmagReportModule.load();
+            }, 2000);
+
+            // Enables ROC by default. All other report types are enabled when user joins an incident
+            Core.View.addToSidePanel(reportViewer);
+            var rocButton = Ext.create('Ext.Button', {
+                text: 'ROC',
+                baseCls: buttonStyle,
+                handler: function() {
+                    Core.View.showSidePanel();
+                    if(reportViewer.getActiveTab().title != 'ROC') {
+                        var rocElement = reportViewer.items.items.find(function(element) {
+                            return element.title == 'ROC';
+                        });
+                        reportViewer.setActiveItem(rocElement);
+                    }
+                    Core.View.setActiveTabOnSidePanel(reportViewer);
+                }
+            });
+            Core.View.addToTitleBar([rocButton, {xtype: 'tbspacer', width: 15}]);
+        };
+
+        return new ReportModule();
+    }
+);

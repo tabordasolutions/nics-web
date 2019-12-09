@@ -33,25 +33,15 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 
 		Ext.define('modules.report-roc.RocFormController', {
 			extend : 'Ext.app.ViewController',
-			
 			alias: 'controller.rocformcontroller',
 			mixins: {geoApp: 'modules.geocode.AbstractController'},
 
 			init : function(args) {
-			
 				this.mediator = Core.Mediator.getInstance();
 				this.endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
-				this.emailROCBinding = this.emailROC.bind(this);
-				Core.EventManager.addListener("EmailROCReport", this.emailROCBinding);
-				// this.mixins.geoApp.onLocateCallback = this.onLocateCallback.bind(this);
-				this.loadLocationBasedDataByIncidentBinding = this.processLocationBasedDataForIncident.bind(this);
-				this.processLocationBasedDataBinding = this.processLocationBasedData.bind(this);
-				this.processWeatherDataBinding = this.processWeatherData.bind(this);
-				this.processPostIncidentAndROCResponseBinding = this.processPostIncidentAndROCResponse.bind(this);
-				Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.loadLocationBasedDataByIncidentBinding);
-				Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
-				Core.EventManager.addListener("LoadWeatherData", this.processWeatherDataBinding);
-				Core.EventManager.addListener("iweb.NICS.incident.newIncident.report.ROC.#", this.processPostIncidentAndROCResponseBinding);
+				this.bindEvents();
+				this.addListeners();
+
 				this.prevLatitude = null;
 				this.prevLongitude = null;
                 this.createIncidentTypeCheckboxes();
@@ -61,6 +51,22 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				if(this.view.editROC && this.view.reportType == 'NEW') {
 					this.requestLocationBasedDataForIncident(this.view.incidentId);
 				}
+			},
+
+			bindEvents: function(){
+                this.emailROCBinding = this.emailROC.bind(this);
+                this.loadLocationBasedDataByIncidentBinding = this.processLocationBasedDataForIncident.bind(this);
+                this.processLocationBasedDataBinding = this.processLocationBasedData.bind(this);
+                this.processWeatherDataBinding = this.processWeatherData.bind(this);
+                this.processPostIncidentAndROCResponseBinding = this.processPostIncidentAndROCResponse.bind(this);
+			},
+
+			addListeners: function() {
+                Core.EventManager.addListener("EmailROCReport", this.emailROCBinding);
+                Core.EventManager.addListener("LoadLocationBasedDataByIncident", this.loadLocationBasedDataByIncidentBinding);
+                Core.EventManager.addListener("LoadLocationBasedData", this.processLocationBasedDataBinding);
+                Core.EventManager.addListener("LoadWeatherData", this.processWeatherDataBinding);
+                Core.EventManager.addListener("iweb.NICS.incident.newIncident.report.ROC.#", this.processPostIncidentAndROCResponseBinding);
 			},
 
 			createIncidentTypeCheckboxes: function() {
@@ -83,7 +89,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				}
 			},
 
-			populateFormFields: function(reportTypeValue, newValue, oldValue, eOpts) {
+			populateROCFormFields: function(reportTypeValue, newValue, oldValue, eOpts) {
                 if(this.view.editROC && (reportTypeValue.getValue() == 'FINAL'))    {
                     this.view.lookupReference('spreadRateComboRef').bindStore([
                         'Forward spread has been stopped'
