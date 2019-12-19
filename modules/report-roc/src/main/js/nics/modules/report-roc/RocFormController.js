@@ -743,11 +743,17 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				message.report.incidentId = formView.data.incidentId;
 				message.report.incidentName = formView.data.incidentName;
 				form.email = this.buildReport(message.report, formView.data.simplifiedEmail, 'email');
-
 			},
 			getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
                 var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
                 var incidentTypesArray = [];
+                var incidentTypesNamesArray = [];
+
+                if(!Array.isArray(incidentTypesNames)) {
+                    incidentTypesNamesArray.push(incidentTypesNames);
+                    incidentTypesNames = incidentTypesNamesArray;
+                }
+
                 for(var i=0; i<incidentTypesNames.length; i++) {
                     for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
                         if(incidentTypesNames[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
