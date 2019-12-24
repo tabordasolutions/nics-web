@@ -120,18 +120,32 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
             var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
             var incidentTypesArray = [];
+            var incidentTypesNamesArray = [];
 
             if(incidentTypesNames != null && incidentTypesNames.incidenttype != null) {
-                for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
-                    for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
-                        if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
-                            break;
+                if(!Array.isArray(incidentTypesNames.incidenttype)) {
+                    incidentTypesNamesArray.push(incidentTypesNames);
+                    incidentTypesNames = incidentTypesNamesArray;
+
+                    for(var i=0; i<incidentTypesNames.length; i++) {
+                        for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                            if(incidentTypesNames[i].incidenttype === incidentTypesWithIncidentID[j].incidentTypeName) {
+                                incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
+                        for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                            if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
+                                incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                                break;
+                            }
                         }
                     }
                 }
             }
-
             return { "incidenttype": incidentTypesArray };
         },
 		formulas: {
