@@ -637,11 +637,12 @@ function(Core, RocFormController, RocFormModel ) {
                                 editable: false,
                                 store: [],
                                 reference: 'evacuationsComboboxRef',
-                                listeners: { change: {fn: 'onEvacuationsChange'}}
                             },
-                            {bind: {
-                                value: '{evacuationsInProgress}',
-                                disabled: '{disableEvacuationsInProgress}'},
+                            {
+                                bind: {
+                                    value: '{evacuationsInProgress}',
+                                    disabled: '{disableEvacuationsInProgress}'
+                                },
                                 disabled: true,
                                 xtype: 'checkboxgroup',
                                 fieldLabel: 'Evacuations in progress for',
@@ -650,7 +651,15 @@ function(Core, RocFormController, RocFormModel ) {
                                 vertical: true,
                                 columns: 2,
                                 reference: 'evacuationsInProgressRef',
-                                items: [],
+                                items: [
+                                    { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style', bind: {disabled: '{isEvacuationsMitigated}'}},
+                                    { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style', bind: {disabled: '{isEvacuationsMitigated}'}},
+                                    { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style', bind: {disabled: '{isEvacuationsMitigated}'}},
+                                    { boxLabel: 'Evacuation warnings have been lifted', name: 'evacuations', inputValue: 'Evacuation warnings have been lifted', cls: 'roc-no-style', bind: {disabled: '{!isEvacuationsMitigated}'}},
+                                    { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style', bind: {disabled: '{isEvacuationsMitigated}'}},
+                                    { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style', bind: {disabled: '{isEvacuationsMitigated}'}},
+                                    { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'},
+                                ],
                                 validator: function(val) {
                                     return (!this.disabled && !val) ? "This is a required field" : true;
                                 }

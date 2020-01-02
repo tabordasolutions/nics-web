@@ -45,7 +45,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.prevLatitude = null;
 				this.prevLongitude = null;
                 this.createIncidentTypeCheckboxes();
-                this.onEvacuationsChange();
                 this.onStructureThreatsChange();
                 this.onInfrastructuresThreatInProgressChange();
 				if(this.view.editROC && this.view.reportType == 'NEW') {
@@ -371,23 +370,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
             buildPoint: function(lat, long, view) {
                 return new ol.geom.Point([long, lat])
                     .transform(ol.proj.get('EPSG:4326'), view.getProjection());
-            },
-
-            onEvacuationsChange: function(evacuationsSelectedValue, newValue, oldValue, eOpts) {
-                var checkboxGroup = this.view.lookupReference('evacuationsInProgressRef');
-                checkboxGroup.removeAll();
-
-                if(newValue == "Mitigated") {
-                    checkboxGroup.insert(0, { boxLabel: 'Evacuation warnings have been lifted', name: 'evacuations', inputValue: 'Evacuation warnings have been lifted', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(1, { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'})
-                } else {
-                    checkboxGroup.insert(0, { boxLabel: 'Evacuation orders in place', name: 'evacuations', inputValue: 'Evacuation orders in place', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(1, { boxLabel: 'Evacuation center has been established', name: 'evacuations', inputValue: 'Evacuation center has been established', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(2, { boxLabel: 'Evacuation warnings have been established', name: 'evacuations', inputValue: 'Evacuation warnings have been established', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(3, { boxLabel: 'Evacuation orders remain in place', name: 'evacuations', inputValue: 'Evacuation orders remain in place', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(4, { boxLabel: 'Mandatory evacuations are in place', name: 'evacuations', inputValue: 'Mandatory evacuations are in place', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(5, { boxLabel: 'Other', name: 'evacuations', inputValue: 'Other', reference: 'evacuationsRef', cls: 'roc-no-style'})
-                }
             },
 
             onStructureThreatsChange: function(structureThreatsSelectedValue, newValue, oldValue, eOpts) {
