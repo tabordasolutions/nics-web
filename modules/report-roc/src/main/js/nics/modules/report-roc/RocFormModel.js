@@ -166,11 +166,15 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
             },
             isEvacuationsMitigated: function(get) {
                 var evacuations = get('evacuations');
-                return (typeof evacuations == "string") ? evacuations === 'Mitigated' : true;
+                return (typeof evacuations == "string" && evacuations !== 'Mitigated') ? evacuations === 'Mitigated' : true;
             },
             isStructureThreatsMitigated: function(get) {
                 var structuresThreat = get('structuresThreat');
-                return (typeof structuresThreat == "string") ? structuresThreat === 'Mitigated' : true;
+                return (typeof structuresThreat == "string" && structuresThreat !== 'Mitigated') ? structuresThreat === 'Mitigated' : true;
+            },
+            isInfrastructuresThreatMitigated: function(get) {
+                var infrastructuresThreat = get('infrastructuresThreat');
+                return (typeof infrastructuresThreat == "string" && infrastructuresThreat !== 'Mitigated') ? infrastructuresThreat === 'Mitigated' : true;
             },
             updateReport: function(get) {
                 return get('reportType') == 'UPDATE';

@@ -45,7 +45,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 				this.prevLatitude = null;
 				this.prevLongitude = null;
                 this.createIncidentTypeCheckboxes();
-                this.onInfrastructuresThreatInProgressChange();
 				if(this.view.editROC && this.view.reportType == 'NEW') {
 					this.requestLocationBasedDataForIncident(this.view.incidentId);
 				}
@@ -371,6 +370,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     .transform(ol.proj.get('EPSG:4326'), view.getProjection());
             },
 
+            /*
             onInfrastructuresThreatInProgressChange: function(structureThreatsSelectedValue, newValue, oldValue, eOpts) {
                 var checkboxGroup = this.view.lookupReference('infrastructuresThreatInProgressRef');
                 checkboxGroup.removeAll();
@@ -390,6 +390,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     checkboxGroup.insert(5, { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'})
                 }
             },
+            */
 
             onIncidentTypeChange: function(checkbox, newValue, oldValue, eOpts) {
                 var incidentTypeSelectedValuesLength = 0;
