@@ -680,7 +680,6 @@ function(Core, RocFormController, RocFormModel ) {
                                 queryMode: 'local', forceSelection: true, autoSelect: false, editable: false,
                                 store: [],
                                 reference: 'structuresThreatComboRef',
-                                listeners: { change: {fn: 'onStructureThreatsChange'}}
                             },
                             {
                                 bind: {
@@ -695,7 +694,18 @@ function(Core, RocFormController, RocFormModel ) {
                                 vertical: true,
                                 columns: 2,
                                 reference: 'structuresThreatInProgressRef',
-                                items: [],
+                                items: [
+                                    { boxLabel: 'Structure threat mitigated', name: 'structuresThreat', inputValue: 'Structure threat mitigated', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued threat to structures', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'All threats mitigated', name: 'structuresThreat', inputValue: 'All threats mitigated', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Other', name: 'structuresThreat', inputValue: 'Other', reference: 'structureThreatRef', cls: 'roc-no-style'},
+                                ],
                                 validator: function(val) {
                                     return (!this.disabled && !val) ? "This is a required field" : true;
                                 }
