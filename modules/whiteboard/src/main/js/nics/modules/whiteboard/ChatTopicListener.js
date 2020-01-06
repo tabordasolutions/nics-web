@@ -86,11 +86,14 @@ define(['ext', 'iweb/CoreModule', './ChatModel'], function(Ext, Core, ChatModel)
 		 * this helps avoid duplicates
 		 */
 		safelyAddMessages: function(chats) {
-			if (this.store.isSyncing){
+			this.addMessages(chats);
+/**
+  			if (this.store.isSyncing){
 				this.store.on('endupdate', this.safelyAddMessages, this, {args: [chats], single:true});
 			} else {
 				this.addMessages(chats);
 			}
+*/
 		},
 		
 		addMessages: function(chats) {
