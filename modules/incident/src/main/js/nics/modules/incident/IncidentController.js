@@ -153,6 +153,10 @@ define(['iweb/CoreModule',
 
                 var latAndLonValues = [menuItem.lon,menuItem.lat];
                 var center = ol.proj.transform(latAndLonValues,'EPSG:4326','EPSG:3857');
+
+                MapModule.getMap().getView().setCenter(center);
+
+                /*
                 var view = MapModule.getMap().getView();
 
                 this.mixins.geoApp.removeLayer();
@@ -161,6 +165,7 @@ define(['iweb/CoreModule',
                 var feature = this.mixins.geoApp.buildFeature(point,"");
                 this.mixins.geoApp.getLayer().getSource().addFeature(feature);
                 MapModule.getMapController().zoomTo(15);
+                */
 
                 Core.EventManager.fireEvent("nics.incident.join", incident);
             },
