@@ -370,28 +370,6 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     .transform(ol.proj.get('EPSG:4326'), view.getProjection());
             },
 
-            /*
-            onInfrastructuresThreatInProgressChange: function(structureThreatsSelectedValue, newValue, oldValue, eOpts) {
-                var checkboxGroup = this.view.lookupReference('infrastructuresThreatInProgressRef');
-                checkboxGroup.removeAll();
-
-                if(newValue == "Mitigated") {
-                    checkboxGroup.insert(0, { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(1, { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(2, { boxLabel: 'All road closures have been lifted', name: 'infrastructuresThreat', inputValue: 'All road closures have been lifted', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(3, { boxLabel: 'All threats mitigated', name: 'infrastructuresThreat', inputValue: 'All threats mitigated', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(4, { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'})
-                } else {
-                    checkboxGroup.insert(0, { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(1, { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(2, { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(3, { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(4, { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closers are in the area', cls: 'roc-no-style'}),
-                    checkboxGroup.insert(5, { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'})
-                }
-            },
-            */
-
             onIncidentTypeChange: function(checkbox, newValue, oldValue, eOpts) {
                 var incidentTypeSelectedValuesLength = 0;
                 var isFireWildlandCheckboxChecked = false;
