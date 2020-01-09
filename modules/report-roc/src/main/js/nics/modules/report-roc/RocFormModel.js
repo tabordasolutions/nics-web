@@ -154,15 +154,15 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
             },
             disableEvacuationsInProgress: function(get) {
                 var evacuations = get('evacuations');
-                return (typeof evacuations == "string") ? evacuations === 'No' : true;
+                return (typeof evacuations == "string" && evacuations === 'No') ? true: false;
             },
             disableStructuresThreatInProgress: function(get) {
                 var structuresThreat = get('structuresThreat');
-                return (typeof structuresThreat == "string") ? structuresThreat === 'No' : true;
+                return (typeof structuresThreat == "string" && structuresThreat === 'No') ? true: false;
             },
             disableInfrastructuresThreatInProgress: function(get) {
                 var infrastructuresThreat = get('infrastructuresThreat');
-                return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
+                return (typeof infrastructuresThreat == "string" && infrastructuresThreat === 'No') ? true: false;
             },
             isEvacuationsMitigated: function(get) {
                 var evacuations = get('evacuations');
