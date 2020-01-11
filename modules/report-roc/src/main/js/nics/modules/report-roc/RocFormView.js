@@ -698,11 +698,10 @@ function(Core, RocFormController, RocFormModel ) {
                                     { boxLabel: 'Structures threatened', name: 'structuresThreat', inputValue: 'Structures threatened', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
                                     { boxLabel: 'Continued threat to structures', name: 'structuresThreat', inputValue: 'Continued threat to structures', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
                                     { boxLabel: 'Immediate structure threat, evacuations in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuations in place', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
-                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
+                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
                                     { boxLabel: 'Inspections are underway to identify damage', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage', cls: 'roc-no-style', bind: {disabled: '{isStructureThreatsMitigated}'}},
 
                                     { boxLabel: 'Structure threat mitigated', name: 'structuresThreat', inputValue: 'Structure threat mitigated', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
-                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
                                     { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
                                     { boxLabel: 'All threats mitigated', name: 'structuresThreat', inputValue: 'All threats mitigated', cls: 'roc-no-style', bind: {disabled: '{!isStructureThreatsMitigated}'}},
 
@@ -752,16 +751,14 @@ function(Core, RocFormController, RocFormModel ) {
                                 columns: 2,
                                 reference: 'infrastructuresThreatInProgressRef',
                                 items: [
-                                    { boxLabel: 'Immediate structure threat, evacuation in place', name: 'structuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'Major power lines are threatened', name: 'structuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'Road closures are in the area', name: 'structuresThreat', inputValue: 'Road closures are in the area', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
+                                    { boxLabel: 'Immediate structure threat, evacuation in place', name: 'infrastructuresThreat', inputValue: 'Immediate structure threat, evacuation in place', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
+                                    { boxLabel: 'Damage inspection is on going', name: 'infrastructuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style'},
+                                    { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'infrastructuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style'},
+                                    { boxLabel: 'Major power lines are threatened', name: 'infrastructuresThreat', inputValue: 'Major power lines are threatened', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
+                                    { boxLabel: 'Road closures are in the area', name: 'infrastructuresThreat', inputValue: 'Road closures are in the area', cls: 'roc-no-style', bind: {disabled: '{isInfrastructuresThreatMitigated}'}},
 
-                                    { boxLabel: 'Damage inspection is on going', name: 'structuresThreat', inputValue: 'Damage inspection is on going', cls: 'roc-no-style', bind: {disabled: '{!isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'Inspections are underway to identify damage to critical infrastructure and structures', name: 'structuresThreat', inputValue: 'Inspections are underway to identify damage to critical infrastructure and structures', cls: 'roc-no-style', bind: {disabled: '{!isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'All road closures have been lifted', name: 'structuresThreat', inputValue: 'All road closures have been lifted', cls: 'roc-no-style', bind: {disabled: '{!isInfrastructuresThreatMitigated}'}},
-                                    { boxLabel: 'All threats mitigated', name: 'structuresThreat', inputValue: 'All threats mitigated', cls: 'roc-no-style', bind: {disabled: '{!isInfrastructuresThreatMitigated}'}},
+                                    { boxLabel: 'All road closures have been lifted', name: 'infrastructuresThreat', inputValue: 'All road closures have been lifted', cls: 'roc-no-style', bind: {disabled: '{!isInfrastructuresThreatMitigated}'}},
+                                    { boxLabel: 'All threats mitigated', name: 'infrastructuresThreat', inputValue: 'All threats mitigated', cls: 'roc-no-style', bind: {disabled: '{!isInfrastructuresThreatMitigated}'}},
 
                                     { boxLabel: 'Other', name: 'infrastructuresThreat', inputValue: 'Other', reference: 'infrastructureThreatRef', cls: 'roc-no-style'}
                                 ],
