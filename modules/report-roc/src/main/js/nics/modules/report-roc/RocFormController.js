@@ -309,6 +309,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     this.getViewModel().set('directionFromNearestCommunity', '');
 					this.getViewModel().set('incidentType', '');
 					this.getViewModel().set('otherSignificantInfo', '');
+					this.getViewModel().notify();
 				}
 			},
 
