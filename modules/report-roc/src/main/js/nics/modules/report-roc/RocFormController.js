@@ -385,10 +385,19 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                 this.view.lookupReference('scopeRef').allowBlank = true;
                 this.view.lookupReference('scopeRef').validate();
 
-                this.view.lookupReference('fuelTypeCheckboxRef').removeCls('roc-required');
-                this.view.lookupReference('fuelTypeCheckboxRef').addCls('roc-no-style');
-                this.view.lookupReference('fuelTypeCheckboxRef').allowBlank = true;
-                this.view.lookupReference('fuelTypeCheckboxRef').validate();
+                if(this.view.lookupReference('reportTypeRef').value != "FINAL") {
+                    this.view.lookupReference('fuelTypeCheckboxRef').removeCls('roc-required');
+                    this.view.lookupReference('fuelTypeCheckboxRef').addCls('roc-no-style');
+                    this.view.lookupReference('fuelTypeCheckboxRef').allowBlank = true;
+                    this.view.lookupReference('fuelTypeCheckboxRef').validate();
+                }
+
+                if(this.view.lookupReference('reportTypeRef').value == "FINAL") {
+                    this.view.lookupReference('startTimeRef').removeCls('roc-required');
+                    this.view.lookupReference('startTimeRef').addCls('roc-no-style');
+                    this.view.lookupReference('startTimeRef').allowBlank = true;
+                    this.view.lookupReference('startTimeRef').validate();
+                }
 
                 this.view.lookupReference('percentContainedRef').removeCls('roc-required');
                 this.view.lookupReference('percentContainedRef').addCls('roc-no-style');
@@ -437,10 +446,12 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     this.view.lookupReference('scopeRef').allowBlank = false;
                     this.view.lookupReference('scopeRef').validate();
 
-                    this.view.lookupReference('fuelTypeCheckboxRef').removeCls('roc-no-style');
-                    this.view.lookupReference('fuelTypeCheckboxRef').addCls('roc-required');
-                    this.view.lookupReference('fuelTypeCheckboxRef').allowBlank = false;
-                    this.view.lookupReference('fuelTypeCheckboxRef').validate();
+                    if(this.view.lookupReference('reportTypeRef').value != "FINAL") {
+                        this.view.lookupReference('fuelTypeCheckboxRef').removeCls('roc-no-style');
+                        this.view.lookupReference('fuelTypeCheckboxRef').addCls('roc-required');
+                        this.view.lookupReference('fuelTypeCheckboxRef').allowBlank = false;
+                        this.view.lookupReference('fuelTypeCheckboxRef').validate();
+                    }
 
                     this.view.lookupReference('percentContainedRef').removeCls('roc-no-style');
                     this.view.lookupReference('percentContainedRef').addCls('roc-required');

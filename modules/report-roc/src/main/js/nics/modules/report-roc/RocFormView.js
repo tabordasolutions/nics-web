@@ -78,6 +78,7 @@ function(Core, RocFormController, RocFormModel ) {
                                 bind:'{reportType}',
                                 fieldLabel: 'Report Type',
                                 xtype:'displayfield',
+                                reference: 'reportTypeRef',
                                 listeners: { change: {fn: 'populateROCFormFields'}}
                           },
                           {xtype: 'hiddenfield',bind:'{formTypeId}' },
@@ -948,8 +949,8 @@ function(Core, RocFormController, RocFormModel ) {
                 text: 'Submit',
                 reference: 'submitButton',
                 handler: 'submitForm',
-                 formBind: true, //only enabled once the form is valid
-                 disabled: true
+                formBind: true, //only enabled once the form is valid
+                disabled: true
             },
             {
                 text: 'Reset',
