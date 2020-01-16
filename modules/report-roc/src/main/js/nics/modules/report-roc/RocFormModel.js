@@ -164,6 +164,9 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 var infrastructuresThreat = get('infrastructuresThreat');
                 return (typeof infrastructuresThreat == "string" && infrastructuresThreat === 'No') ? true: false;
             },
+            disableStartTime: function(get) {
+                return ((get('reportType') == 'FINAL') || (get('reportType') == 'UPDATE'));
+            },
             isEvacuationsMitigated: function(get) {
                 var evacuations = get('evacuations');
                 return (typeof evacuations == "string" && evacuations === 'Mitigated') ? true: false;

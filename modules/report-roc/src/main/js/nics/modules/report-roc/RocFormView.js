@@ -506,7 +506,8 @@ function(Core, RocFormController, RocFormModel ) {
                         {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
                         {
                             bind: {
-                                value: '{startTime}'
+                                value: '{startTime}',
+                                hidden: '{disableStartTime}'
                             },
                             xtype: 'timefield',
                             fieldLabel: 'Start Time',
