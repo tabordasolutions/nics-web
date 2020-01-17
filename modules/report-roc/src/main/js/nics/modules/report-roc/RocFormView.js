@@ -47,561 +47,581 @@ function(Core, RocFormController, RocFormModel ) {
         bodyPadding: 12,
 		referenceHolder: true,
 	    items:[
-	    {bind:'{errorMessage}', xtype:'displayfield', reference: 'errorLabel', xtype: 'label', hidden: true,
-        		 			style: {color: 'red'}, padding: '0 0 0 5', border: true},
-		{bind:'{successMessage}', xtype:'displayfield', reference: 'successLabel', xtype: 'label', hidden: true,
- 			style: {color: 'green'}, padding: '0 0 0 5', border: true},
-	    { 
-	    	 xtype: 'fieldset',
-	         title: 'Incident Info',
-	         defaultType: 'textfield',
-	         defaults: {
-	             anchor: '100%'
-	         },
-	    	 items:[  {
-	    	                bind:'{reportType}',
-	    	                fieldLabel: 'Report Type',
-	    	                xtype:'displayfield',
-                            listeners: { change: {fn: 'populateROCFormFields'}}
-                      },
-	    	 	      {xtype: 'hiddenfield',bind:'{formTypeId}' },
-                      {xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
-                        items:[
-						    {bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'},
-                                    xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name',
-							    	queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
-									allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', flex:2,
-									listeners: {
-										select: 'onIncidentSelect',
-										change: 'onIncidentChange'
-									}
-							}
-                        ]
-                      },
-                      {
-                         xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield',
-                         items: [
-                             {bind: '{incidentNumber}', vtype:'extendedalphanum', fieldLabel: 'Incident Number', flex:1, labelAlign:"left", width: 100, reference: 'incidentNumber'}
-                         ],
-                         listeners: {
-                             afterrender: function() {
-                                 var tip = Ext.create('Ext.tip.ToolTip', {
-                                     target: this.id,
-                                     html: 'State Agency ID 6 digit incident number (e.g. CASCU001234)'
-                                 });
-                             }
-                         }
-                      },
-
-					{ xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
-					    items: [
-                            {
-                                bind: {
-                                    value: '{latDegrees}',
-                                    readOnly: '{readOnlyIncidentDetails}'
-                                },
-                                xtype: 'numberfield',
-                                reference: 'latDegreesRef',
-                                flex: 1,
-                                allowBlank: false,
-                                minValue: -89,
-                                maxValue: 89,
-                                allowDecimals: false,
-                                fieldLabel: 'Latitude',
-                                cls: 'roc-required',
-                                listeners: {
-                                     afterrender: function() {
-                                         var tip = Ext.create('Ext.tip.ToolTip', {
-                                             target: this.id,
-                                             html: 'Example: 41° 9.13\', -78° 34.15\''
-                                         });
-                                     }
+	        {
+	            bind:'{errorMessage}',
+	            xtype:'displayfield',
+	            reference: 'errorLabel',
+	            xtype: 'label',
+	            hidden: true,
+                style: {color: 'red'},
+                padding: '0 0 0 5',
+                border: true
+            },
+		    {
+		        bind:'{successMessage}',
+		        xtype:'displayfield',
+		        reference: 'successLabel',
+		        xtype: 'label',
+		        hidden: true,
+ 			    style: {color: 'green'},
+ 			    padding: '0 0 0 5',
+ 			    border: true
+            },
+            {
+                 xtype: 'fieldset',
+                 title: 'Incident Info',
+                 defaultType: 'textfield',
+                 defaults: {
+                     anchor: '100%'
+                 },
+                 items:[  {
+                                bind:'{reportType}',
+                                fieldLabel: 'Report Type',
+                                xtype:'displayfield',
+                                reference: 'reportTypeRef',
+                                listeners: { change: {fn: 'populateROCFormFields'}}
+                          },
+                          {xtype: 'hiddenfield',bind:'{formTypeId}' },
+                          {xtype: 'fieldcontainer',layout:'hbox',defaultType: 'textfield', defaults: {anchor: '100%'},
+                            items:[
+                                {bind: {store: '{activeIncidentsStore}', value: '{incidentName}', readOnly: '{incidentNameReadOnly}', editable: '{!incidentNameReadOnly}'},
+                                        xtype: 'combobox', vtype:'simplealphanum', fieldLabel: 'Incident Name',
+                                        queryMode: 'local', displayField: 'incidentName', valueField: 'incidentName', anyMatch: true,
+                                        allowBlank: false, cls:'roc-required', readOnlyCls: 'roc-read-only', flex:2,
+                                        listeners: {
+                                            select: 'onIncidentSelect',
+                                            change: 'onIncidentChange'
+                                        }
+                                }
+                            ]
+                          },
+                          {
+                             xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield',
+                             items: [
+                                 {bind: '{incidentNumber}', vtype:'extendedalphanum', fieldLabel: 'Incident Number', flex:1, labelAlign:"left", width: 100, reference: 'incidentNumber'}
+                             ],
+                             listeners: {
+                                 afterrender: function() {
+                                     var tip = Ext.create('Ext.tip.ToolTip', {
+                                         target: this.id,
+                                         html: 'State Agency ID 6 digit incident number (e.g. CASCU001234)'
+                                     });
                                  }
-                            },
-						    {
-						        xtype: 'displayfield',
-						        value: '°',
-						        width: 10,
-						        fieldStyle  : "text-align:center",
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\''
-                                        });
-                                    }
-                                }
-                            },
-                            {
-                                bind: {
-                                    value: '{latDecimal}',
-                                    readOnly: '{readOnlyIncidentDetails}'
-                                },
-                                xtype: 'numberfield',
-                                reference: 'latDecimalRef',
-                                flex: 1,
-                                allowBlank: false,
-                                allowDecimals: false,
-                                minValue:0,
-                                maxValue: 59,
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\''
-                                        });
-                                    }
-                                }
-                            },
-						    {
-						        xtype: 'displayfield',
-						        value: '.',
-						        width: 10,
-						        fieldStyle  : "text-align:center",
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\''
-                                        });
-                                    }
-                                }
-                            },
+                             }
+                          },
 
-                            /* Original field.  Make it hidden. */
-						    {
-                                bind: {
-                                    value: '{latMinutes}',
-                                    readOnly: '{readOnlyIncidentDetails}'
+                        { xtype: 'fieldcontainer', layout: 'hbox', defaultType: 'textfield', reference: 'latitudeGroupRef',
+                            items: [
+                                {
+                                    bind: {
+                                        value: '{latDegrees}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'numberfield',
+                                    reference: 'latDegreesRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    minValue: -89,
+                                    maxValue: 89,
+                                    allowDecimals: false,
+                                    fieldLabel: 'Latitude',
+                                    cls: 'roc-required',
+                                    listeners: {
+                                         afterrender: function() {
+                                             var tip = Ext.create('Ext.tip.ToolTip', {
+                                                 target: this.id,
+                                                 html: 'Example: 41° 9.13\', -78° 34.15\''
+                                             });
+                                         }
+                                     }
                                 },
-                                xtype: 'hiddenfield',
-                                reference: 'latMinutesRef',
-                                flex: 1,
-                                allowBlank: false,
-                                allowDecimals: false,
-                                minValue:0,
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\''
-                                        });
+                                {
+                                    xtype: 'displayfield',
+                                    value: '°',
+                                    width: 10,
+                                    fieldStyle  : "text-align:center",
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\''
+                                            });
+                                        }
                                     }
-                                }
-                            },
+                                },
+                                {
+                                    bind: {
+                                        value: '{latDecimal}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'numberfield',
+                                    reference: 'latDecimalRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    allowDecimals: false,
+                                    minValue:0,
+                                    maxValue: 59,
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\''
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'displayfield',
+                                    value: '.',
+                                    width: 10,
+                                    fieldStyle  : "text-align:center",
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\''
+                                            });
+                                        }
+                                    }
+                                },
 
-                            /* New field.  Make it display purpose. */
-                            {
-                                bind: {
-                                    value: '{latMinutesDisplay}',
-                                    readOnly: '{readOnlyIncidentDetails}'
+                                /* Original field.  Make it hidden. */
+                                {
+                                    bind: {
+                                        value: '{latMinutes}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'hiddenfield',
+                                    reference: 'latMinutesRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    allowDecimals: false,
+                                    minValue:0,
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\''
+                                            });
+                                        }
+                                    }
                                 },
-                                xtype: 'numberfield',
-                                reference: 'latMinutesDisplayRef',
-                                flex: 1,
-                                allowBlank: false,
-                                allowDecimals: false,
-                                minValue:0,
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\''
-                                        });
-                                    }
-                                }
-                            },
-                            {
-                                xtype: 'displayfield',
-                                value: '\'',
-                                width: 10,
-                                padding:'0 0 0 5',
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\''
-                                        });
-                                    }
-                                }
-                            }
-						]
-					},
-					{
-					    xtype: 'fieldcontainer',
-					    layout: 'hbox',
-					    defaultType: 'textfield',
-					    reference: 'longitudeGroupRef',
-					    items: [
-						    {
-						        bind: {
-						            value: '{longDegrees}',
-						            readOnly: '{readOnlyIncidentDetails}'
-                                },
-                                xtype: 'numberfield',
-                                reference: 'longDegreesRef',
-                                flex: 1,
-                                allowBlank: false,
-                                minValue: -179,
-                                maxValue: 179,
-                                allowDecimals: false,
-							    fieldLabel: 'Longitude',
-							    cls: 'roc-required',
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
-                                    }
-                                }
-                            },
-						    {
-						        xtype: 'displayfield',
-						        value: '°',
-						        width: 10,
-						        fieldStyle  : "text-align:center",
-						        listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
-                                    }
-                                }
-                            },
-                            {
-                                bind: {
-                                    value: '{longDecimal}',
-                                    readOnly: '{readOnlyIncidentDetails}'
-                                },
-                                xtype: 'numberfield',
-                                reference: 'longDecimalRef',
-                                flex: 1,
-                                allowBlank: false,
-                                allowDecimals: false,
-                                minValue:0,
-                                maxValue: 59,
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
-                                    }
-                                }
-                            },
-                            {
-                                xtype: 'displayfield',
-                                value: '.',
-                                width: 10,
-                                fieldStyle  : "text-align:center",
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
-                                    }
-                                }
-                            },
 
-                            /* Original field.  Make it hidden. */
-						    {
-						        bind: {
-						            value: '{longMinutes}',
-						            readOnly: '{readOnlyIncidentDetails}'
+                                /* New field.  Make it display purpose. */
+                                {
+                                    bind: {
+                                        value: '{latMinutesDisplay}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'numberfield',
+                                    reference: 'latMinutesDisplayRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    allowDecimals: false,
+                                    minValue:0,
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\''
+                                            });
+                                        }
+                                    }
                                 },
-                                xtype: 'hiddenfield',
-                                reference: 'longMinutesRef',
-                                flex: 1,
-                                allowBlank: false,
-                                minValue:0,
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
+                                {
+                                    xtype: 'displayfield',
+                                    value: '\'',
+                                    width: 10,
+                                    padding:'0 0 0 5',
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\''
+                                            });
+                                        }
                                     }
                                 }
-                            },
-
-                            /* New field.  Make it display purpose. */
-                            {
-                                bind: {
-                                    value: '{longMinutesDisplay}',
-                                    readOnly: '{readOnlyIncidentDetails}'
-                                },
-                                xtype: 'numberfield',
-                                reference: 'longMinutesDisplayRef',
-                                flex: 1,
-                                allowBlank: false,
-                                allowDecimals: false,
-                                minValue:0,
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
-                                    }
-                                }
-                            },
-
-                            {
-                                xtype: 'displayfield',
-                                value: '\'',
-                                width: 10,
-                                padding:'0 0 0 5',
-                                listeners: {
-                                    afterrender: function() {
-                                        var tip = Ext.create('Ext.tip.ToolTip', {
-                                            target: this.id,
-                                            html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
-                                        });
-                                    }
-                                }
-                            }
-						]
-					},
-					{
-					    xtype: 'button',
-                        text: 'Find Location on Map',
-                        enableToggle: true,
-                        toggleHandler: 'onLocateToggle',
-                        reference: 'locateButton',
-                        bind: {disabled: '{readOnlyIncidentDetails}'},
-						margin:'0 0 0 20',
-						cls: 'roc-button',
-                        listeners: {
-                            afterrender: function() {
-                                var tip = Ext.create('Ext.tip.ToolTip', {
-                                    target: this.id,
-                                    html: 'Find location on map'
-                                });
-                            }
-                        }
-                    },
-                    {
-                        xtype: 'button',
-                        text: 'Search',
-                        enableToggle: true,
-                        reference: 'searchButton',
-                        bind: {disabled: '{readOnlyIncidentDetails}'},
-                        margin:'0 0 0 20',
-                        cls: 'roc-button',
-                        listeners: { click: {fn: 'onLocationChange'}}
-                    },
-					{
-					    bind: {
-					        value: '{incidentTypes}',
-					        readOnly: '{readOnlyIncidentDetails}'
+                            ]
                         },
-                        xtype: 'checkboxgroup',
-                        fieldLabel: 'Incident Type',
-                        vertical: true,
-                        columns: 2,
-                        scrollable: true,
-                        reference: 'incidentTypesRef',
-                        items: [],
-                        cls: 'roc-required',
-                        validator: function(val) {
-                            return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
-                        },
-                        listeners: { change: {fn: 'onIncidentTypeChange'}}
-					},
-					{ bind: '{state}', fieldLabel: 'State / Province / Region', xtype: 'displayfield' },
-					{xtype: 'hiddenfield',bind:'{formTypeId}' },
-			]
-	    },
-
-	    {
-    		xtype: 'fieldset',
-    		title: 'ROC Details',
-    	    defaultType: 'textfield',
-    	    defaults: {
-    	         anchor: '100%'
-    	    },
-    	    items: [
-	            {
-	    	        xtype: 'fieldset',
-	    	        title: 'Incident Info',
-	                defaultType: 'textfield',
-	                defaults: {
-	                anchor: '100%'
-	            },
-	            items: [
-	                    {xtype: 'combobox', fieldLabel: 'Initial County', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
-							'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
-							'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
-							'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
-							'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
-						},
-	                    {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
                         {
-                            bind:'{location}',
-                            vtype:'extendedalphanumsspecialchars',
-                            fieldLabel: 'Location',
-                            allowBlank:false,
-                            cls:'roc-required',
+                            xtype: 'fieldcontainer',
+                            layout: 'hbox',
+                            defaultType: 'textfield',
+                            reference: 'longitudeGroupRef',
+                            items: [
+                                {
+                                    bind: {
+                                        value: '{longDegrees}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'numberfield',
+                                    reference: 'longDegreesRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    minValue: -179,
+                                    maxValue: 179,
+                                    allowDecimals: false,
+                                    fieldLabel: 'Longitude',
+                                    cls: 'roc-required',
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'displayfield',
+                                    value: '°',
+                                    width: 10,
+                                    fieldStyle  : "text-align:center",
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    bind: {
+                                        value: '{longDecimal}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'numberfield',
+                                    reference: 'longDecimalRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    allowDecimals: false,
+                                    minValue:0,
+                                    maxValue: 59,
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype: 'displayfield',
+                                    value: '.',
+                                    width: 10,
+                                    fieldStyle  : "text-align:center",
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                },
+
+                                /* Original field.  Make it hidden. */
+                                {
+                                    bind: {
+                                        value: '{longMinutes}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'hiddenfield',
+                                    reference: 'longMinutesRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    minValue:0,
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                },
+
+                                /* New field.  Make it display purpose. */
+                                {
+                                    bind: {
+                                        value: '{longMinutesDisplay}',
+                                        readOnly: '{readOnlyIncidentDetails}'
+                                    },
+                                    xtype: 'numberfield',
+                                    reference: 'longMinutesDisplayRef',
+                                    flex: 1,
+                                    allowBlank: false,
+                                    allowDecimals: false,
+                                    minValue:0,
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                },
+
+                                {
+                                    xtype: 'displayfield',
+                                    value: '\'',
+                                    width: 10,
+                                    padding:'0 0 0 5',
+                                    listeners: {
+                                        afterrender: function() {
+                                            var tip = Ext.create('Ext.tip.ToolTip', {
+                                                target: this.id,
+                                                html: 'Example: 41° 9.13\', -78° 34.15\' (negative sign automatically populated)'
+                                            });
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'Find Location on Map',
+                            enableToggle: true,
+                            toggleHandler: 'onLocateToggle',
+                            reference: 'locateButton',
+                            bind: {disabled: '{readOnlyIncidentDetails}'},
+                            margin:'0 0 0 20',
+                            cls: 'roc-button',
                             listeners: {
                                 afterrender: function() {
                                     var tip = Ext.create('Ext.tip.ToolTip', {
                                         target: this.id,
-                                        html: 'Geo-referenced location based on lat/long'
+                                        html: 'Find location on map'
                                     });
                                 }
                             }
                         },
-                        {bind:'{street}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Street', allowBlank:false, cls:'roc-required'},
-                        {bind:'{crossStreet}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Cross Street', allowBlank:false, cls:'roc-required'},
-                        {bind:'{nearestCommunity}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Nearest Community', allowBlank:false, cls:'roc-required'},
-                        {bind:'{milesFromNearestCommunity}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Miles from Nearest Community', allowBlank:false, cls:'roc-required'},
-                        {bind: '{directionFromNearestCommunity}',
-                            xtype: 'combobox',
-                            fieldLabel: 'Direction from Nearest Community',
-                            allowBlank:false,
-                            cls:'roc-required',
-                            store: ["", "north", "northwest", "northeast", "south", "southwest", "southeast", "east", "west"]
-                        },
                         {
-                            bind:'{dpa}',
-                            xtype: 'combobox',
-                            fieldLabel: 'DPA',
-                            queryMode: 'local',
-                            allowBlank:false,
-                            cls: 'roc-required',
-                            editable: false,
-                            forceSelection: true,
-                            autoSelect: false,
-                            store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal'],
-                            listeners: {
-                                afterrender: function() {
-                                    var tip = Ext.create('Ext.tip.ToolTip', {
-                                        target: this.id,
-                                        html: 'Direct Protection Area'
-                                    });
-                                }
-                            }
-                        },
-                        {bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership',
-                            queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
-                            forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']},
-                        {
-                            bind:'{jurisdiction}',
-                            vtype:'extendedalphanum',
-                            fieldLabel: 'Jurisdiction',
-                            allowBlank:false,
-                            cls:'roc-required',
-                            listeners: {
-                                afterrender: function() {
-                                    var tip = Ext.create('Ext.tip.ToolTip', {
-                                        target: this.id,
-                                        html: 'For non-CAL FIRE incidents, enter name of responsible agency'
-                                    });
-                                }
-                            }
-                        },
-                        {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
-                        {
-                            bind: {
-                                value: '{startTime}'
-                            },
-                            xtype: 'timefield',
-                            fieldLabel: 'Start Time',
-                            allowBlank: false,
-                            cls: 'roc-required',
-                            reference: 'startTimeRef',
-                            format: 'Hi',
-                            hideTrigger: true,
-                            listeners: {
-                                afterrender: function() {
-                                    var tip = Ext.create('Ext.tip.ToolTip', {
-                                        target: this.id,
-                                        html: 'Start Time'
-                                    });
-                                }
-                            }
-
-                        }
-	                ]
-	            },
-	            {
-	    	        xtype: 'fieldset',
-	    	        title: 'Vegetaion Fire Incident Scope',
-	                defaultType: 'textfield',
-	                defaults: {
-	                anchor: '100%'
-	            },
-	            items: [
-	                    {
-	                        bind:'{scope}',
-	                        vtype:'extendedalphanum',
-	                        fieldLabel: 'Acreage',
-	                        allowBlank: true,
-	                        cls:'roc-no-style',
-	                        reference: 'scopeRef'
-	                    },
-                        {
-                            bind: '{spreadRate}',
-                            xtype: 'combobox',
-                            fieldLabel: 'Rate of Spread',
-                            queryMode: 'local',
-                            forceSelection: true,
-                            autoSelect: false,
-                            editable: false,
-                            reference: 'spreadRateComboRef',
-                            store: [],
-                            listeners: {
-                                afterrender: function(){
-                                    fn: 'populateSpreadRateDropDown'
-                                }
-                            }
+                            xtype: 'button',
+                            text: 'Search',
+                            enableToggle: true,
+                            reference: 'searchButton',
+                            bind: {disabled: '{readOnlyIncidentDetails}'},
+                            margin:'0 0 0 20',
+                            cls: 'roc-button',
+                            listeners: { click: {fn: 'onLocationChange'}}
                         },
                         {
                             bind: {
-                                value: '{fuelTypeCheckBoxGroup}',
-                                hidden: '{finalReport}'
+                                value: '{incidentTypes}',
+                                readOnly: '{readOnlyIncidentDetails}'
                             },
                             xtype: 'checkboxgroup',
-                            fieldLabel: 'Fuel Type(s)',
-                            allowBlank: true,
-                            cls: 'roc-no-style',
-                            reference: 'fuelTypeCheckboxRef',
+                            fieldLabel: 'Incident Type',
                             vertical: true,
                             columns: 2,
-                            items: [
-                                { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
-                                { boxLabel: 'Brush', name: 'fuelType', inputValue: 'Brush', cls: 'roc-no-style'},
-                                { boxLabel: 'Timber', name: 'fuelType', inputValue: 'Timber', cls: 'roc-no-style'},
-                                { boxLabel: 'Oak Woodland', name: 'fuelType', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
-                                { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'}
-                            ],
-                            listeners: { change: {fn: 'onOtherFuelTypeCheckBoxChecked'}}
-                        },
-                        {
-                            bind: {
-                                value: '{otherFuelTypes}',
-                                hidden: '{finalReport}'
+                            scrollable: true,
+                            reference: 'incidentTypesRef',
+                            items: [],
+                            cls: 'roc-required',
+                            validator: function(val) {
+                                return (!this.readOnly && !val) ? "You must select atleast one Incident Type" : true;
                             },
-                            disabled: true,
-                            fieldLabel: 'Other Fuel Type(s)',
-                            vtype:'extendedalphanum',
-                            reference: 'otherFuelTypesRef',
-                            cls: 'roc-no-style'
+                            listeners: { change: {fn: 'onIncidentTypeChange'}}
                         },
-                        {
-                            bind:'{percentContained}',
-                            vtype:'extendednum',
-                            fieldLabel: '% Contained',
-                            allowBlank: true,
-                            cls:'roc-no-style',
-                            reference: 'percentContainedRef'
+                        { bind: '{state}', fieldLabel: 'State / Province / Region', xtype: 'displayfield' },
+                        {xtype: 'hiddenfield',bind:'{formTypeId}' },
+                ]
+            },
+
+            {
+                xtype: 'fieldset',
+                title: 'ROC Details',
+                defaultType: 'textfield',
+                defaults: {
+                     anchor: '100%'
+                },
+                items: [
+                    {
+                        xtype: 'fieldset',
+                        title: 'Incident Info',
+                        defaultType: 'textfield',
+                        defaults: {
+                            anchor: '100%'
                         },
-	                ]
-	            },
-                {
+                        items: [
+                            {xtype: 'combobox', fieldLabel: 'Initial County', allowBlank:false, cls:'roc-required', store: ['', 'Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt',
+                                'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange',
+                                'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo',
+                                'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama',
+                                'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba'], bind: '{county}'
+                            },
+                            {bind:'{additionalAffectedCounties}',vtype:'extendedalphanum', fieldLabel: 'Additional Affected Counties', allowBlank:true},
+                            {
+                                bind:'{location}',
+                                vtype:'extendedalphanumsspecialchars',
+                                fieldLabel: 'Location',
+                                allowBlank:false,
+                                cls:'roc-required',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Geo-referenced location based on lat/long'
+                                        });
+                                    }
+                                }
+                            },
+                            {bind:'{street}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Street', allowBlank:false, cls:'roc-required'},
+                            {bind:'{crossStreet}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Cross Street', allowBlank:false, cls:'roc-required'},
+                            {bind:'{nearestCommunity}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Nearest Community', allowBlank:false, cls:'roc-required'},
+                            {bind:'{milesFromNearestCommunity}',vtype:'extendedalphanumsspecialchars', fieldLabel: 'Miles from Nearest Community', allowBlank:false, cls:'roc-required'},
+                            {
+                                bind: '{directionFromNearestCommunity}',
+                                xtype: 'combobox',
+                                fieldLabel: 'Direction from Nearest Community',
+                                allowBlank:false,
+                                cls:'roc-required',
+                                store: ["", "north", "northwest", "northeast", "south", "southwest", "southeast", "east", "west"]
+                            },
+                            {
+                                bind:'{dpa}',
+                                xtype: 'combobox',
+                                fieldLabel: 'DPA',
+                                queryMode: 'local',
+                                allowBlank:false,
+                                cls: 'roc-required',
+                                editable: false,
+                                forceSelection: true,
+                                autoSelect: false,
+                                store: ['State', 'Federal', 'Local', 'State/Federal', 'State/Local', 'State/FederalLocal'],
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Direct Protection Area'
+                                        });
+                                    }
+                                }
+                            },
+                            {
+                                bind:'{sra}', xtype: 'combobox', fieldLabel: 'Ownership',
+                                queryMode: 'local', allowBlank:false, cls: 'roc-required', editable: false,
+                                forceSelection: true, autoSelect: false, store: ['SRA', 'FRA', 'LRA', 'FRA/SRA', 'FRA/LRA', 'SRA/LRA', , 'SRA/FRA', 'LRA/SRA', 'LRA/FRA', 'DOD']
+                            },
+                            {
+                                bind:'{jurisdiction}',
+                                vtype:'extendedalphanum',
+                                fieldLabel: 'Jurisdiction',
+                                allowBlank:false,
+                                cls:'roc-required',
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'For non-CAL FIRE incidents, enter name of responsible agency'
+                                        });
+                                    }
+                                }
+                            },
+                            {bind: '{date}', xtype: 'datefield', fieldLabel: 'Date', format: 'm/d/y',cls:'roc-required', allowBlank:false},
+                            {
+                                bind: {
+                                    value: '{startTime}',
+                                    hidden: '{disableStartTime}'
+                                },
+                                xtype: 'timefield',
+                                fieldLabel: 'Start Time',
+                                allowBlank: false,
+                                cls: 'roc-required',
+                                reference: 'startTimeRef',
+                                format: 'Hi',
+                                hideTrigger: true,
+                                listeners: {
+                                    afterrender: function() {
+                                        var tip = Ext.create('Ext.tip.ToolTip', {
+                                            target: this.id,
+                                            html: 'Start Time'
+                                        });
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'fieldset',
+                        title: 'Vegetaion Fire Incident Scope',
+                        defaultType: 'textfield',
+                        defaults: {
+                            anchor: '100%'
+                        },
+                        items: [
+                            {
+                                bind:'{scope}',
+                                vtype:'extendedalphanum',
+                                fieldLabel: 'Acreage',
+                                allowBlank: true,
+                                cls:'roc-no-style',
+                                reference: 'scopeRef'
+                            },
+                            {
+                                bind: '{spreadRate}',
+                                xtype: 'combobox',
+                                fieldLabel: 'Rate of Spread',
+                                queryMode: 'local',
+                                forceSelection: true,
+                                autoSelect: false,
+                                editable: false,
+                                reference: 'spreadRateComboRef',
+                                store: [],
+                                listeners: {
+                                    afterrender: function(){
+                                        fn: 'populateSpreadRateDropDown'
+                                    }
+                                }
+                            },
+                            {
+                                bind: {
+                                    value: '{fuelTypeCheckBoxGroup}',
+                                    hidden: '{finalReport}'
+                                },
+                                xtype: 'checkboxgroup',
+                                fieldLabel: 'Fuel Type(s)',
+                                allowBlank: true,
+                                cls: 'roc-no-style',
+                                reference: 'fuelTypeCheckboxRef',
+                                vertical: true,
+                                columns: 2,
+                                items: [
+                                    { boxLabel: 'Grass', name: 'fuelType', inputValue: 'Grass', cls: 'roc-no-style'},
+                                    { boxLabel: 'Brush', name: 'fuelType', inputValue: 'Brush', cls: 'roc-no-style'},
+                                    { boxLabel: 'Timber', name: 'fuelType', inputValue: 'Timber', cls: 'roc-no-style'},
+                                    { boxLabel: 'Oak Woodland', name: 'fuelType', inputValue: 'Oak Woodland', cls: 'roc-no-style'},
+                                    { boxLabel: 'Other', name: 'fuelType', inputValue: 'Other', cls: 'roc-no-style', reference: 'otherFuelTypeCheckBox'}
+                                ],
+                                listeners: { change: {fn: 'onOtherFuelTypeCheckBoxChecked'}}
+                            },
+                            {
+                                bind: {
+                                    value: '{otherFuelTypes}',
+                                    hidden: '{finalReport}'
+                                },
+                                disabled: true,
+                                fieldLabel: 'Other Fuel Type(s)',
+                                vtype:'extendedalphanum',
+                                reference: 'otherFuelTypesRef',
+                                cls: 'roc-no-style'
+                            },
+                            {
+                                bind:'{percentContained}',
+                                vtype:'extendednum',
+                                fieldLabel: '% Contained',
+                                allowBlank: true,
+                                cls:'roc-no-style',
+                                reference: 'percentContainedRef'
+                            },
+                        ]
+                    },
+                    {
                         xtype: 'fieldset',
                         title: 'Weather Information',
                         defaultType: 'textfield',
@@ -615,8 +635,8 @@ function(Core, RocFormController, RocFormModel ) {
                                 {bind:'{windDirection}', vtype:'extendedalphanum', fieldLabel: 'Wind Direction'}
                         ]
 
-                   },
-                {
+                    },
+                    {
                         xtype: 'fieldset',
                         title: 'Threats & Evacuations',
                         defaultType: 'textfield',
@@ -896,9 +916,8 @@ function(Core, RocFormController, RocFormModel ) {
                                 cls: 'roc-required'
                             },
                         ]
-
-                   },
-                {
+                    },
+                    {
                         xtype: 'fieldset',
                         title: 'Email',
                         defaultType: 'textfield',
@@ -920,26 +939,29 @@ function(Core, RocFormController, RocFormModel ) {
                                 }
                             }
                         ]
-                },
-            ]
-        },
-    ],
+                    },
+                ]
+            },
+        ],
 
-	 buttons: [
-	{
-		text: 'Submit',
-		reference: 'submitButton',
-	    handler: 'submitForm',
-	     formBind: true, //only enabled once the form is valid
-	     disabled: true
-	},{
-		text: 'Reset',
-		reference: 'resetButton',
-		handler: 'clearForm'
-	},{
-		text: 'Cancel',
-		reference: 'cancelButton',
-		handler: 'cancelForm'
-	}]
+        buttons: [
+            {
+                text: 'Submit',
+                reference: 'submitButton',
+                handler: 'submitForm',
+                formBind: true, //only enabled once the form is valid
+                disabled: true
+            },
+            {
+                text: 'Reset',
+                reference: 'resetButton',
+                handler: 'clearForm'
+            },
+            {
+                text: 'Cancel',
+                reference: 'cancelButton',
+                handler: 'cancelForm'
+            }
+        ]
 	});
 });

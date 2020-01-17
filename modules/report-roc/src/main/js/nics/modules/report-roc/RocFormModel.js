@@ -154,15 +154,18 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
             },
             disableEvacuationsInProgress: function(get) {
                 var evacuations = get('evacuations');
-                return (typeof evacuations == "string" && evacuations === 'No') ? true: false;
+                return (typeof evacuations == "string" && (evacuations === 'No' || evacuations === '')) ? true: false;
             },
             disableStructuresThreatInProgress: function(get) {
                 var structuresThreat = get('structuresThreat');
-                return (typeof structuresThreat == "string" && structuresThreat === 'No') ? true: false;
+                return (typeof structuresThreat == "string" && (structuresThreat === 'No' || structuresThreat === '')) ? true: false;
             },
             disableInfrastructuresThreatInProgress: function(get) {
                 var infrastructuresThreat = get('infrastructuresThreat');
-                return (typeof infrastructuresThreat == "string" && infrastructuresThreat === 'No') ? true: false;
+                return (typeof infrastructuresThreat == "string" && (infrastructuresThreat === 'No' || infrastructuresThreat === '')) ? true: false;
+            },
+            disableStartTime: function(get) {
+                return ((get('reportType') == 'FINAL') || (get('reportType') == 'UPDATE'));
             },
             isEvacuationsMitigated: function(get) {
                 var evacuations = get('evacuations');
