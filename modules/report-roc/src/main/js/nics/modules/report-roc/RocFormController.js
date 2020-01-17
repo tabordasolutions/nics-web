@@ -89,19 +89,19 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
 			populateROCFormFields: function(reportTypeValue, newValue, oldValue, eOpts) {
                 if(this.view.editROC && (reportTypeValue.getValue() == 'FINAL'))    {
                     this.view.lookupReference('spreadRateComboRef').bindStore([
-                        'Forward spread has been stopped'
+                        '', 'Forward spread has been stopped'
                     ]);
 
                     this.view.lookupReference('evacuationsComboboxRef').bindStore([
-                        'No', 'Mitigated'
+                        '', 'No', 'Mitigated'
                     ]);
 
                     this.view.lookupReference('structuresThreatComboRef').bindStore([
-                        'No', 'Mitigated'
+                        '', 'No', 'Mitigated'
                     ]);
 
                     this.view.lookupReference('infrastructuresThreatComboRef').bindStore([
-                        'No', 'Mitigated'
+                        '', 'No', 'Mitigated'
                     ]);
 
                 } else {
@@ -115,7 +115,7 @@ define(['ol', 'iweb/CoreModule', 'iweb/modules/MapModule', "nics/modules/UserPro
                     ]);
 
                     this.view.lookupReference('evacuationsComboboxRef').bindStore([
-                        'Yes', 'No', 'Mitigated'
+                        '', 'Yes', 'No', 'Mitigated'
                     ]);
 
                     this.view.lookupReference('structuresThreatComboRef').bindStore([
