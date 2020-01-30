@@ -55,8 +55,6 @@ define(
         ReportModule.prototype.load = function() {
             var reportViewer = Ext.create('modules.report.ReportViewer');
 
-            RocReportModule.load();
-
             setTimeout(function(){
                 GeneralReportModule.load();
             }, 2000);
@@ -86,7 +84,6 @@ define(
                     Core.View.setActiveTabOnSidePanel(reportViewer);
                 }
             });
-            Core.View.addToTitleBar([rocButton, {xtype: 'tbspacer', width: 15}]);
         };
 
         return new ReportModule();

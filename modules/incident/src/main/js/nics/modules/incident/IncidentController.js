@@ -155,24 +155,7 @@ define(['iweb/CoreModule',
                 var center = ol.proj.transform(latAndLonValues,'EPSG:4326','EPSG:3857');
 
                 MapModule.getMap().getView().setCenter(center);
-
-                /*
-                var view = MapModule.getMap().getView();
-
-                this.mixins.geoApp.removeLayer();
-                view.setCenter(center);
-                var point = this.buildPoint(menuItem.lat, menuItem.lon, view);
-                var feature = this.mixins.geoApp.buildFeature(point,"");
-                this.mixins.geoApp.getLayer().getSource().addFeature(feature);
-                MapModule.getMapController().zoomTo(15);
-                */
-
                 Core.EventManager.fireEvent("nics.incident.join", incident);
-            },
-
-            buildPoint: function(lat, long, view) {
-                return new ol.geom.Point([long, lat])
-                    .transform(ol.proj.get('EPSG:4326'), view.getProjection());
             },
 
 			onJoinArchivedIncident: function(evt, incident){
