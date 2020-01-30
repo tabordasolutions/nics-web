@@ -33,10 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.Manifest;
 
 
@@ -155,19 +152,31 @@ public class LoginServlet extends HttpServlet implements Servlet {
 			String s_loggedOut = (loggedOut == null) ? null : (String) loggedOut;
 			boolean b_loggedOut = Boolean.parseBoolean(s_loggedOut);
 			
-			List<Map<String, Object>> workspaces = getWorkspaces(req.getServerName());
-			System.out.println("Hereis " +  (workspaces.get(0)).get("workspaceid"));
-			String defaultWorkspace = workspaces.get(0).get("workspaceid").toString();
+			// List<Map<String, Object>> workspaces = getWorkspaces(req.getServerName());
+
+			List<Map<String, Object>> workspaces = new ArrayList<Map<String, Object>>();
+			Map<String, Object> workspaces_map = new HashMap<String, Object>();
+			workspaces_map.put("SCOUT", "WORKSPACE");
+			workspaces.add(workspaces_map);
+
+			// System.out.println("Hereis " +  (workspaces.get(0)).get("workspaceid"));
+			// String defaultWorkspace = workspaces.get(0).get("workspaceid").toString();
+			String defaultWorkspace = "1";
 			if (workspaces.size() > 0 && !b_loggedOut) {
 				req.setAttribute("version", warVersion);
 				req.setAttribute("workspaces", workspaces);
 				chosenWorkspace  = req.getParameter("currentWorkspace");
+
+				List<?> local_scout_announcements = null;
+
 				if (chosenWorkspace != null && chosenWorkspace != ""){
-			    	req.setAttribute("announcements",this.getAnnouncements(chosenWorkspace));
+					req.setAttribute("announcements",local_scout_announcements);
+			    	// req.setAttribute("announcements",this.getAnnouncements(chosenWorkspace));
 			    	req.setAttribute("selectedWorkspace", chosenWorkspace);
 			    }
 			    else {
-			    	req.setAttribute("announcements",this.getAnnouncements(defaultWorkspace));
+					req.setAttribute("announcements",local_scout_announcements);
+			    	// req.setAttribute("announcements",this.getAnnouncements(defaultWorkspace));
 			    	req.setAttribute("selectedWorkspace", defaultWorkspace);
 			    }
 				req.setAttribute("selectedWorkspace", workspaces);
@@ -191,8 +200,9 @@ public class LoginServlet extends HttpServlet implements Servlet {
 						LOGIN_ERROR_NOWORKSPACE_DESCRIPTION);
 				req.getRequestDispatcher(FAILED_JSP_PATH).forward(req, resp);
 			}
-		} catch (WebApplicationException | ProcessingException
-				| URISyntaxException e) {
+		// } catch (WebApplicationException | ProcessingException | URISyntaxException e) {
+		} catch (WebApplicationException | ProcessingException e) {
+
 			logger.error("Failed to retrieve available workspaces", e);
 			req.setAttribute(ERROR_MESSAGE_KEY,
 					LOGIN_ERROR_CONFIGURATION_MESSAGE);
@@ -371,6 +381,6 @@ public class LoginServlet extends HttpServlet implements Servlet {
 				
 			}
 		}
-			return announcements;
+		return announcements;
 	}
 }
