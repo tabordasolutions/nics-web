@@ -141,8 +141,15 @@ define(['iweb/CoreModule',
                 }
 
                 var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
-                var incident = { name: menuItem.text, id: menuItem.incidentId, incidentNumber: menuItem.incidentNumber, incidentTypes: menuItem.incidentTypes,
-                                 latitude: menuItem.lat, longitude: menuItem.lon, topic: topic };
+                var incident = {
+                    name: menuItem.text,
+                    id: menuItem.incidentId,
+                    incidentNumber: menuItem.incidentNumber,
+                    incidentTypes: menuItem.incidentTypes,
+                    latitude: menuItem.lat,
+                    longitude: menuItem.lon,
+                    topic: topic
+                };
 
                 if(!this.model.isOpen(incident)){
                     this.mediator.subscribe(topic);
@@ -155,7 +162,8 @@ define(['iweb/CoreModule',
                 var center = ol.proj.transform(latAndLonValues,'EPSG:4326','EPSG:3857');
 
                 MapModule.getMap().getView().setCenter(center);
-                Core.EventManager.fireEvent("nics.incident.join", incident);
+
+                Core.EventManager.fireEvent("nics.incident.roc.join", incident);
             },
 
 			onJoinArchivedIncident: function(evt, incident){

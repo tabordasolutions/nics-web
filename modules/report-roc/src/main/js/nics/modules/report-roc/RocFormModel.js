@@ -120,18 +120,32 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
 		getIncidentTypeIdsFromIncidentTypeNames: function(incidentTypesNames) {
             var incidentTypesWithIncidentID = UserProfile.getIncidentTypes();
             var incidentTypesArray = [];
+            var incidentTypesNamesArray = [];
 
             if(incidentTypesNames != null && incidentTypesNames.incidenttype != null) {
-                for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
-                    for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
-                        if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
-                            incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
-                            break;
+                if(!Array.isArray(incidentTypesNames.incidenttype)) {
+                    incidentTypesNamesArray.push(incidentTypesNames);
+                    incidentTypesNames = incidentTypesNamesArray;
+
+                    for(var i=0; i<incidentTypesNames.length; i++) {
+                        for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                            if(incidentTypesNames[i].incidenttype === incidentTypesWithIncidentID[j].incidentTypeName) {
+                                incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    for(var i=0; i<incidentTypesNames.incidenttype.length; i++) {
+                        for(var j=0; j<incidentTypesWithIncidentID.length; j++) {
+                            if(incidentTypesNames.incidenttype[i] === incidentTypesWithIncidentID[j].incidentTypeName) {
+                                incidentTypesArray.push(incidentTypesWithIncidentID[j].incidentTypeId);
+                                break;
+                            }
                         }
                     }
                 }
             }
-
             return { "incidenttype": incidentTypesArray };
         },
 		formulas: {
@@ -139,16 +153,31 @@ define(['ext','iweb/CoreModule', 'nics/modules/UserProfileModule'], function(Ext
                 return get('incidentNameReadOnly') ? true : get('incidentId') != null && get('incidentId') != '';
             },
             disableEvacuationsInProgress: function(get) {
-                var evacuations = get('evacuations') ;
-                return (typeof evacuations == "string") ? evacuations === 'No' : true;
+                var evacuations = get('evacuations');
+                return (typeof evacuations == "string" && (evacuations === 'No' || evacuations === '')) ? true: false;
             },
             disableStructuresThreatInProgress: function(get) {
-                var structuresThreat = get('structuresThreat') ;
-                return (typeof structuresThreat == "string") ? structuresThreat === 'No' : true;
+                var structuresThreat = get('structuresThreat');
+                return (typeof structuresThreat == "string" && (structuresThreat === 'No' || structuresThreat === '')) ? true: false;
             },
             disableInfrastructuresThreatInProgress: function(get) {
-                var infrastructuresThreat = get('infrastructuresThreat') ;
-                return (typeof infrastructuresThreat == "string") ? infrastructuresThreat === 'No' : true;
+                var infrastructuresThreat = get('infrastructuresThreat');
+                return (typeof infrastructuresThreat == "string" && (infrastructuresThreat === 'No' || infrastructuresThreat === '')) ? true: false;
+            },
+            disableStartTime: function(get) {
+                return ((get('reportType') == 'FINAL') || (get('reportType') == 'UPDATE'));
+            },
+            isEvacuationsMitigated: function(get) {
+                var evacuations = get('evacuations');
+                return (typeof evacuations == "string" && evacuations === 'Mitigated') ? true: false;
+            },
+            isStructureThreatsMitigated: function(get) {
+                var structuresThreat = get('structuresThreat');
+                return (typeof structuresThreat == "string" && structuresThreat === 'Mitigated') ? true: false;
+            },
+            isInfrastructuresThreatMitigated: function(get) {
+                var infrastructuresThreat = get('infrastructuresThreat');
+                return (typeof infrastructuresThreat == "string" && infrastructuresThreat === 'Mitigated') ? true: false;
             },
             updateReport: function(get) {
                 return get('reportType') == 'UPDATE';
