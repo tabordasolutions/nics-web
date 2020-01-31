@@ -61,7 +61,6 @@
                     <div id="workspaces" class="form-group text-center">
                         <label for="server">Workspace:</label>
                         <select id="server" class="form-control" name="workspace" style="width:auto;display: inline-block" required>
-                            <option value="1">SCOUT</option>
                         </select>
                     </div>
                     <div class="form-group ">
