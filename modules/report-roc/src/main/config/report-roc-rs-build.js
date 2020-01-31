@@ -1,12 +1,12 @@
 ({
     paths: {
-        'ext': 'empty:',
         'ol': 'empty:',
+        'ext': 'empty:',
         'iweb/CoreModule': 'empty:',
         'nics/modules/UserProfileModule': 'empty:',
-        'nics/modules/report/common/FormVTypes': 'empty:',
         'iweb/modules/MapModule': 'empty:',
-        'iweb/modules/drawmenu/Interactions': 'empty:'
+        'iweb/modules/drawmenu/Interactions': 'empty:',
+        'nics/modules/report/common/FormVTypes': 'empty:'
     },
 
     baseUrl: '../js',

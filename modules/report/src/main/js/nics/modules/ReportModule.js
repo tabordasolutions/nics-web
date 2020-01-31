@@ -48,7 +48,6 @@ define(
     function(Core, ReportViewer, GeneralReportModule, DamageReportModule,
             RocReportModule, FmagReportModule, I215ReportModule,  MapModule) {
 
-
         var ReportModule = function() {};
         var buttonStyle = 'nontb_style';
 
@@ -85,7 +84,7 @@ define(
                 }
             });
         };
-
+      
         return new ReportModule();
     }
 );

@@ -56,24 +56,27 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 
 			var topic = "nics.report.reportType";
 			Core.EventManager.createCallbackHandler(
-					topic, this, function(evt, response){
-						Ext.Array.each(response.types, function(type){
-							if(type.formTypeName === 'ROC'){
-								this.formTypeId = type.formTypeId;
-								return;
-							}
-						}, this);
-						
-						//Continue loading
-						this.bindEvents();
-			});
+                topic, this, function(evt, response){
+                    Ext.Array.each(response.types, function(type){
+                        if(type.formTypeName === 'ROC'){
+                            this.formTypeId = type.formTypeId;
+                            return;
+                        }
+                    }, this);
+
+                    //Continue loading
+                    this.bindEvents();
+			    }
+			);
 			this.mediator.sendRequestMessage(Core.Config.getProperty(UserProfile.REST_ENDPOINT) +
 					"/reports/types", topic);
 		},
 		
 		bindEvents: function(){
+            var topic = Ext.String.format("iweb.NICS.ws.{0}.newIncident", UserProfile.getWorkspaceId());
+            var removeTopic = Ext.String.format("iweb.NICS.ws.{0}.removeIncident", UserProfile.getWorkspaceId());
 			//Bind UI Elements
-			Core.EventManager.addListener("nics.incident.join", this.onJoinIncident.bind(this));
+			Core.EventManager.addListener("nics.incident.roc.join", this.onJoinIncident.bind(this));
 			Core.EventManager.addListener("nics.incident.close", this.onCloseIncident.bind(this));
 			Core.EventManager.addListener("LoadROCReports", this.onLoadReports.bind(this));
 			Core.EventManager.addListener("PrintROCReport", this.onReportReady.bind(this));
@@ -82,29 +85,26 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			Core.EventManager.addListener("LoadOrgDistList", this.loadOrgDistList.bind(this));
 			Core.EventManager.addListener("nics.active.incidents.ready", this.loadActiveIncidents.bind(this));
 			Core.EventManager.addListener("nics.active.incidents.update", this.updateActiveIncident.bind(this));
-			var topic = Ext.String.format("iweb.NICS.ws.{0}.newIncident", UserProfile.getWorkspaceId());
-			this.mediator.subscribe(topic);
+			// this.mediator.subscribe(topic);
 			Core.EventManager.addListener(topic, this.addActiveIncident.bind(this));
-			var removeTopic = Ext.String.format("iweb.NICS.ws.{0}.removeIncident", UserProfile.getWorkspaceId());
-			this.mediator.subscribe(topic);
 			Core.EventManager.addListener(removeTopic, this.removeActiveIncident.bind(this));
-
+            this.mediator.subscribe(topic);
 		},
 
 		onJoinIncident: function(e, incident) {
+		    Ext.override(Ext.data.Connection, {timeout:45000});
 		    var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+		    var url = "";
+
+            this.clearReportsInView();
 
             if(this.eventListenerRemoved) {
                 Core.EventManager.addListener("LoadROCReports", this.onLoadReports.bind(this));
                 Core.EventManager.addListener("LoadOrgAdminList", this.loadOrgAdminList.bind(this));
                 Core.EventManager.addListener("LoadOrgDistList", this.loadOrgDistList.bind(this));
                 Core.EventManager.addListener("PrintROCReport", this.onReportReady.bind(this));
-
                 this.eventListenerRemoved = false;
             }
-
-		    this.clearReportsInView();
-		    this.getView().enable();
 
 			this.incidentName = incident.name;
 			this.incidentNumber = incident.incidentNumber;
@@ -115,30 +115,13 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			this.emailList = UserProfile.getUsername();
 
 			//Load reports
-			this.mediator.sendRequestMessage(
-			    endpoint + "/reports/" + this.incidentId + '/ROC',
-                "LoadROCReports"
+			url = Ext.String.format(
+			    "{0}/reports/{1}/ROC/",
+                endpoint,
+                this.incidentId
             );
 
-			//Load list of admins, and distribution list for this incident
-			var url = Ext.String.format(
-			    "{0}/orgs/{1}/adminlist/{2}",
-			    endpoint,
-			    UserProfile.getWorkspaceId(),
-			    UserProfile.getOrgId()
-            );
-
-			this.mediator.sendRequestMessage(url, "LoadOrgAdminList");
-
-			var url = Ext.String.format(
-			    "{0}/orgs/{1}/org/{2}",
-			    endpoint,
-			    UserProfile.getWorkspaceId(),
-			    UserProfile.getOrgName()
-            );
-
-			this.mediator.sendRequestMessage(url, "LoadOrgDistList");
-
+            this.mediator.sendRequestMessage(url, "LoadROCReports");
 			//Subscribe to New ROC report message on the bus
 			this.newTopic = Ext.String.format(
                 "iweb.NICS.incident.{0}.report.{1}.new",
@@ -146,10 +129,10 @@ function(Core, UserProfile, RocReportView, RocFormView) {
                 "ROC"
             );
 			this.mediator.subscribe(this.newTopic);
-			
 			this.newHandler = this.onReportAdded.bind(this);
 			Core.EventManager.addListener(this.newTopic, this.newHandler);
 			this.incidentNameReadOnly = true;
+			this.getView().enable();
 		},
 
 		onCloseIncident: function(e, incidentId) {
@@ -237,6 +220,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 				//Clear away any previous report
 				rocReportContainer.removeAll();
 				//Add new report
+
 				var rocForm = Ext.create('modules.report-roc.RocFormView',{
 					incidentId: this.incidentId,
 					incidentName: this.incidentName,
@@ -244,8 +228,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					editROC: !displayOnly
 				});
 
-				//rocReportContainer.show();
-		        rocReportContainer.add(rocForm);				//Pull data from the report, and add in the incidentName and Id
 				var formData = (JSON.parse(record.data.message));
 			    formData.report.incidentId = record.data.incidentId;
 			    formData.report.incidentName = record.data.incidentName;
@@ -293,6 +275,9 @@ function(Core, UserProfile, RocReportView, RocFormView) {
                     formData.report.otherOtherSignificantInfo = "";
                 }
 
+                rocReportContainer.show();
+                rocReportContainer.add(rocForm);
+
 				if (displayOnly){
 					rocForm.controller.setFormReadOnly();
 				} else {
@@ -339,6 +324,7 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			var newReports = [];
 			var isFinal = false;
 			var combo = this.lookupReference('rocList');
+
 			if(response) {
 				if(response.reports && 
 					response.reports.length > 0){
@@ -359,18 +345,17 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 					combo.getStore().loadRawData(newReports, true);
 					var latestForm = combo.getStore().getAt(0).data.formId;
 					combo.setValue(latestForm);
-					this.displayCurrentRecord(true, 'select');
+
+                    this.displayCurrentRecord(true, 'select');
+
 					if (isFinal){
 						this.lookupReference('updateButton').disable();
 						this.lookupReference('finalButton').disable();
-					}
-					else {
+					} else {
 						this.lookupReference('updateButton').enable();
 						this.lookupReference('finalButton').enable();
 					}
-					
-				}
-				else {
+				} else {
 					this.lookupReference('createButton').enable();
 					this.lookupReference('updateButton').disable();
 					this.lookupReference('finalButton').disable();
@@ -384,8 +369,6 @@ function(Core, UserProfile, RocReportView, RocFormView) {
 			var reportTitle  = message.datecreated;
 			var reportType = message.report.reportType;
 		
-			
-			
 			return {
 				formId: report.formId,
 				incidentId: this.incidentId,
