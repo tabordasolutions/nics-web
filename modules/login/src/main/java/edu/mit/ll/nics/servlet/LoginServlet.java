@@ -156,7 +156,8 @@ public class LoginServlet extends HttpServlet implements Servlet {
 
 			List<Map<String, Object>> workspaces = new ArrayList<Map<String, Object>>();
 			Map<String, Object> workspaces_map = new HashMap<String, Object>();
-			workspaces_map.put("SCOUT", "WORKSPACE");
+			workspaces_map.put("workspaceid", "1");
+			workspaces_map.put("workspacename", "SCOUT");
 			workspaces.add(workspaces_map);
 
 			// System.out.println("Hereis " +  (workspaces.get(0)).get("workspaceid"));
@@ -167,7 +168,33 @@ public class LoginServlet extends HttpServlet implements Servlet {
 				req.setAttribute("workspaces", workspaces);
 				chosenWorkspace  = req.getParameter("currentWorkspace");
 
-				List<?> local_scout_announcements = null;
+				List<Map<String, Object>> local_scout_announcements = new ArrayList<Map<String, Object>>();
+				Map<String, Object> announcements_map1 = new HashMap<String, Object>();
+
+				announcements_map1.put("created","2019-10-24 16:17:03.553935");
+				announcements_map1.put("message", "Please check CalOES Website for Technical and Operational Issues at www.caloes.ca.gov follow the sections listed below CalOES Divisions Regional Operations Situation Awareness and Collaboration Tool");
+				local_scout_announcements.add(announcements_map1);
+
+				Map<String, Object> announcements_map2 = new HashMap<String, Object>();
+				announcements_map2.put("created","2019-09-09 15:41:44.995583");
+				announcements_map2.put("message", "WARNING SCOUT is currently experiencing technical issues with low-bandwidth cellular connections.  All data layers and feeds are currently working but the collaborative drawing of data periodically will not save with a marginal internet connection.");
+				local_scout_announcements.add(announcements_map2);
+
+				Map<String, Object> announcements_map3 = new HashMap<String, Object>();
+				announcements_map3.put("created","2019-09-20 22:04:15.629228");
+				announcements_map3.put("message", "Remote Sensing data feeds ...Spot Reports, WIFire, FIRIS etc... have been moved into the Data Folders Sensor Data folder.");
+				local_scout_announcements.add(announcements_map3);
+
+				Map<String, Object> announcements_map4 = new HashMap<String, Object>();
+				announcements_map4.put("created","2019-06-03 15:44:21.277257");
+				announcements_map4.put("message", "SCOUT Transitioning to Phase 3");
+				local_scout_announcements.add(announcements_map4);
+
+				Map<String, Object> announcements_map5 = new HashMap<String, Object>();
+				announcements_map5.put("created","2019-06-10 15:52:08.819918");
+				announcements_map5.put("message", "training.scout.ca.gov");
+				local_scout_announcements.add(announcements_map5);
+
 
 				if (chosenWorkspace != null && chosenWorkspace != ""){
 					req.setAttribute("announcements",local_scout_announcements);
