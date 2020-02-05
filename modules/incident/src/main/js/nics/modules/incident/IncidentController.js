@@ -239,7 +239,7 @@ define(['iweb/CoreModule',
 			
 			onCreateIncident: function(evt, response){
 				if(response.message != "OK"){
-				    console.log(response);
+				    console.log("Create Incident Failed: ", response);
 					Ext.MessageBox.alert("Status", "Create Incident Failed. Please try again.");
 				}else{
 					//Reset Display
