@@ -240,7 +240,12 @@ define(['iweb/CoreModule',
 			onCreateIncident: function(evt, response){
 				if(response.message != "OK"){
 				    console.log("Create Incident Failed: ", response);
-					Ext.MessageBox.alert("Status", "Create Incident Failed. Please try again.");
+
+					if(response.message == "Incident name already exists.") {
+					    Ext.MessageBox.alert("Status", "This incident name already exists. Please try different Incident name.");
+					} else {
+					    Ext.MessageBox.alert("Status", "Create Incident Failed. Please try again or contact your administrator.");
+					}
 				}else{
 					//Reset Display
 					this.getView().resetCreateWindow();
