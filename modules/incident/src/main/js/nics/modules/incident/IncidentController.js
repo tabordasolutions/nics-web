@@ -239,7 +239,8 @@ define(['iweb/CoreModule',
 			
 			onCreateIncident: function(evt, response){
 				if(response.message != "OK"){
-					Ext.MessageBox.alert("Status", response);
+				    console.log(response);
+					Ext.MessageBox.alert("Status", JSON.stringify(response));
 				}else{
 					//Reset Display
 					this.getView().resetCreateWindow();
