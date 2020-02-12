@@ -61,6 +61,11 @@ define(['iweb/CoreModule',
 			    this.mediator = Core.Mediator.getInstance();
 			    
 			    this.bindEvents();
+
+			    gtag('config', gid, {
+                  'page_title' : 'Incident',
+                  'page_path': '/nics/modules/incident/IncidentController.js'
+                });
 			},
 	 
 			bindEvents: function(){
@@ -139,6 +144,12 @@ define(['iweb/CoreModule',
                 if(this.model.getCurrentIncident().id != -1){
                     Core.EventManager.fireEvent("nics.incident.close");
                 }
+
+                gtag('event', 'Select', {
+                  'event_category': 'Incident',
+                  'event_label': 'Incident Select',
+                  'value': 'UserId: ' + UserProfile.getUserId() + " SessionId: " + UserProfile.getUserSessionId() + " Incident Id: " + menuItem.incidentId
+                });
 
                 var topic = Ext.String.format("iweb.NICS.incident.{0}.#", menuItem.incidentId);
                 var incident = { name: menuItem.text, id: menuItem.incidentId, incidentNumber: menuItem.incidentNumber, incidentTypes: menuItem.incidentTypes,
@@ -449,6 +460,12 @@ define(['iweb/CoreModule',
 			},
 
 			updateIncident: function(){
+				gtag('event', "update", {
+                  'event_category': 'Incident',
+                  'event_label': 'Incident Update',
+                  'value': 'UserId: ' + UserProfile.getUserId() + " SessionId: " + UserProfile.getUserSessionId() + " Incident Id: " + this.updateIncidentId
+                });
+
 				var view = this.getView();
 			
 				var incidentTypes = this.getView().getIncidentTypeIds().map(function(id){
@@ -486,6 +503,12 @@ define(['iweb/CoreModule',
 			
 
 			createIncident: function(){
+				gtag('event', 'Create', {
+                  'event_category': 'Incident',
+                  'event_label': 'Incident Create',
+                  'value': 'UserId: ' + UserProfile.getUserId() + " SessionId: " + UserProfile.getUserSessionId()
+                });
+
 				var view = this.getView();
 				if (!view.getStateRegion())
 				{
