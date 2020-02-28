@@ -33,10 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.Manifest;
 
 
@@ -155,19 +152,58 @@ public class LoginServlet extends HttpServlet implements Servlet {
 			String s_loggedOut = (loggedOut == null) ? null : (String) loggedOut;
 			boolean b_loggedOut = Boolean.parseBoolean(s_loggedOut);
 			
-			List<Map<String, Object>> workspaces = getWorkspaces(req.getServerName());
-			System.out.println("Hereis " +  (workspaces.get(0)).get("workspaceid"));
-			String defaultWorkspace = workspaces.get(0).get("workspaceid").toString();
+			// List<Map<String, Object>> workspaces = getWorkspaces(req.getServerName());
+
+			List<Map<String, Object>> workspaces = new ArrayList<Map<String, Object>>();
+			Map<String, Object> workspaces_map = new HashMap<String, Object>();
+			workspaces_map.put("workspaceid", "1");
+			workspaces_map.put("workspacename", "SCOUT");
+			workspaces.add(workspaces_map);
+
+			// System.out.println("Hereis " +  (workspaces.get(0)).get("workspaceid"));
+			// String defaultWorkspace = workspaces.get(0).get("workspaceid").toString();
+			String defaultWorkspace = "1";
 			if (workspaces.size() > 0 && !b_loggedOut) {
 				req.setAttribute("version", warVersion);
 				req.setAttribute("workspaces", workspaces);
 				chosenWorkspace  = req.getParameter("currentWorkspace");
+
+				List<Map<String, Object>> local_scout_announcements = new ArrayList<Map<String, Object>>();
+
+				Map<String, Object> announcements_map4 = new HashMap<String, Object>();
+				announcements_map4.put("created","2019-06-03 08:44:21.277257");
+				announcements_map4.put("message", "SCOUT Transitioning to Phase 3");
+				local_scout_announcements.add(announcements_map4);
+
+				Map<String, Object> announcements_map5 = new HashMap<String, Object>();
+				announcements_map5.put("created","2019-06-10 08:52:08.819918");
+				announcements_map5.put("message", "training.scout.ca.gov");
+				local_scout_announcements.add(announcements_map5);
+
+				Map<String, Object> announcements_map2 = new HashMap<String, Object>();
+				announcements_map2.put("created","2019-09-09 08:41:44.995583");
+				announcements_map2.put("message", "WARNING SCOUT is currently experiencing technical issues with low-bandwidth cellular connections.  All data layers and feeds are currently working but the collaborative drawing of data periodically will not save with a marginal internet connection.");
+				local_scout_announcements.add(announcements_map2);
+
+				Map<String, Object> announcements_map3 = new HashMap<String, Object>();
+				announcements_map3.put("created","2019-09-20 15:04:15.629228");
+				announcements_map3.put("message", "Remote Sensing data feeds ...Spot Reports, WIFire, FIRIS etc... have been moved into the Data Folders Sensor Data folder.");
+				local_scout_announcements.add(announcements_map3);
+
+				Map<String, Object> announcements_map1 = new HashMap<String, Object>();
+				announcements_map1.put("created","2019-10-24 09:17:03.553935");
+				announcements_map1.put("message", "Please check CalOES Website for Technical and Operational Issues at www.caloes.ca.gov follow the sections listed below CalOES Divisions Regional Operations Situation Awareness and Collaboration Tool");
+				local_scout_announcements.add(announcements_map1);
+
+
 				if (chosenWorkspace != null && chosenWorkspace != ""){
-			    	req.setAttribute("announcements",this.getAnnouncements(chosenWorkspace));
+					req.setAttribute("announcements",local_scout_announcements);
+			    	// req.setAttribute("announcements",this.getAnnouncements(chosenWorkspace));
 			    	req.setAttribute("selectedWorkspace", chosenWorkspace);
 			    }
 			    else {
-			    	req.setAttribute("announcements",this.getAnnouncements(defaultWorkspace));
+					req.setAttribute("announcements",local_scout_announcements);
+			    	// req.setAttribute("announcements",this.getAnnouncements(defaultWorkspace));
 			    	req.setAttribute("selectedWorkspace", defaultWorkspace);
 			    }
 				req.setAttribute("selectedWorkspace", workspaces);
@@ -191,8 +227,9 @@ public class LoginServlet extends HttpServlet implements Servlet {
 						LOGIN_ERROR_NOWORKSPACE_DESCRIPTION);
 				req.getRequestDispatcher(FAILED_JSP_PATH).forward(req, resp);
 			}
-		} catch (WebApplicationException | ProcessingException
-				| URISyntaxException e) {
+		// } catch (WebApplicationException | ProcessingException | URISyntaxException e) {
+		} catch (WebApplicationException | ProcessingException e) {
+
 			logger.error("Failed to retrieve available workspaces", e);
 			req.setAttribute(ERROR_MESSAGE_KEY,
 					LOGIN_ERROR_CONFIGURATION_MESSAGE);
@@ -371,6 +408,6 @@ public class LoginServlet extends HttpServlet implements Servlet {
 				
 			}
 		}
-			return announcements;
+		return announcements;
 	}
 }
