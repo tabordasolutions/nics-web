@@ -219,6 +219,9 @@ define([
 				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
 
                 Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login/{1}", endpoint, UserProfile.getUsername()), topic);
+
+                //Issue a get of the login page with the loggedOut param set, which will clean up the java session.		                 Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login", endpoint), topic);
+                $.get('./login?loggedOut=true');
 			},
 
 			refreshToken: function(){
