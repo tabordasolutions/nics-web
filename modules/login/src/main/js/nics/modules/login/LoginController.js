@@ -220,7 +220,10 @@ define([
 
                 Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login/{1}", endpoint, UserProfile.getUsername()), topic);
 
-                //Issue a get of the login page with the loggedOut param set, which will clean up the java session.		                 Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login", endpoint), topic);
+                /* close connection to atmosphere */
+                this.mediator.close();
+
+                /* Issue a get of the login page with the loggedOut param set, which will clean up the java session. */
                 $.get('./login?loggedOut=true');
                 location.href = "./login?loggedOut=true";
 			},
