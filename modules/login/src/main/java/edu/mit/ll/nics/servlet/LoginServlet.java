@@ -84,7 +84,7 @@ public class LoginServlet extends HttpServlet implements Servlet {
 
 	private static final String LOGIN_JSP_PATH = "login/login.jsp";
 	private static final String FAILED_JSP_PATH = "login/loginFailed.jsp";
-	private static final String LOGGED_OUT_JSP_PATH = "/login/loggedOut.jsp";
+	private static final String LOGGED_OUT_JSP_PATH = "login/loggedOut.jsp";
 	private static final String HOME_PATH = "home.html";
 	private static final String MANIFEST_PATH = "/META-INF/MANIFEST.MF";
 	private static final String IMPL_VERSION = "Implementation-Version";
