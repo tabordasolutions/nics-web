@@ -83,6 +83,7 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 				url = this.updateParameters(request.getParameter("url"), request);
 				String proxyBaseURL = Config.getInstance().getConfiguration().getString("nics.proxy.baseurl");
 				Map<String, String> headerOptions = new HashMap<>();
+				boolean internalUrl = false;
 
 				try {
 					String[] keyValuePair = Config.getInstance().getConfiguration().getStringArray("nics.proxy.translations");
@@ -92,6 +93,7 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 							logger.debug("URL changed FROM: " + url);
 							url = url.replace(proxyBaseURL + keyValue[0], keyValue[1]);
 							logger.debug(" TO: " + url + " in class WFSProxyServlet");
+							internalUrl = true;
 							break;
 						}
 					}
@@ -99,10 +101,12 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 					logger.error("Error rewriting URL", e);
 				}
 
-				if (url.startsWith(proxyBaseURL + "/geoserver") || url.startsWith(proxyBaseURL + "/static/uploads")) {
+				// if (url.startsWith(proxyBaseURL + "/geoserver") || url.startsWith(proxyBaseURL + "/static/uploads")) {
+				if (internalUrl) {
 					String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
 					headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
 				}
+
 
 				/*
 				if(url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.geoserver"))
