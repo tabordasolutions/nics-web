@@ -31,7 +31,9 @@ package edu.mit.ll.nics.servlet;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -42,6 +44,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import edu.mit.ll.nics.common.ws.client.BasicRequest;
@@ -59,55 +62,101 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 	@Override
 	public void init() throws ServletException {}
 
+	private long executionTime = 0;
+	private void startExecutionTime() {
+		executionTime = System.currentTimeMillis();
+	}
+
+	private void logExecutionTime(String url) {
+		logger.info("Time to service request from [" + url + "] in ms : " + (System.currentTimeMillis() - executionTime));
+	}
+
 	@Override
 	protected void doGet(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-		String url = this.updateParameters(request.getParameter("url"), request);
-		
-		Map<String, String> headerOptions = new HashMap<>();
-		
-		if(url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.geoserver"))
-				|| url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.upload"))){
-			String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
-			headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
+		startExecutionTime();
+		String url = "";
+		String result = "";
+		try {
+
+			if (!request.getParameter("url").isEmpty()) {
+
+				url = this.updateParameters(request.getParameter("url"), request);
+				String proxyBaseURL = Config.getInstance().getConfiguration().getString("nics.proxy.baseurl");
+				Map<String, String> headerOptions = new HashMap<>();
+				boolean internalUrl = false;
+
+				try {
+					String[] keyValuePair = Config.getInstance().getConfiguration().getStringArray("nics.proxy.translations");
+					for (int i = 0; i < keyValuePair.length; i++) {
+						String[] keyValue = keyValuePair[i].split("->");
+						if (url.startsWith(proxyBaseURL + keyValue[0])) {
+							logger.debug("URL changed FROM: " + url);
+							url = url.replace(proxyBaseURL + keyValue[0], keyValue[1]);
+							logger.debug(" TO: " + url + " in class WFSProxyServlet");
+							internalUrl = true;
+							break;
+						}
+					}
+				} catch (Exception e) {
+					logger.error("Error rewriting URL", e);
+				}
+
+				// if (url.startsWith(proxyBaseURL + "/geoserver") || url.startsWith(proxyBaseURL + "/static/uploads")) {
+				if (internalUrl) {
+					String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
+					headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
+				}
+
+
+				/*
+				if(url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.geoserver"))
+						|| url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.upload"))){
+					String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
+					headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
+				}
+				*/
+				headerOptions.put("User-Agent", "NicsWeb");
+				BasicRequest basicRequest = new BasicRequest();
+				result = (String) basicRequest.getRequest(url, headerOptions);
+
+				if (url.toLowerCase().indexOf(".kml") > -1) {
+					if (result != null && result.indexOf("<kml") == -1) {
+						result = this.appendKMLHeader(result);
+					}
+					//OL3 does not current support BalloonStyle
+					/*
+					if(result.indexOf("BalloonStyle") > -1){
+						result = this.replaceBalloonStyle(result);
+					}
+					*/
+				}
+			}
+
+			ServletOutputStream out = null;
+			try {
+				out = response.getOutputStream();
+				response.setContentType("text/plain");
+
+				if (result != null && result != "") {
+					out.write(result.getBytes());
+				} else {
+					out.write("".getBytes());
+				}
+			} catch (IOException e) {
+				logger.error("Error writing out response", e);
+			} finally {
+				IOUtils.closeQuietly(out);
+			}
+		} finally {
+			logExecutionTime(url);
 		}
-		headerOptions.put("User-Agent", "NicsWeb");
-        
-        BasicRequest basicRequest = new BasicRequest();
-        String result = (String) basicRequest.getRequest(url, headerOptions);
-        
-        if(url.toLowerCase().indexOf(".kml") > -1){
-        	if(result != null && result.indexOf("<kml") == -1){
-        		result = this.appendKMLHeader(result);
-        	}
-        	//OL3 does not current support BalloonStyle
-			/*
-        	if(result.indexOf("BalloonStyle") > -1){
-        		result = this.replaceBalloonStyle(result);
-        	}
-        	*/
-    	}
-        
-        try {
-            ServletOutputStream out = response.getOutputStream();
-            response.setContentType("text/plain");
-            
-            if(result != null && result != "") {
-               out.write(result.getBytes());
-            }else {
-               out.write("".getBytes());
-            }
-            out.close();
-        }
-        catch(IOException e) {
-            logger.error("Error writing out response", e);
-        }
-    }
-	
+	}
+
 	private String updateParameters(String url, HttpServletRequest request){
 		StringBuffer urlString = new StringBuffer(url);
-		
+
 		try{
-		Map<String,String[]> paramMap = request.getParameterMap();
+			Map<String,String[]> paramMap = request.getParameterMap();
 			for(String param : paramMap.keySet()){
 				if(!param.equalsIgnoreCase("url") &&
 						!param.equalsIgnoreCase("callback") &&
@@ -119,15 +168,15 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 				}
 			}
 		}catch(Exception e){
-            logger.error("Error encoding URL", e);
+			logger.error("Error encoding URL", e);
 		}
 
 		return urlString.toString();
 	}
-	
+
 	private String appendKMLHeader(String result){
-	    StringBuffer header = new StringBuffer();
-	    header.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\" ");
+		StringBuffer header = new StringBuffer();
+		header.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\" ");
 		header.append("xmlns:gx=\"http://www.google.com/kml/ext/2.2\" ");
 		header.append("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
 		header.append("xsi:schemaLocation=\"http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd\">");
