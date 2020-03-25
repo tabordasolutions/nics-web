@@ -30,6 +30,7 @@
 package edu.mit.ll.nics.servlet;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,18 +106,22 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 	private String updateParameters(String url, HttpServletRequest request){
 		StringBuffer urlString = new StringBuffer(url);
 		
+		try{
 		Map<String,String[]> paramMap = request.getParameterMap();
-		for(String param : paramMap.keySet()){
-			if(!param.equalsIgnoreCase("url") &&
-					!param.equalsIgnoreCase("callback") &&
-					!param.equalsIgnoreCase("_")){
-				urlString.append("&");
-				urlString.append(param);
-				urlString.append("=");
-				urlString.append(paramMap.get(param)[0]);
+			for(String param : paramMap.keySet()){
+				if(!param.equalsIgnoreCase("url") &&
+						!param.equalsIgnoreCase("callback") &&
+						!param.equalsIgnoreCase("_")){
+					urlString.append("&");
+					urlString.append(param);
+					urlString.append("=");
+					urlString.append(URLEncoder.encode(paramMap.get(param)[0], "UTF-8"));
+				}
 			}
+		}catch(Exception e){
+            logger.error("Error encoding URL", e);
 		}
-		
+
 		return urlString.toString();
 	}
 	

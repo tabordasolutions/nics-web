@@ -218,9 +218,15 @@ define([
 				var topic = "nics.logout.usersession.callback";
 				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
 
-                Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login", endpoint), topic);
-			},
+                Core.Mediator.getInstance().sendDeleteMessage(Ext.String.format("{0}/login/{1}", endpoint, UserProfile.getUsername()), topic);
 
+                /* close connection to atmosphere */
+                this.mediator.close();
+
+                /* Issue a get of the login page with the loggedOut param set, which will clean up the java session. */
+                $.get('./login?loggedOut=true');
+                location.href = "./login?loggedOut=true";
+			},
 
 			refreshToken: function(){
 				var url = './refresh?currentUserSessionId=' + UserProfile.getCurrentUserSessionId();
