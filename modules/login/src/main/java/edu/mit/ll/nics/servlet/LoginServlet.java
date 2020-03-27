@@ -111,7 +111,7 @@ public class LoginServlet extends HttpServlet implements Servlet {
 	@Override
 	public void init() throws ServletException {
 		Configuration config = Config.getInstance().getConfiguration();
-		restEndpoint = config.getString("endpoint.rest");
+		restEndpoint = config.getString("endpoint.internalrest");
 		cookieDomain = config.getString("private.cookie.domain");
 		helpSite = config.getString("help.site.url","https://www.scout.ca.gov/scouthelp");
 		siteLogo = config.getString("main.site.logo","login/images/scout_logo.png");

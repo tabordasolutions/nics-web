@@ -66,7 +66,7 @@ public class TokenRefresher extends HttpServlet implements Servlet {
 	@Override
 	public void init() throws ServletException {
 		Configuration config = Config.getInstance().getConfiguration();
-		restEndpoint = config.getString("endpoint.rest");
+		restEndpoint = config.getString("endpoint.internalrest");
 	}
 
 	@Override
