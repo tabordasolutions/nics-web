@@ -91,7 +91,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 			var wfsFormat = new ol.format.WFS();
 
 			var vectorSource = new ol.source.Vector({
-                         loader: function(extent, resolution, projection) {
+             loader: function(extent, resolution, projection) {
 				 var requestUrl = Ext.String.format(
 						  "{0}//{1}/nics/proxy?url={2}?version=1.1.0&service=WFS&request=GetFeature&typename={3}" +
 						  "&srsname=EPSG:3857&bbox={4}{5}",
@@ -110,19 +110,19 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 					}
 				  
 					var loadFeatures = function(data, status){
-						//remove all previous features in this extent, to avoid flash on refresh
-						this.getFeaturesInExtent(extent).forEach(function(feature){
-							if(feature.getGeometry().intersectsExtent(extent)) {
-								this.removeFeature(feature);
-							}
-						}, this);
-						
-						//add the new features
-						this.addFeatures(wfsFormat.readFeatures(data));
+                        if(data != null) {
+                            //remove all previous features in this extent, to avoid flash on refresh
+                            this.getFeaturesInExtent(extent).forEach(function(feature){
+                                if(feature.getGeometry().intersectsExtent(extent)) {
+                                    this.removeFeature(feature);
+                                }
+                            }, this);
+                        }
+                        //add the new features
+                        this.addFeatures(wfsFormat.readFeatures(data));
 					};
 					
 					var handler = loadFeatures.bind(this);
-				  
 					$.ajax({
 				      url: requestUrl,
 				      dataType: 'xml',
@@ -172,7 +172,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 				    var loadFeatures = function(source, status){
 				    	//remove all features when we get results, to avoid flash on refresh
 						this.getFeatures().forEach(this.removeFeature, this);
-							
+
 				    	if (source) {
 				    		//ol kml format uses kml document baseURI for relative URLs. since we are
 				    		//using the proxy and preprocesing the text, baseURI is not properly set.
