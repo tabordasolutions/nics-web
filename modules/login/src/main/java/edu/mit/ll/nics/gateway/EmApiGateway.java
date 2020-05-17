@@ -70,7 +70,7 @@ public class EmApiGateway {
     private final OrganizationTypeMapResponseMapper organizationTypeMapResponseMapper;
 
     @Autowired
-    public EmApiGateway(@Qualifier("internalRestEndpoint") URL restEndpoint, Client client, LoggerFactory loggerFactory) {
+    public EmApiGateway(@Qualifier("restEndpoint") URL restEndpoint, Client client, LoggerFactory loggerFactory) {
         this.restEndpoint = restEndpoint;
         this.client = client;
         this.logger = loggerFactory.getLogger(EmApiGateway.class);

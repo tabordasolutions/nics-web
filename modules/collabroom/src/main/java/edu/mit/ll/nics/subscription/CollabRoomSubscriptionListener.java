@@ -55,7 +55,7 @@ public class CollabRoomSubscriptionListener implements SubscriptionValidator {
 	private final String COLLABROOM_TOPIC = "iweb.NICS.collabroom";
 	private final String INCIDENT_TOPIC = "iweb.NICS.incident";
 	private final String REQUEST_TYPE = "json";
-	private final String REST_ENDPOINT_CONFIG = "endpoint.internalrest";
+	private final String REST_ENDPOINT_CONFIG = "endpoint.rest";
 	private final String USERNAME_ATTRIB = "username";
 
 	public CollabRoomSubscriptionListener() {

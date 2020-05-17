@@ -55,7 +55,6 @@ import edu.mit.ll.iweb.websocket.Config;
 public class WFSProxyServlet extends HttpServlet implements Servlet {
 
 	private static Logger logger = Logger.getLogger(WFSProxyServlet.class);
-	private static RequestInternalUrlForwarding requestInternalUrlForwarding = RequestInternalUrlForwarding.getInstance();
 
 	public WFSProxyServlet() {
 	}
@@ -80,20 +79,42 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 		try {
 
 			if (!request.getParameter("url").isEmpty()) {
+
 				url = this.updateParameters(request.getParameter("url"), request);
+				String proxyBaseURL = Config.getInstance().getConfiguration().getString("nics.proxy.baseurl");
 				Map<String, String> headerOptions = new HashMap<>();
 				boolean internalUrl = false;
-				String forwardingUrl = requestInternalUrlForwarding.getForwardingUrl(url);
 
-				if(forwardingUrl != url) {
-					internalUrl = true;
+				try {
+					String[] keyValuePair = Config.getInstance().getConfiguration().getStringArray("nics.proxy.translations");
+					for (int i = 0; i < keyValuePair.length; i++) {
+						String[] keyValue = keyValuePair[i].split("->");
+						if (url.startsWith(proxyBaseURL + keyValue[0])) {
+							logger.debug("URL changed FROM: " + url);
+							url = url.replace(proxyBaseURL + keyValue[0], keyValue[1]);
+							logger.debug(" TO: " + url + " in class WFSProxyServlet");
+							internalUrl = true;
+							break;
+						}
+					}
+				} catch (Exception e) {
+					logger.error("Error rewriting URL", e);
 				}
 
+				// if (url.startsWith(proxyBaseURL + "/geoserver") || url.startsWith(proxyBaseURL + "/static/uploads")) {
 				if (internalUrl) {
 					String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
 					headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
 				}
 
+
+				/*
+				if(url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.geoserver"))
+						|| url.startsWith(Config.getInstance().getConfiguration().getString("endpoint.upload"))){
+					String token = (String) SessionHolder.getData(request.getSession().getId(), SessionHolder.TOKEN);
+					headerOptions.put("Cookie", String.format("AMAuthCookie=%1$s;iPlanetDirectoryPro=%1$s", token));
+				}
+				*/
 				headerOptions.put("User-Agent", "NicsWeb");
 				BasicRequest basicRequest = new BasicRequest();
 				result = (String) basicRequest.getRequest(url, headerOptions);
@@ -102,6 +123,12 @@ public class WFSProxyServlet extends HttpServlet implements Servlet {
 					if (result != null && result.indexOf("<kml") == -1) {
 						result = this.appendKMLHeader(result);
 					}
+					//OL3 does not current support BalloonStyle
+					/*
+					if(result.indexOf("BalloonStyle") > -1){
+						result = this.replaceBalloonStyle(result);
+					}
+					*/
 				}
 			}
 
