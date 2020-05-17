@@ -103,7 +103,7 @@
 
 	<root>
 		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="STDERR" />
 		<appender-ref ref="SADISPLAY_ROLLING_FILE" />
 	</root>
 
