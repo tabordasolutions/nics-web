@@ -99,7 +99,7 @@ public class ForgotPassswordServlet extends HttpServlet implements Servlet
     @Override
     public void init() throws ServletException {
         Configuration config = Config.getInstance().getConfiguration();
-        restEndpoint = config.getString("endpoint.internalRestEndpoint");
+        restEndpoint = config.getString("endpoint.internalrest");
         cookieDomain = config.getString("private.cookie.domain");
 
 
