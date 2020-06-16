@@ -100,7 +100,7 @@ define(['ext', "iweb/CoreModule", "./DatalayerBuilder",
 			},
 			
 			onLoadUserProfile: function(e){
-				if(UserProfile.isSuperUser() || UserProfile.isAdminUser()){
+				if(UserProfile.isSuperUser() || UserProfile.isAdminUser() || UserProfile.isGISUser()){
 					//add drag and drop support
 					var treeview = this.getView().getTree().getView();
 					treeview.addPlugin({

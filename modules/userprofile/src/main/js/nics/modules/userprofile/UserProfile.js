@@ -53,6 +53,7 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 			var description;
 			var isSuperUser;
 			var isAdminUser;
+			var isGISUser;
 			var incidentMapName;
 			
 			var propertiesLoadedEvt = "nics.user.properties.loaded";
@@ -120,6 +121,7 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 				jobTitle = data.jobTitle
 				isSuperUser = data.isSuperUser;
 				isAdminUser = data.isAdminUser;
+				isGISUser = data.isGISUser;
 				
 				var endpoint = Core.Config.getProperty("endpoint").rest;
 				var url = Ext.String.format("{0}/orgs/{1}?userId={2}",
@@ -285,6 +287,10 @@ define(["iweb/CoreModule", 'ol', 'iweb/modules/MapModule'],
 				isAdminUser: function(){
 					return isAdminUser;
 				},
+
+				isGISUser: function(){
+                    return isGISUser;
+                },
 
 				init: function(){
 					_init();

@@ -31,8 +31,10 @@ package edu.mit.ll.nics.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.jar.Manifest;
 
@@ -111,7 +113,7 @@ public class LoginServlet extends HttpServlet implements Servlet {
 	@Override
 	public void init() throws ServletException {
 		Configuration config = Config.getInstance().getConfiguration();
-		restEndpoint = config.getString("endpoint.rest");
+		restEndpoint = config.getString("endpoint.internalrest");
 		cookieDomain = config.getString("private.cookie.domain");
 		helpSite = config.getString("help.site.url","https://www.scout.ca.gov/scouthelp");
 		siteLogo = config.getString("main.site.logo","login/images/scout_logo.png");
@@ -365,6 +367,16 @@ public class LoginServlet extends HttpServlet implements Servlet {
 		iCookie.setSecure(true);
 		iCookie.setPath("/");
 		resp.addCookie(iCookie);
+		
+		try{
+			String instanceReference = InetAddress.getLocalHost().getHostName();
+			int instanceReferenceIndex = instanceReference.indexOf(".");
+			String instanceReferenceHost =  instanceReference.substring(instanceReferenceIndex - 4, instanceReferenceIndex);
+			Cookie instanceReferenceCookie = new Cookie("Instance-Reference", instanceReferenceHost);
+			resp.addCookie(instanceReferenceCookie);
+		} catch (UnknownHostException e){
+			logger.error(e);
+		}
 	}
 
 	private String getWarVersion() throws IOException {

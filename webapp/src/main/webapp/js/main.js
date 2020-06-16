@@ -129,13 +129,44 @@ require([
 	        //Load each module
 	        function loadModules() {
 
-	        	//Add Title
-				Core.View.addToTitleBar([{xtype: 'tbspacer', width: 5},{xtype: "label", html: "<b>" +
-					((Core.Config.getProperty("main.site.label") || '') ? Core.Config.getProperty("main.site.label") :
-					"Situation Awareness &amp; Collaboration Tool" ) + "</b>"}]);
+                /* READ COOKIES */
+                var allcookies = document.cookie;
+                var referenceValue, cookiekeyname, cookievalue = "";
+                var cookiearray = allcookies.split(';');
 
-	        	Core.Mediator.getInstance().setCookies(
-	        			Core.Config.getProperty("endpoint.rest"), ["openam", "iplanet"]);
+                for(var i=0; i<cookiearray.length; i++) {
+                    cookiekeyname = cookiearray[i].split('=')[0];
+                    cookievalue = cookiearray[i].split('=')[1];
+                    /* Get Instance-Reference cookie. */
+                    if(cookiekeyname == "Instance-Reference") {
+                        referenceValue = cookievalue;
+                        break;
+                    }
+                }
+
+	        	//Add Title
+				Core.View.addToTitleBar(
+				    [
+				        {
+				            xtype: 'tbspacer',
+				            width: 5
+                        },
+				        {
+				            xtype: "label",
+				            html: "<b>" + ((Core.Config.getProperty("main.site.label") || '') ? Core.Config.getProperty("main.site.label") : "Situation Awareness &amp; Collaboration Tool" ) + "</b>",
+                            listeners: {
+                                afterrender: function() {
+                                    var tip = Ext.create('Ext.tip.ToolTip', {
+                                        target: this.id,
+                                        html: referenceValue
+                                    });
+                                }
+                            }
+                        }
+                    ]
+                );
+
+	        	Core.Mediator.getInstance().setCookies(Core.Config.getProperty("endpoint.rest"), ["openam", "iplanet"]);
 
 	            var MapController = MapModule.load();
 

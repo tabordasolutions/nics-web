@@ -59,6 +59,11 @@ public class SpringConfiguration {
         return new URL(configuration().getString("endpoint.rest"));
     }
 
+    @Bean(name = "internalRestEndpoint")
+    public URL internalRestEndpoint() throws MalformedURLException {
+        return new URL(configuration().getString("endpoint.internalrest"));
+    }
+
     @Bean
     @Scope("prototype")
     public CookieTokenUtil cookieTokenUtil() {
