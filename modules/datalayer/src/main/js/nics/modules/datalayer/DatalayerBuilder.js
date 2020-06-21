@@ -100,15 +100,19 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 					  url, layername, extent.join(','), ',EPSG:3857');
 				  
 					if(config.secure){
-						var token = TokenManager.getToken(config.datasourceid);
-						
-						if(token){
-							requestUrl = requestUrl + "&token=" + token;
-						}else{
-							return; //Don't attempt to get features w/o a token
-						}
-					}
-				  
+						var response = TokenManager.getTokenSynchronously(config.datasourceid);
+						try
+						{
+							var jsonResponse = JSON.parse(response);
+							if(jsonResponse.token){
+								requestUrl = requestUrl + "&token=" + jsonResponse.token;
+							} else{
+								return; //Don't attempt to get features w/o a token
+							}
+		                } catch(e){
+							return;
+						} //JS Logging?
+					}				  
 					var loadFeatures = function(data, status){
 						//remove all previous features in this extent, to avoid flash on refresh
 						this.getFeaturesInExtent(extent).forEach(function(feature){
@@ -330,11 +334,26 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 		
 		buildArcGisLayer: function(url, layername, config) {
 			
-			var layer = new ol.layer.Tile({
+			var params = {'LAYERS': 'show:' + layername  };
+			if(config.secure){
+				var response = TokenManager.getTokenSynchronously(config.datasourceid);
+				try
+				{
+					var jsonResponse = JSON.parse(response);
+					if(jsonResponse.token){
+						params = {'LAYERS': 'show:' + layername, 'token': jsonResponse.token  };
+					} else{
+						return; //Don't attempt to get features w/o a token
+					}
+                } catch(e){
+					return;
+				} //JS Logging?
+			}
+			layer = new ol.layer.Tile({
 				opacity: config.opacity || 1,
 				source: new ol.source.TileArcGISRest({
 					url: url,
-					params: {'LAYERS': 'show:' + layername }
+					params: params
 				})
 			});
 			FeatureRequest.addLayer(layer);
