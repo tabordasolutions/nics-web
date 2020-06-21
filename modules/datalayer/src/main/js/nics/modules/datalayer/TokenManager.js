@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-define(["iweb/CoreModule", 'nics/modules/UserProfileModule'], 
-	function(Core, UserProfile){
+define(["iweb/CoreModule", 'nics/modules/UserProfileModule', 'ext'], 
+	function(Core, UserProfile, Ext){
 	
 		var tokenManager = new function() {
 			
@@ -72,6 +72,20 @@ define(["iweb/CoreModule", 'nics/modules/UserProfileModule'],
 				Core.Mediator.getInstance().sendRequestMessage(url, topic);
 			};
 			
+			function requestTokenSynchronously(datasourceid){
+				var endpoint = Core.Config.getProperty(UserProfile.REST_ENDPOINT);
+				var url = Ext.String.format("{0}/datalayer/{1}/token/{2}",
+					endpoint,
+					UserProfile.getWorkspaceId(),
+					datasourceid);
+				
+				var response = Ext.Ajax.request({
+    				async: false,
+    				url: url
+				});	
+				return response.responseText			
+			};
+
 			function handleTokenResponse(datasourceid, callback, evt, response){
 				if(response.token){
 					_addToken(datasourceid, response);
@@ -84,6 +98,9 @@ define(["iweb/CoreModule", 'nics/modules/UserProfileModule'],
 			
 			return {
 				
+				getTokenSynchronously: function(datasourceid) {
+					return requestTokenSynchronously(datasourceid);
+				},
 				getToken: function(datasourceid, callback){
 					return _getToken(datasourceid, callback);
 				},
