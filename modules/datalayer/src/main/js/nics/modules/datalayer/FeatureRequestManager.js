@@ -74,6 +74,7 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule', 'iweb/modules/ma
                 mapSize = map.getSize(),
                 extent = map.getView().calculateExtent(mapSize);
 
+				var token = layer.getSource().getParams().token;
                 var LAYERS = layer.getSource().getParams().LAYERS;
                 var show = LAYERS.indexOf("show:");
                 if(show != -1){
@@ -93,7 +94,8 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule', 'iweb/modules/ma
                         returnZ: false,
                         returnM: false,
                         f: 'json',
-                        sr: 3857
+                        sr: 3857,
+						token: token
                     },
                     method: 'GET',
                     success: onRequestSuccess.bind(this, evt, container, mapSize)
