@@ -152,7 +152,7 @@ define(["ol",'ext', 'iweb/CoreModule','iweb/modules/MapModule', 'iweb/modules/ma
 				var type = typeof value;
 				if(type != "object"){
 					//Replace null string with empty value
-					if(value == "null"){
+					if(value == "Null"){
 							value = "";
 					}
 						
