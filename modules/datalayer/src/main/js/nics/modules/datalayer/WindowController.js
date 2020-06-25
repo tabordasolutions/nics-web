@@ -169,7 +169,7 @@ define(['ext', "iweb/CoreModule", "./DatalayerBuilder",
 		    				url: url,
 							timeout: 5000
 						});	
-						this.onLoadFolder(null, Ext.decode(response.responseText))
+						this.onLoadFolder(null, Ext.decode(response.responseText));
 						
 					} catch (error) {
 					} finally {
