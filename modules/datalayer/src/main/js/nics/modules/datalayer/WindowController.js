@@ -156,15 +156,29 @@ define(['ext', "iweb/CoreModule", "./DatalayerBuilder",
 				};
 			},
 			
+
 			lazyLoadFolder: function(folder, opts){
 				if(!folder.lazyLoaded){
 					var url = Ext.String.format('{0}/folder/{1}/id/{2}',
 							Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 							UserProfile.getWorkspaceId(), folder.data.folderid);
-					this.mediator.sendRequestMessage(url, 'nics.data.loadfolder.' + this.rootName);
-					
-					folder.set("loading", true);
-					folder.lazyLoaded = true;
+					try {
+						folder.set("loading", true);
+						var response = Ext.Ajax.request({
+		    				async: false,
+		    				url: url,
+							timeout: 5000
+						});	
+						this.onLoadFolder(null, Ext.decode(response.responseText))
+						
+					} catch (error) {
+					} finally {
+						folder.set("loading", false);
+					}
+//					this.mediator.sendRequestMessage(url, 'nics.data.loadfolder.' + this.rootName);
+//					
+//					folder.set("loading", true);
+//					folder.lazyLoaded = true;
 				}
 			},
 			
