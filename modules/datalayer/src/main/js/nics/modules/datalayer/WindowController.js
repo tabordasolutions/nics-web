@@ -161,10 +161,30 @@ define(['ext', "iweb/CoreModule", "./DatalayerBuilder",
 					var url = Ext.String.format('{0}/folder/{1}/id/{2}',
 							Core.Config.getProperty(UserProfile.REST_ENDPOINT),
 							UserProfile.getWorkspaceId(), folder.data.folderid);
-					this.mediator.sendRequestMessage(url, 'nics.data.loadfolder.' + this.rootName);
-					
 					folder.set("loading", true);
-					folder.lazyLoaded = true;
+					Ext.Ajax.request({
+						url: url,
+						timeout: 5000,
+						scope: this,
+						success: function(response) {
+							try {
+								var obj = Ext.decode(response.responseText);
+								this.onLoadFolder(null, obj);
+							} catch (error) {
+								console.log(error);
+								folder.set("expanded", false);
+								folder.set("loaded", false);
+							} finally {
+								folder.set("loading", false);
+							}
+						},
+						failure: function(response) {
+							folder.set("expanded", false);
+							folder.set("loaded", false);
+							folder.set("loading", false);
+							console.log("Failure in Ajax call" + response.statusText);
+						}
+					});
 				}
 			},
 			
