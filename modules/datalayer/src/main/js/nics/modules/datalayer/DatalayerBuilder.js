@@ -29,7 +29,7 @@
  * s
  */
 define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','../datalayerstyle/WfsStylerFactory'],
-		function(Core, ol, TokenManager, FeatureRequest, WfsStylerFactory){
+		function(Core, ol, TokenManager, FeatureRequestManager, WfsStylerFactory){
 	
 	// matches href tags with relative urls
 	//var relativeHrefRegex = /<href>(?!http|#)(.*)<\/href>/gi;
@@ -39,7 +39,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 		
 		constructor: function() {
 			this.mediator = Core.Mediator.getInstance();
-			FeatureRequest.init();
+			FeatureRequestManager.init();
 		},
 				
 		buildLayer: function(type, config){
@@ -79,7 +79,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 					}
 				}))
 			});
-			FeatureRequest.addLayer(wmsLayer);
+			FeatureRequestManager.addLayer(wmsLayer);
 			return wmsLayer;
 		},
 		
@@ -334,14 +334,16 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 		
 		buildArcGisLayer: function(url, layername, config) {
 			
-			var params = {'LAYERS': 'show:' + layername  };
+			var params = { };
+			params.LAYERS = 'show:' + layername;
+			// token management done by proxy
 			if(config.secure){
 				var response = TokenManager.getTokenSynchronously(config.datasourceid);
 				try
 				{
 					var jsonResponse = JSON.parse(response);
 					if(jsonResponse.token){
-						params = {'LAYERS': 'show:' + layername, 'token': jsonResponse.token  };
+						params.token = jsonResponse.token;
 					} else{
 						return; //Don't attempt to get features w/o a token
 					}
@@ -351,15 +353,20 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager','..
 			}
 			layer = new ol.layer.Tile({
 				opacity: config.opacity || 1,
+				visible : true,
 				source: new ol.source.TileArcGISRest({
-					url: url,
+				  	url: Ext.String.format(
+						  "{0}//{1}/nics/{2}.proxy?url={3}",
+					  window.location.protocol,
+					  window.location.host,
+					  config.datalayerid,
+					  url),
 					params: params
 				})
 			});
-			FeatureRequest.addLayer(layer);
+			FeatureRequestManager.addLayer(layer);
 			
-			return layer;
-			
+			return layer;			
 		},
 
         buildWFSStyle: function(url, layername, config) {
