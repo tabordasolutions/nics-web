@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016, Massachusetts Institute of Technology (MIT)
+ * Copyright (c) 2008-2020, Massachusetts Institute of Technology (MIT)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,36 @@ define(['ol'], function(ol){
 		var parsed = JSON.parse(doc);
 		return {
 			version: parsed.currentVersion,
-			layers: parsed.layers
+			layers: parsed.layers,
+			services: parsed.services,
+			folders: parsed.folders
 		};
 	};
-	
+
+	ArcGISCapabilities.prototype.readServices = function(doc) {
+		var ret = null;
+		var parsed = JSON.parse(doc);
+		if (parsed) {
+			ret = {
+				version: parsed.currentVersion,
+				services: parsed.services
+			};
+		}
+
+		return ret;
+	};
+
+	ArcGISCapabilities.prototype.readLayers = function(doc) {
+		var ret = null;
+		var parsed = JSON.parse(doc);
+		if (parsed) {
+			ret = {
+				version: parsed.currentVersion,
+				layers: parsed.layers
+			};
+		}
+		return ret;
+	};
+
 	return ArcGISCapabilities;
 });

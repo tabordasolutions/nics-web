@@ -31,12 +31,13 @@ define(['ext', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 				'./WindowController', './ImportWindow', './DatasourceImportPanel',
 				'./FileImportPanel', './ShapeFileImportPanel',
 				'./WFSCapabilities', './WMSCapabilities',
-				'./ArcGISCapabilities'],
+				'./ArcGISCapabilities', './ArcGISDatasourceImportPanel'],
 
 	function(Ext, Core, UserProfile,
 			WindowController, ImportWindow, DatasourceImportPanel,
 			FileImportPanel, ShapeFileImportPanel,
-			WFSCapabilities, WMSCapabilities, ArcGISCapabilities){
+			WFSCapabilities, WMSCapabilities, ArcGISCapabilities,
+			ArcGISDatasourceImportPanel){
 	
 		return Ext.define('modules.datalayer.DataWindowController', {
 			extend : 'modules.datalayer.WindowController',
@@ -92,7 +93,17 @@ define(['ext', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 						dataSourceType: 'arcgisrest',
 						capabilitiesFormat: new ArcGISCapabilities(),
 						workspaceId: this.workspaceId
-					}),
+					}), new DatasourceImportPanel({
+				title : 'ArcGIS Enterprise',
+				dataSourceType : 'arcgisent',
+				capabilitiesFormat : new ArcGISCapabilities(),
+				workspaceId : this.workspaceId
+			}), new ArcGISDatasourceImportPanel({
+				title : 'ArcGIS Online',
+				dataSourceType : 'arcgisonline',
+				capabilitiesFormat : new ArcGISCapabilities(),
+				workspaceId : this.workspaceId
+			}),
 					new FileImportPanel({
 						title: 'KMZ',
 						dataSourceType: 'kmz',

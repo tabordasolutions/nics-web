@@ -70,7 +70,7 @@
     </dependency>
   </dependencies>
 
-    <build>
+     <build>
         <plugins>
             <plugin>
                 <groupId>com.github.bringking</groupId>
@@ -89,5 +89,5 @@
             </plugin>
         </plugins>
     </build>
-  
+ 
 </project>
