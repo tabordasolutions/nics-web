@@ -274,12 +274,12 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 			getCapabilities: function(record, success, failure) {
 				var url = "";
 				
-				if(this.dataSourceType == 'arcgisrest'){
+				if(this.dataSourceType == 'arcgisonline' 
+						|| this.dataSourceType == 'arcgisent' ){
 					url = Ext.String.format('{0}?f=json', record.get('internalurl'));
-				}
-				else{
+				} else {
 					url = Ext.String.format('{0}?service={1}&request=GetCapabilities',
-						record.get('internalurl'), this.dataSourceType);
+							record.get('internalurl'), this.dataSourceType);
 				}
 				
 				if(record.get('secure')){
@@ -310,7 +310,9 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 					success: function(response) {
 						//can't use responseXML becaue the proxy doesn't return the correct content type
 						var caps;
-						if(dataSourceType != 'arcgisrest') {
+						if(dataSourceType != 'arcgisonline' 
+								&& dataSourceType != 'arcgisent') 
+						{
 							var xmlDoc = new DOMParser().parseFromString(response.responseText, 'application/xml');
 							caps = this.capabilitiesFormat.read(xmlDoc);
 						} else {
@@ -329,7 +331,9 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 							if (!layer.Title && layer.Name) {
 								layer.Title = layer.Name;
 							}
-							if(dataSourceType == 'arcgisrest') {
+							if(dataSourceType == 'arcgisonline' 
+								|| dataSourceType == 'arcgisent') 
+							{
 								layer.Title = layer.name;
 								layer.Name = layer.id;
 							}

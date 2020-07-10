@@ -70,7 +70,7 @@ define([
   function _requestSession(datasourceid) {
     // TODO: currently only handles arcgis online
     //var clientId = "2lXUMmgCcwEHGnxx";
-	var clientId = Core.Config.getProperty("nics.arcgis.datalayer.clientid");
+	var clientId = 'jN9CbduqiCYOQLM1';
     
     window.ArcGISclientId = clientId;
     return ArcgisAuth.UserSession.beginOAuth2({

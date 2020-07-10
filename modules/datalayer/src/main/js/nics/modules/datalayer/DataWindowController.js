@@ -88,22 +88,24 @@ define(['ext', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 						capabilitiesFormat: new WMSCapabilities(),
 						workspaceId: this.workspaceId
 					}),
+//					new DatasourceImportPanel({
+//						title: 'ArcGIS MapServer',
+//						dataSourceType: 'arcgisrest',
+//						capabilitiesFormat: new ArcGISCapabilities(),
+//						workspaceId: this.workspaceId
+//					}), 
 					new DatasourceImportPanel({
-						title: 'ArcGIS MapServer',
-						dataSourceType: 'arcgisrest',
-						capabilitiesFormat: new ArcGISCapabilities(),
-						workspaceId: this.workspaceId
-					}), new DatasourceImportPanel({
-				title : 'ArcGIS Enterprise',
-				dataSourceType : 'arcgisent',
-				capabilitiesFormat : new ArcGISCapabilities(),
-				workspaceId : this.workspaceId
-			}), new ArcGISDatasourceImportPanel({
-				title : 'ArcGIS Online',
-				dataSourceType : 'arcgisonline',
-				capabilitiesFormat : new ArcGISCapabilities(),
-				workspaceId : this.workspaceId
-			}),
+						title : 'ArcGIS Enterprise',
+						dataSourceType : 'arcgisent',
+						capabilitiesFormat : new ArcGISCapabilities(),
+						workspaceId : this.workspaceId
+					}), 
+					new ArcGISDatasourceImportPanel({
+						title : 'ArcGIS Online',
+						dataSourceType : 'arcgisonline',
+						capabilitiesFormat : new ArcGISCapabilities(),
+						workspaceId : this.workspaceId
+					}),
 					new FileImportPanel({
 						title: 'KMZ',
 						dataSourceType: 'kmz',
