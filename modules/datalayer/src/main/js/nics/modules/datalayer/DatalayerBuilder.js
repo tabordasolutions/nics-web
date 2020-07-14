@@ -59,8 +59,8 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager',
 				return this.buildOSMLayer(config.url, config.layername, config);
 			}else if(type == "xyz"){
 				return this.buildXYZLayer(config.url, config.layername, config);
-			}else if(type == "arcgisrest"){
-				return this.buildArcGisLayer(config.url, config.layername, config);
+//			}else if(type == "arcgisrest"){
+//				return this.buildArcGisLayer(config.url, config.layername, config);
 			}else if(type == "arcgisent"){
 				return this.buildArcGisEnterpriseLayer(config.url, config.layername, config);
 			}else if(type == "arcgisonline"){
@@ -596,42 +596,42 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager',
 			
 		},
 		
-		buildArcGisLayer: function(url, layername, config) {
-			
-			var params = { };
-			params.LAYERS = 'show:' + layername;
-			// token management done by proxy
-			if(config.secure){
-				var response = TokenManager.getTokenSynchronously(config.datasourceid);
-				try
-				{
-					var jsonResponse = JSON.parse(response);
-					if(jsonResponse.token){
-						params.token = jsonResponse.token;
-					} else{
-						return; //Don't attempt to get features w/o a token
-					}
-                } catch(e){
-					return;
-				} //JS Logging?
-			}
-			layer = new ol.layer.Tile({
-				opacity: config.opacity || 1,
-				visible : true,
-				source: new ol.source.TileArcGISRest({
-				  	url: Ext.String.format(
-						  "{0}//{1}/nics/{2}.proxy?url={3}",
-					  window.location.protocol,
-					  window.location.host,
-					  config.datalayerid,
-					  url),
-					params: params
-				})
-			});
-			FeatureRequestManager.addLayer(layer);
-			
-			return layer;			
-		},
+//		buildArcGisLayer: function(url, layername, config) {
+//			
+//			var params = { };
+//			params.LAYERS = 'show:' + layername;
+//			// token management done by proxy
+//			if(config.secure){
+//				var response = TokenManager.getTokenSynchronously(config.datasourceid);
+//				try
+//				{
+//					var jsonResponse = JSON.parse(response);
+//					if(jsonResponse.token){
+//						params.token = jsonResponse.token;
+//					} else{
+//						return; //Don't attempt to get features w/o a token
+//					}
+//                } catch(e){
+//					return;
+//				} //JS Logging?
+//			}
+//			layer = new ol.layer.Tile({
+//				opacity: config.opacity || 1,
+//				visible : true,
+//				source: new ol.source.TileArcGISRest({
+//				  	url: Ext.String.format(
+//						  "{0}//{1}/nics/{2}.proxy?url={3}",
+//					  window.location.protocol,
+//					  window.location.host,
+//					  config.datalayerid,
+//					  url),
+//					params: params
+//				})
+//			});
+//			FeatureRequestManager.addLayer(layer);
+//			
+//			return layer;			
+//		},
 
         buildWFSStyle: function(url, layername, config) {
             var styler = WfsStylerFactory.getStyler(config);
