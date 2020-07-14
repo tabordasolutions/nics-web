@@ -50,7 +50,10 @@ define([
       session.tokenExpires = new Date(session.tokenExpires);
       if (!_expired(session.tokenExpires)) {
         return new ArcgisAuth.UserSession(session);
-      }
+      } else {
+		_removeSession(datasourceid);
+		_requestSession(datasourceid);
+	  }
     }
     return null;
   }

@@ -444,7 +444,7 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 				} else {
 					Ext.Msg.show({
 						title: 'Data Layer',
-						message: 'There was a problem saving the datasource',
+						message: 'There was a problem saving the datalayer',
 						buttons: Ext.Msg.OK,
 						icon: Ext.Msg.ERROR
 					});

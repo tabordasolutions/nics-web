@@ -194,20 +194,20 @@ define(['ext', "iweb/CoreModule", "./DatalayerBuilder",
 			},
 			
 			addNewLayer: function(node){
-				if(node.data.secure){
+				if (node.data.secure && node.data.layerType != "arcgisonline") {
 					//Add the layer once we have a token
 					var token = TokenManager.getToken(node.data.datasourceid, {
 						topic: this.tokenHandlerTopic,
 						params: node
 					});
-					
-					if(!token){ return; }
+
+					if (!token) { return; }
 				}
-				
-				if(node.data.refreshrate){
+
+				if (node.data.refreshrate) {
 					RefreshLayerManager.addLayer(
-							node.data.refreshrate, node.data.datalayerid, 
-							node.data.layer, node.data.datasourceid);
+						node.data.refreshrate, node.data.datalayerid,
+						node.data.layer, node.data.datasourceid);
 				}
 				Core.EventManager.fireEvent("nics.datalayer.legend.click", node.data);
 				Core.Ext.Map.addLayer(node.data.layer);

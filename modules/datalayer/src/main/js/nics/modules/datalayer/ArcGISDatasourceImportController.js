@@ -599,7 +599,7 @@ define([
 
         onAddDatalayer: function(evt, response) {
             var newLayers = response.datalayers;
-            if (response.message == "OK") {
+            if (response.message.toUpperCase() == "OK") {
                 Ext.Msg.show({
                     title: ("Data Layer"),
                     message: (
@@ -613,7 +613,7 @@ define([
                 Ext.Msg.show({
                     title: ("Data Layer"),
                     message: (
-                        "There was a problem saving the datasource"
+                        "There was a problem saving the datalayer"
                     ),
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR,

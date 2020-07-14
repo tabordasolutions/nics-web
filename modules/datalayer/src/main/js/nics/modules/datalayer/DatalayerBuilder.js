@@ -31,7 +31,7 @@
 define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager',
 		'../datalayerstyle/WfsStylerFactory', './ArcGISSessionManager', 'lib/ole'],
 		function(Core, ol, TokenManager, FeatureRequestManager, WfsStylerFactory,
-				SessionManager, ole){
+				ArcGISSessionManager, ole){
 	
 	// matches href tags with relative urls
 	//var relativeHrefRegex = /<href>(?!http|#)(.*)<\/href>/gi;
@@ -89,7 +89,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager',
 			
 			var promise = !config.secure
 				? Promise.resolve(null)
-				: SessionManager.getRequestSession(config.datasourceid);
+				: ArcGISSessionManager.getRequestSession(config.datasourceid);
 			
 			promise.then(function(session){
 				var svcUrl = new URL(url);
@@ -125,7 +125,7 @@ define(['iweb/CoreModule', 'ol', './TokenManager', './FeatureRequestManager',
 
 			var promise = !config.secure
 				? Promise.resolve(null)
-				: SessionManager.getRequestSession(config.datasourceid);
+				: ArcGISSessionManager.getRequestSession(config.datasourceid);
 
 			if(config.stylepath) {
 				// use custom renderer
