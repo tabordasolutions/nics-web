@@ -204,8 +204,8 @@ public class LoginServlet extends HttpServlet implements Servlet {
 			    	req.setAttribute("selectedWorkspace", chosenWorkspace);
 			    }
 			    else {
-					req.setAttribute("announcements",local_scout_announcements);
-			    	// req.setAttribute("announcements",this.getAnnouncements(defaultWorkspace));
+					//req.setAttribute("announcements",local_scout_announcements);
+			    	req.setAttribute("announcements",this.getAnnouncements(defaultWorkspace));
 			    	req.setAttribute("selectedWorkspace", defaultWorkspace);
 			    }
 				req.setAttribute("selectedWorkspace", workspaces);
