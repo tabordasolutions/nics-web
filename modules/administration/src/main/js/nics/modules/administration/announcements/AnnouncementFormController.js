@@ -52,7 +52,7 @@ define(['iweb/CoreModule' ,'nics/modules/UserProfileModule'  ],
 	    		
 	    		announcement.usersessionid = UserProfile.getUserSessionId();
 	    		announcement.logtypeid = this.logtypeid;
-	    		announcement.message  = vm.get("message");
+	    		announcement.message  = vm.get("message").trim();
 	    		
 	    		if(announcement.message == null || announcement.message == undefined || announcement.message == "" ) {
 		            Ext.MessageBox.alert("Announcement Error", "Please enter announcement");
