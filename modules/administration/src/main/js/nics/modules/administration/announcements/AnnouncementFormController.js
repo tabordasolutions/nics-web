@@ -54,7 +54,10 @@ define(['iweb/CoreModule' ,'nics/modules/UserProfileModule'  ],
 	    		announcement.logtypeid = this.logtypeid;
 	    		announcement.message  = vm.get("message");
 	    		
-	    		
+	    		if(announcement.message == null || announcement.message == undefined || announcement.message == "" ) {
+		            Ext.MessageBox.alert("Announcement Error", "Please enter announcement");
+		            return;
+				}
 	    		
 	    		var topic ="nics.announcement.new";
 	    		Core.EventManager.createCallbackHandler(topic, this, 
