@@ -48,6 +48,7 @@ define(['ext', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 				if (!this.importWindow) {
 					this.importWindow = this.createImportWindow();
 				}
+				Core.EventManager.fireEvent("nics.data.windowType", this.getView().rootName);
 				this.importWindow.show();
 			},
 			

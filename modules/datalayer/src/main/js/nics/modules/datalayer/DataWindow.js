@@ -39,12 +39,14 @@
 				if(UserProfile.getSystemRoleId() == 1 || UserProfile.getSystemRoleId() == 2){
 					Ext.getCmp('importDataButton').hide();
 				}
+				if(UserProfile.getSystemRoleId() == 1 || UserProfile.getSystemRoleId() == 2){
+					Ext.getCmp('importFireButton').hide();
+				}
 				
 			},
 			
 			buttons: [{
 				text: 'Import Data',
-				id: 'importDataButton',
 				handler: 'onImportClick'
 			}]
 		});

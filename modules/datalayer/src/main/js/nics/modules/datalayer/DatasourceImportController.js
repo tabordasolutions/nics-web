@@ -56,8 +56,13 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 				Core.EventManager.addListener("nics.data.adddatasource." + this.dataSourceType, this.onAddDatasource.bind(this));
 				Core.EventManager.addListener("nics.data.adddatalayer." + this.dataSourceType, this.onAddDatalayer.bind(this));
 				Core.EventManager.addListener(this.tokenHandlerTopic, this.tokenHandler.bind(this));
+				Core.EventManager.addListener("nics.data.windowType", this.setWindowType.bind(this));
 			},
 			
+			setWindowType: function(evnt, name) {
+				this.windowName = name;
+			},
+
 			updateGridTitle: function() {
 				var panelTitle = this.getView().getTitle();
 				
@@ -415,7 +420,8 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 						usersessionid: userSessionId,
 						refreshrate: refreshRate.getValue()
 					},
-					legend: legend.getValue()
+					legend: legend.getValue(),
+					rootFolder : this.windowName
 				};
 				
 				var version = record.get('version');

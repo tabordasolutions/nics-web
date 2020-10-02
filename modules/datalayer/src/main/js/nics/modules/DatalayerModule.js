@@ -50,8 +50,21 @@ define(["iweb/CoreModule",
 				})
 			});
 
+			var importFireButton = new DataWindow({
+					rootName: 'Fire',
+					id:"importFireButton"
+				});
+		
+			Core.EventManager.addListener(UserProfile.PROFILE_LOADED, importFireButton.hideImportButton);
+
+			var fireButton = new Button({
+				text: 'Fire',
+				window: importFireButton
+			});
+
 			var importDataButton = new DataWindow({
-					rootName: 'Data'
+					rootName: 'Data',
+					id:"importDataButton"
 				});
 
 			Core.EventManager.addListener(UserProfile.PROFILE_LOADED, importDataButton.hideImportButton);
@@ -80,7 +93,7 @@ define(["iweb/CoreModule",
 			
 			//Add View to Core
 			Core.View.addButtonPanel(
-					[ "-", mapsButton, dataButton, weatherButton, trackingButton ]
+					[ "-", mapsButton, fireButton, dataButton, weatherButton, trackingButton ]
 			);
 			
 			var setGeoserverCookies = function(event){
