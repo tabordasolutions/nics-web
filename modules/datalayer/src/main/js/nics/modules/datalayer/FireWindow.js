@@ -29,7 +29,7 @@
  */
  define(["iweb/CoreModule", './Window', './DataWindowController', 'nics/modules/UserProfileModule'], 
  	function(Core, Window, DataWindowController, UserProfile) {
-		return Ext.define('modules.datalayer.DataWindow', {
+		return Ext.define('modules.datalayer.FireWindow', {
 			extend: 'modules.datalayer.Window',
 			
 			controller: 'datalayer.datawindowcontroller',
@@ -37,13 +37,17 @@
 			hideImportButton: function(e){
 				
 				if(UserProfile.getSystemRoleId() == 1 || UserProfile.getSystemRoleId() == 2){
-					Ext.getCmp('importDataButton').hide();
+					Ext.getCmp('importFireButton').hide();
 				}
+				
 			},
 			
 			buttons: [{
 				text: 'Import Data',
 				handler: 'onImportClick'
+			},{
+				text: '>> Interragroup App',
+				handler: 'onNavigate2InterragroupApp'
 			}]
 		});
 });

@@ -29,12 +29,12 @@
  */
 define(["iweb/CoreModule",
         "./datalayer/Button", "./datalayer/Window",
-        "./datalayer/DataWindow", "./datalayer/MapsController",
+        "./datalayer/DataWindow", "./datalayer/FireWindow", "./datalayer/MapsController",
         "./datalayer/ExportView", "./datalayer/DatalayerPanelView", 
         "nics/modules/UserProfileModule", "./datalayer/TrackingWindow",
 		"./datalayer/TrackingLocatorWindow"],
 	
-	function(Core, Button, Window, DataWindow, MapsController, ExportView,
+	function(Core, Button, Window, DataWindow, FireWindow, MapsController, ExportView,
 			 DatalayerPanelView, UserProfile, TrackingWindow, TrackingLocatorWindow,
 			 StyleRendererController) {
 	
@@ -50,7 +50,7 @@ define(["iweb/CoreModule",
 				})
 			});
 
-			var importFireButton = new DataWindow({
+			var importFireButton = new FireWindow({
 					rootName: 'Fire',
 					id:"importFireButton"
 				});
