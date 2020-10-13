@@ -45,9 +45,11 @@
 			buttons: [{
 				text: 'Import Data',
 				handler: 'onImportClick'
-			},{
-				text: '>> Interragroup App',
-				handler: 'onNavigate2InterragroupApp'
-			}]
+			}
+			,{
+				text: Core.Translate.i18nJSON('>> FIRIS App'),
+				handler: 'onNavigate2FIRISApp'
+			}
+			]
 		});
 });

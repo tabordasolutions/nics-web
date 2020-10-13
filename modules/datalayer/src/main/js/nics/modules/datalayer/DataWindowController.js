@@ -52,9 +52,9 @@ define(['ext', 'iweb/CoreModule', 'nics/modules/UserProfileModule',
 				this.importWindow.show();
 			},
 			
-			onNavigate2InterragroupApp: function(){
-				console.log('Navigating to Interragroup App');
-				window.open('/nics/scoutInterra.html');
+			onNavigate2FIRISApp: function(){
+				console.log('Navigating to FIRIS App ...');
+				window.open('/nics/scoutFIRIS.html');
 			},
 				
 			createImportWindow: function() {
