@@ -37,9 +37,9 @@
 
         <style>
             body {
-                background-color: #343535;
+                background-color: #ffffff;
                 font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-                color: #ffffff;
+                color: #000000;
                 font-size: 14px;
             }
             h2 {
@@ -47,11 +47,15 @@
             }
             #servid {
                 width: 100vw;
-                background-color: #F5F5F7;
+                background-color: #d3e1f1;
                 padding: 5px;
                 color: #343535;
                 display: inline-block;
                 margin-bottom: 1px;
+            }
+            .scout-firis{
+            	top: 17px;
+            	position:relative;
             }
             iframe {
                 margin-top: 0px;
@@ -82,38 +86,55 @@
 				margin: 4px 2px;
 				cursor: pointer;
 			}
+			img {
+			  display: block;
+			  margin-left: auto;
+			  margin-right: auto;
+			}
 			.buttonR {background-color: #008CBA;} /* Blue */
 			.buttonL {background-color: #4CAF50;} /* Green */ 
 			.buttonH {background-color: #e7e7e7; color: black;} /* Gray */ 
 			.buttonTitle {background-color: #000000; color: white;} /* Gray */ 
-			.buttonInstr {background-color: #000000; color: white;font-size: 12px; text-align: left;} /* Gray */ 
+			.buttonInstr {background-color: #008CBA; color: white;font-size: 12px; text-align: left; padding: 10pz} /* Gray */ 
 			
 			.not-allowed{
 			 cursor: not-allowed! important;
-			    
-			}    
+			} 
+			
+			#scoutDetails{
+				margin: 0 auto;
+				text-align: center;
+				line-height: 1.4285;
+			} 
+			.btn-round {
+				border-radius: 5%;
+			}  
 	</style>
 
     </head>
 
     <body>
         <div id="servid">
-             	<button class="button buttonTitle not-allowed" ><b>SCOUT-FIRIS INTERFACE</b></b></button>
-          		<button style="float: right;" class="button buttonH" onclick="displayHelp()">Help</button>
-            	<button style="float: right;" class="button buttonL" onclick="displayLogin()">Login</button>
-            	<button style="float: right;" class="button buttonR" onclick="displayRegistration()">Register</button>
-              	<button style="float: right;" class="button buttonInstr not-allowed" >Please register if you are a first time user of SCOUT-FIRIS Application.<br>Please login if you are already registered.</button>
+             	<label class="scout-firis" ><b>SCOUT-FIRIS INTERFACE</b></b></label>
+          		<button style="float: right;" class="button buttonH btn-round" onclick="displayHelp()">Help</button>
+            	<button style="float: right;" class="button buttonL btn-round" onclick="displayLogin()">Login</button>
+            	<button style="float: right;" class="button buttonR btn-round" onclick="displayRegistration()">Register</button>
+              	<label class="scout-firis" style="float: right;">Please register if you are a first time user of SCOUT-FIRIS Application.<br>Please login if you are already registered.</button>
           </div>
 
 <script>
+
+	/*
     function displayRegistration() {
-        document.getElementById("iframeFiris").innerHTML = 
-        	"<iframe src=\"https://secure.intterragroup.com/account/new?g=9c6de46e-5aad-4132-8220-b28d791b6c08\" ></iframe>";
+        var iframe = document.getElementById("iframeFiris");
+        iframe.src =  
+        	"https://secure.intterragroup.com/account/new?g=9c6de46e-5aad-4132-8220-b28d791b6c08";
 
     }
     function displayLogin() {
-        document.getElementById("iframeFiris").innerHTML = 
-        	"<iframe src=\"https://portal.intterragroup.com\" ></iframe>";
+        var iframe = document.getElementById("iframeFiris");
+        iframe.src =  
+        	"https://portal.intterragroup.com";
 
     }
     function displayHelp() {
@@ -121,13 +142,44 @@
         	"<iframe src=\"https://intterra.helpdocs.com/client-specific/firis\" ></iframe>";
 
     }
+    */
+    /* OPTION 0 */
+    function displayRegistration() {
+       window.location =  
+        	"https://secure.intterragroup.com/account/new?g=9c6de46e-5aad-4132-8220-b28d791b6c08";
+
+    }
+    function displayLogin() {
+        window.location =  
+        	"https://portal.intterragroup.com";
+
+    }
+    function displayHelp() {
+        document.getElementById("iframeFiris").innerHTML = 
+        	"<iframe src=\"https://intterra.helpdocs.com/client-specific/firis\" ></iframe>";
+
+    }
+
 </script>
 
         <br />
 
-        <div id="iframeFiris"/>
+        <div id="iframeFiris">
+        <img src="login/images/scout_logo.png" style="width:423px !important;" />
+        <div id="scoutDetails">
+        	<br>
+	        The Fire Integrated Real-time Intelligence System (FIRIS) Pilot Program provides enhanced wildfire situational awareness for first responders. 
+	        <br>
+	        The program provides the Initial and extended response Incident Commanders (IC) access to intelligence and information to support the complex decision requirements for dynamic wildfires. 
+			<br>
+			The FIRIS Program also combines Intelligence, Surveillance, and Reconnaissance (ISR) capabilities with accurate, real-time wildland fire spread modeling.
+			<br>
+			SCOUT users can now access FIRIS data using the links above.
+		</div>
+        </div>
 
-<!--
+
+<!-- for NICS7
          <div id="iframeFiris">
             <iframe name="iframe1" src="/nics/proxy.jsp?redirect2Firis">
             
