@@ -47,7 +47,7 @@
 				handler: 'onImportClick'
 			}
 			,{
-				text: Core.Translate.i18nJSON('>> FIRIS App'),
+				text: '>> FIRIS App',
 				handler: 'onNavigate2FIRISApp'
 			}
 			]
