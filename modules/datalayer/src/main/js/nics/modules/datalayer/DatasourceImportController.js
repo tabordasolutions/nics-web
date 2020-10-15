@@ -420,8 +420,7 @@ define(['ext', 'ol', "iweb/CoreModule", "nics/modules/UserProfileModule", "./Tok
 						usersessionid: userSessionId,
 						refreshrate: refreshRate.getValue()
 					},
-					legend: legend.getValue(),
-					rootFolder : this.windowName
+					legend: legend.getValue()
 				};
 				
 				var version = record.get('version');
