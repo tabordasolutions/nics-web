@@ -42,11 +42,12 @@
 				
 			},
 			
-			buttons: [{
-				text: 'Import Data',
-				handler: 'onImportClick'
-			}
-			,{
+			buttons: [
+//			{
+//				text: 'Import Data',
+//				handler: 'onImportClick'
+//			},
+			{
 				text: '>> FIRIS App',
 				handler: 'onNavigate2FIRISApp'
 			}
