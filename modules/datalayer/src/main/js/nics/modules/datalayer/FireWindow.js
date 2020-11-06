@@ -47,10 +47,10 @@
 //				text: 'Import Data',
 //				handler: 'onImportClick'
 //			},
-//			{
-//				text: '>> FIRIS App',
-//				handler: 'onNavigate2FIRISApp'
-//			}
+			{
+				text: '>> FIRIS App',
+				handler: 'onNavigate2FIRISApp'
+			}
 			]
 		});
 });
